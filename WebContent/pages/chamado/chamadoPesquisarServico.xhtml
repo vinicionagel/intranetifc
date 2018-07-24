@@ -1,0 +1,142 @@
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"    
+    xmlns:t="http://myfaces.apache.org/tomahawk" 
+    xmlns:c="http://java.sun.com/jsp/jstl/core" >
+    <p:panel id="panelPesquisarServ" header="Filtro" collapsed="true" toggleable="true" toggleSpeed="300">
+        <p:ajax event="toggle" listener="#{chamadoServicoBean.carregarBuscaAvancada}" update="panelPesquisarServ"/> 
+        <h:panelGrid columns="6" cellpadding="6">
+            <h:outputText value="#{labels.campoServico}" />
+            <h:selectOneMenu value="#{chamadoServicoBean.chamadoServicoFiltro.servicoDTO}" converter="SimpleIndexConverter" style="width: 160px"> 
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />
+                <t:selectItems value="#{chamadoServicoBean.servicosUsuario}" var="item" itemLabel="#{item.descricaoCurta}" itemValue="#{item}" />
+            </h:selectOneMenu>
+
+            <h:outputText value="#{labels.campoUsuarioAtribuido}" />
+            <h:selectOneMenu value="#{chamadoServicoBean.chamadoServicoFiltro.usuarioAtribuidoDTO}" converter="SimpleIndexConverter" style="width: 160px">
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />
+                <t:selectItems value="#{chamadoBean.listaUsuario}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
+            </h:selectOneMenu>
+
+            <h:outputText value="#{labels.campoPrioridade}" />  
+            <h:selectOneMenu value="#{chamadoServicoBean.chamadoServicoFiltro.prioridadeDTO}" style="width: 160px">
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />  
+                <t:selectItems value="#{chamadoBean.listaPrioridade}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/> 
+            </h:selectOneMenu> 
+
+            <h:outputText value="#{labels.campoStatus}" />
+            <h:selectOneMenu value="#{chamadoServicoBean.chamadoServicoFiltro.statusDTO}" converter="SimpleIndexConverter" style="width: 160px">
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />
+                <t:selectItems value="#{andamentoBean.listaStatus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                                          
+            </h:selectOneMenu> 
+
+            <h:outputText value="#{labels.campoSetor}" />
+            <h:selectOneMenu value="#{chamadoServicoBean.codigoSetor}" converter="SimpleIndexConverter" style="width: 160px"  >
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />
+                <c:forEach items="#{chamadoServicoBean.setorSelectItens}" var="item">
+                    <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                </c:forEach>  
+            </h:selectOneMenu> 
+        </h:panelGrid>
+
+        <p:commandButton value="#{labels.botaoFiltrar}" ajax="true" update="tabView">
+            <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="filtrando" /> 
+        </p:commandButton> 
+    </p:panel>
+    <p:dataTable id="pesquisaDataServico" var="chamadosServico" value="#{chamadoServicoBean.chamadosServico}" paginator="true" emptyMessage="#{labels.naoHaRegistros}"
+                 rows="25" paginatorPosition="bottom" rowStyleClass="#{chamadosServico.prioridadeDTO.codigo == 3 ? 'prioridadeAlta' : null}">
+        <f:facet name="header"> 
+            <h:outputText value="#{labels.tituloLista} #{labels.campoChamado} de Servico" />
+        </f:facet>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoCodigo}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.codigo}" />
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoTitulo}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.titulo}" />
+        </p:column>        
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoUsuarioAtribuido}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.usuarioAtribuidoDTO.nome}" />
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoDataHoraAbertura}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.dataHoraAbertura}" >
+                <f:convertDateTime pattern='dd/MM/yyyy'/>
+            </h:outputText>  
+        </p:column>
+
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoDataPrevista}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.dataPrevista}" >
+                <f:convertDateTime pattern='dd/MM/yyyy'/>
+            </h:outputText>  
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoProgresso}" />
+            </f:facet>
+            <p:progressBar widgetVar="pb" value="#{chamadosServico.progresso}" labelTemplate="#{chamadosServico.progresso}%" styleClass='#{chamadosServico.progresso == 0 ? "animated2" : "animated"}' />
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    pb.setValue(#{chamadosServico.progresso});
+                    var x = #{chamadosServico.progresso};
+                    if (x === 0){
+                        pb.setValue(0.00001);
+                    }
+                });
+            </script>
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoPrioridade}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.prioridadeDTO.descricao}" />
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoStatus}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.statusDTO.descricao}" />
+        </p:column>       
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoServico}" />
+            </f:facet>
+            <h:outputText value="#{chamadosServico.servicoDTO.descricaoCurta}" />
+        </p:column>       
+
+        <p:column>
+            <f:facet name="header" >
+                <h:outputText value="#{labels.campoOpcao}" />
+            </f:facet>
+            <t:div style="padding-left: 10px !important">  
+                <h:outputLink value="andamentoChamado.jsf?codigo=#{chamadosServico.codigo}">
+                    <h:outputText styleClass="ui-icon ui-icon-pencil"/>  
+                </h:outputLink>
+            </t:div>   
+        </p:column>            
+    </p:dataTable>
+</html>

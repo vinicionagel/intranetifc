@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk">
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{ocorrenciaBean}" />  
+        <ui:define name="CONTEUDO">
+            <h:panelGrid columns="1" cellpadding="10">
+                <h:form id="formPrincipalas">
+                    <t:div style="float: left">
+                        <p:messages/>
+                        <h:panelGrid columns="4" cellpadding="1">
+                            <p:panel> 
+                                <p:autoComplete  value="#{bean.aluno}" completeMethod="#{bean.alunos}" var="a" itemLabel="#{a.nome}" itemValue="#{a}" converter="AlunoConverter" minQueryLength="4" maxResults="10" forceSelection="true"/> 
+                                <p:spacer width="30" height="10" /> 
+                                <p:commandButton value="#{labels.botaoPesquisar}" oncomplete="updateTitulo('#{labels.botaoPesquisar}')"  actionListener="#{bean.dadosPesquisa}" action="#{bean.pesquisarOcorrencia}" update="pesquisaData" title="Pesquisar" />
+                                <p:commandButton value="#{labels.botaoPesquisarObservados}" onclick="updateTitulo('#{labels.botaoPesquisarObservados}')" actionListener="#{bean.dadosPesquisa}" action="#{bean.pesquisarObservador}" update="pesquisaData" title="Pesquisar Observados" />   
+                            </p:panel>                     
+                            <p:panel rendered="#{interfaceBean.verificarIncluir}" > 
+                                <p:commandButton value="#{labels.botaoIncluir}" action="#{bean.include}" ajax="false"/>
+                            </p:panel>
+                        </h:panelGrid>
+
+                        <p:spacer width="10" height="10" />
+
+                        <p:dataTable value="#{bean.lista}" rowStyleClass="#{item.acaoDisciplinarDTO.codigo == 4 ? 'prioridadeAlta' : null}" id="pesquisaData" var="item" paginator="true" emptyMessage="#{labels.naoHaRegistros}" rows="10" paginatorPosition="bottom">
+                            
+                            <f:facet name="header"> 
+                                <h:outputText value="#{labels.tituloLista} #{bean.tituloLayoutUnit}" />
+                            </f:facet>
+                            <p:column style="">
+                                <f:facet name="header">
+                                    <h:outputText value="#{labels.campoCodigo}" />
+                                </f:facet>
+                                <h:outputText value="#{item.codigo}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{labels.campoAssunto}" />
+                                </f:facet>
+                                <h:outputText value="#{item.titulo}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{labels.campoNome}" />
+                                </f:facet>
+                                <h:outputText value="#{item.alunoDTO.nome}" />
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Setor Autor" />
+                                </f:facet>
+                                <h:outputText value="#{item.setorDTOAutor.descricao}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Setor Atribuído" />
+                                </f:facet>
+                                <h:outputText value="#{item.setorDTOAtribuido.descricao}"/>
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{labels.campoDataHoraAbertura}" />
+                                </f:facet>
+                                <h:outputText value="#{item.dataHoraAbertura}" >
+                                    <f:convertDateTime pattern='dd/MM/yyyy HH:mm'/>
+                                </h:outputText>  
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{labels.campoDataPrevista}" />
+                                </f:facet>
+                                <h:outputText value="#{item.dataPrevista}" >
+                                    <f:convertDateTime pattern='dd/MM/yyyy'/>
+                                </h:outputText>  
+                            </p:column>
+                            <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="#{labels.campoProgresso}" />
+                                </f:facet>
+                                <p:column>
+                                    <p:progressBar widgetVar="pb" labelTemplate="#{item.progresso}%" styleClass='#{item.progresso == 0 ? "animated2" : "animated"}' />
+                                    <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            PF('pb').setValue(#{item.progresso});
+                                            var x = #{item.progresso};
+
+                                            if (x === 0){
+                                                PF('pb').setValue(0.00001);
+                                            }
+                                        });
+                                    </script>
+                                </p:column>
+                            </p:column>
+                             <p:column>
+                                <f:facet name="header">
+                                    <h:outputText value="Ação disciplinar" />
+                                </f:facet>
+                                 <h:outputText value="#{item.acaoDisciplinarDTO.descricao}" title="#{item.acaoDisciplinarDTO.tipoOcorrenciaDTO.descricao}" />
+                            </p:column>
+                            <p:column rendered="#{interfaceBean.verificarEditar or interfaceBean.verificarExcluir}" styleClass="opcoesTH">
+                                <f:facet name="header" >
+                                    <h:outputText value="#{labels.campoOpcao}" />
+                                </f:facet>
+                                <t:div style="padding-left: 10px !important">  
+                                    <h:outputLink value="andamentoOcorrencia.jsf?codigo=#{item.codigo}">
+                                        <h:outputText styleClass="ui-icon ui-icon-pencil"/>  
+                                    </h:outputLink>
+                                </t:div>                            
+                            </p:column>
+                        </p:dataTable>
+                    </t:div>
+                </h:form>
+            </h:panelGrid>
+            <script type="text/javascript">
+            function updateTitulo(texto) {
+                spans = document.getElementById('layoutCenter').getElementsByTagName('span');
+                span = spans[0];
+                span.innerHTML = "#{labels.tituloCadastro} #{chamadoBean.tituloLayoutUnit}: " + '<span style="color: #408D0E">' + texto + '</span>'
+            }
+            </script>
+       </ui:define>
+    </ui:composition>
+</html>

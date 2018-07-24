@@ -1,0 +1,267 @@
+.ui-panel-titlebar-icon-pencil, ui-corner-all, ui-state-default {
+    background: transparent !important;
+}
+
+.ui-state-default .ui-icon-pencil {
+    background-image: url("../images/ui-icons_8dc262_256x240.png") !important;
+}
+#lista .ui-tabs .ui-tabs-nav {
+    border: none !important;
+}
+/*
+    Elementos p:tabView
+*/
+#lista .ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all {
+    border-radius: 4px 4px 0px 0px;
+}
+
+#lista .ui-state-default.ui-corner-top {
+    /* tabs que não estão selecionadas */
+    border-radius:  4px 4px 4px 4px;
+    
+    margin-bottom: 4px !important;
+}
+.ui-panelmenu-content {
+   overflow: hidden !important;
+}
+
+#lista .ui-state-default.ui-tabs-selected.ui-state-active.ui-corner-top {
+    /* tab selecionada */
+    background: #FAFAF4 !important;
+    border-radius: 4px 4px 0px 0px;
+    height: 33px !important;
+    margin-bottom: 0px !important;
+}
+
+.ui-widget {
+    font-size: 12px !important;
+    font-family: Arial,sans-serif;
+}
+
+root { 
+    display: block;
+}
+.menu {
+    color: #FFFFFF;
+    border-bottom: 1px solid #dedede;
+    min-height: 17px;
+    _height: 17px;
+    font-size: 12px;
+    display: block;
+    padding: 6px 0 1px 15px;
+    text-decoration: none;
+}
+.rodape{
+    background-color: #dfd9c3;
+    font-variant: small-caps;
+    font-weight: bold;
+    overflow: hidden;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+}
+.area{
+    width: 700px;
+    height: 100px;      
+}
+
+.botaoPesquisar {
+    width: 120px;     
+    height: 35px;    
+    _height: 17px;
+    font-size: 16px;
+}
+
+.botaoIncluir {
+    width: 85px;         
+    height: 35px; 
+    font-size: 16px;
+}
+
+.formulario td {
+    vertical-align: top;
+}
+
+.ui-blockui.ui-widget-overlay.ui-helper-hidden {
+    background: transparent !important;
+}
+
+.painelBordaIncluir {
+    border-color: #327e04    
+}
+
+.painelBordaPesquisar {
+    border-top: none;
+    border-left: none;
+    border-bottom-color: #327e04;
+    border-right-color: #327e04
+}
+
+.ui-selectonemenu {
+    display: block;
+    border: none;
+    background: none;
+    background-color: #FFFFFF;
+
+}
+
+.ui-layout-unit-content {
+    border-radius: 0px;
+}
+
+.ui-layout-north {
+    z-index:100 !important;
+    overflow:visible !important;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+    background: none !important;
+    overflow:visible !important;
+}   
+
+.ui-layout-north {
+    z-index:100 !important;
+    overflow:visible !important;
+}
+.ui-layout-south{
+    border: none;
+    padding: 0 0 0 0;
+    margin: 0 0 0 ;
+    font-size: small; 
+    overflow: hidden;
+    overflow-x: hidden !important;
+    text-align: center;
+    overflow-y: hidden !important;
+}
+.ui-layout-north .ui-layout-unit-content {
+    overflow:visible !important;
+}                  
+
+tr .prioridadeAlta {
+    background-image: none;
+    background-color: tomato !important;    
+}
+
+.animated .ui-progressbar-value {
+   background: #b8d599;
+}
+
+.animated2 .ui-progressbar-value {
+   border: none;  
+}
+
+.ui-state-default .ui-icon-pencil {
+   background-image: url("../images/ui-icons_8dc262_256x240.png") !important;
+}
+
+.ui-editor iframe{
+    background: white;
+}
+
+.opcoes {
+    margin: 1px !important;
+    float: left !important;
+}
+
+.opcoesTH {
+    width: 75px !important; 
+}
+
+/* CABEÇALHO */
+.banner {
+    float: left;
+    height: 100%;
+    margin-left: 12px;
+    max-width: 40%;
+    text-align: center;
+    width: 550px;
+}
+
+.banner img {
+    margin: auto;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.cabecalho {
+    height: 100%;
+    width: 100%;
+}
+
+.logo {
+    float: left;
+    width: 30%;
+}
+
+.logo img {
+    max-width: 420px;
+    width: 100%;
+}
+
+.menuTopo {
+    float: right;
+    height: 100%;
+    overflow: visible;
+    width: 28%;
+}
+
+.centralizadoImagemCarregando{
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+.identado {
+    display: block;                                     
+    margin-top: 4px;                                        
+}
+
+.flutuadoEsquerda{
+    float: left !important;
+}
+
+.flutuadoDireita{
+    float: right;
+}
+
+.divselectonemenu{
+    margin-top: -18px;
+    margin-left: 30px;
+}
+.alinhamentoConfirmDialogExclusao {
+    margin-right: 10px; 
+    margin-left: 38%;
+}
+.calendarioEspecial .ui-datepicker {
+    width: auto !important;
+}
+/*
+    PAINEL UTILIZADO NA RESERVA DE RECURSO CALENDARIO.
+*/
+.painelReservaCalendario {
+    background: none !important; 
+    min-width: 350px; 
+    min-height: 180px; 
+    position: relative; 
+    left: 0px; 
+    top: 10px;
+}
+
+/*
+    Centralizar botao dentro de um table
+*/
+.centralizadoBotaoTable {
+    margin: auto;
+    display: block !important; 
+}
+
+.textoAlinhadoSincronizacao {
+    margin-top: 10px;
+    margin-right: 10px;
+    float: right;
+    color: red;
+    font-weight: bold;
+}
+
+.botaoAtualizarOcorrencia{
+    margin-right: 5px;
+}

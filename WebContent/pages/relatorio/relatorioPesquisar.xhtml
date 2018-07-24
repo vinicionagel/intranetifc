@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">   
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:define name="CONTEUDO">
+                <h:form id="lista">     
+                    <p:messages id="messages"/>   
+                        <p:panel header="Informe os dados para gerar o relatório: " id="painelPesquisa">  
+                            <h:panelGrid id="grid" columns="1" cellpadding="1">
+                                <h:panelGrid columns="2" cellpadding="1">
+                                    <h:outputText value="#{labels.campoTipoRelatorio}: " />
+                                    <p:selectOneMenu id="tipoRelatorio" value="#{relatorioBean.tipoRelatorio}" required="true" requiredMessage="Selecione o Tipo de Relatório."> 
+                                        <f:selectItem itemLabel="Selecione um Item" itemValue="" /> 
+                                        <f:selectItem itemLabel="Chamado de Infraestrutura" itemValue="1" /> 
+                                        <f:selectItem itemLabel="Chamado de Serviço" itemValue="2" /> 
+                                        <f:selectItem itemLabel="Horas Trabalhadas" itemValue="3" /> 
+                                        <f:selectItem itemLabel="Equipamentos em Manutenção" itemValue="4" /> 
+                                        <p:ajax update="painelPesquisa" listener="#{relatorioBean.limpaOpcao}"/>
+                                    </p:selectOneMenu> 
+                                </h:panelGrid>
+
+                                <h:selectOneRadio id="options1" value="#{relatorioBean.opcao}" rendered="#{relatorioBean.tipoRelatorio == 1}" required="true" requiredMessage="Selecione uma opção para esse tipo de relatório.">  
+                                    <f:selectItem itemLabel="Por Usuário" itemValue="1" />                                  
+                                    <f:selectItem itemLabel="Por Setor" itemValue="2" />  
+                                    <f:selectItem itemLabel="Por #{labels.campoCampus}" itemValue="3" />  
+                                    <f:selectItem itemLabel="Por Patrimônio" itemValue="4"/> 
+                                    <f:selectItem itemLabel="Por Tipo Patrimônio" itemValue="5"/> 
+                                    <f:selectItem itemLabel="Por Localização" itemValue="6"/> 
+                                    <p:ajax  update="painelPesquisa" />
+                                </h:selectOneRadio>
+                                <h:selectOneRadio id="options2" value="#{relatorioBean.opcao}" rendered="#{(relatorioBean.tipoRelatorio == 2 || relatorioBean.tipoRelatorio == 3)}" required="true" requiredMessage="Selecione uma opção para esse tipo de relatório.">  
+                                    <f:selectItem itemLabel="Por Usuário" itemValue="1" />                                  
+                                    <f:selectItem itemLabel="Por Setor" itemValue="2" />  
+                                    <f:selectItem itemLabel="Por #{labels.campoCampus}" itemValue="3" />                                    
+                                    <p:ajax  update="painelPesquisa" />
+                                </h:selectOneRadio>
+                                <p:outputPanel id="selecaoUsuario" rendered="#{((relatorioBean.opcao == 1) and (((relatorioBean.tipoRelatorio == 1)||(relatorioBean.tipoRelatorio == 2))))}">
+                                    <h:panelGrid columns="2" cellpadding="1">
+                                        <h:outputText value="#{labels.campoUsuario} " />
+                                        <p:selectOneMenu value="#{relatorioBean.usuarioDTOPesquisa}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione o Usuário."> 
+                                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                            <t:selectItems value="#{relatorioBean.listaUsuarios}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />  
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                </p:outputPanel>
+                                <p:outputPanel id="selecaoSetor" rendered="#{((relatorioBean.opcao == 2) and ((relatorioBean.tipoRelatorio == 1)||(relatorioBean.tipoRelatorio == 2)))}">
+                                    <h:panelGrid columns="2" cellpadding="1">
+                                        <h:outputText value="#{labels.campoSetor} " />
+                                        <p:selectOneMenu value="#{relatorioBean.setorSelectItem}" id="setores" style="width: 250px" required="true" requiredMessage="Selecione um Setor.">
+                                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                            <c:forEach items="#{relatorioBean.setorSelectItens}" var="item">
+                                                <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                                            </c:forEach>                                    
+                                        </p:selectOneMenu> 
+                                    </h:panelGrid>                                
+                                </p:outputPanel>
+
+                                <p:outputPanel id="selecaoCampus" rendered="#{((relatorioBean.opcao == 3) and (relatorioBean.tipoRelatorio == 1 || relatorioBean.tipoRelatorio == 2 ))}">
+                                    <h:panelGrid columns="2" cellpadding="1">
+                                        <h:outputText value="#{labels.campoCampus} " />
+                                        <p:selectOneMenu value="#{relatorioBean.campusDTOPesquisa}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione uma Unidade."> 
+                                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                            <t:selectItems value="#{relatorioBean.listaCampus}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                </p:outputPanel>   
+                                <p:outputPanel id="selecaoPatrimonio" rendered="#{((relatorioBean.opcao == 4) and (relatorioBean.tipoRelatorio == 1))}">
+                                    <h:panelGrid columns="2" cellpadding="1">
+                                        <h:outputText value="#{labels.campoPatrimonio} " />
+                                        <p:selectOneMenu value="#{relatorioBean.patrimonioDTOPesquisa}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione um Patrimônio"> 
+                                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                            <t:selectItems value="#{relatorioBean.listaPatrimonios}" var="item" itemLabel="#{item.localizacaoDTO.descricao} - #{item.descricao}" itemValue="#{item}" />  
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                </p:outputPanel> 
+                                <p:outputPanel id="selecaoTipoPatrimonio" rendered="#{((relatorioBean.opcao == 5) and (relatorioBean.tipoRelatorio == 1))}">
+                                    <h:panelGrid columns="2" cellpadding="1">
+                                        <h:outputText value="#{labels.campoTipoPatrimonio} " />
+                                        <p:selectOneMenu value="#{relatorioBean.tipoPatrimonioDTOPesquisa}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione um Tipo Patrimônio"> 
+                                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                            <t:selectItems value="#{relatorioBean.listaTipoPatrimonios}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                </p:outputPanel> 
+                                <p:outputPanel id="selecaoLocalizacao" rendered="#{((relatorioBean.opcao == 6) and (relatorioBean.tipoRelatorio == 1 || relatorioBean.tipoRelatorio == 2 ))}">
+                                    <h:panelGrid columns="2" cellpadding="1">
+                                        <h:outputText value="#{labels.campoLocalizacao} " />
+                                        <p:selectOneMenu value="#{relatorioBean.localizacaoDTOPesquisa}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione uma Unidade."> 
+                                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                            <t:selectItems value="#{relatorioBean.listaLocalizacoes}" var="item" itemLabel="#{item.campusDTO.descricao} - #{item.descricao}" itemValue="#{item}" />  
+                                        </p:selectOneMenu>
+                                    </h:panelGrid>
+                                </p:outputPanel>
+                                <p:outputPanel  id="data">
+                                    <h:selectOneRadio id="opDatas" value="#{relatorioBean.opcaoData}" rendered="#{(relatorioBean.tipoRelatorio != 0)}" >
+                                    <f:selectItem itemLabel="Por mês" itemValue="1" />                                  
+                                    <f:selectItem itemLabel="Por período" itemValue="2" />                                      
+                                    <p:ajax update="data" />
+                                </h:selectOneRadio>  
+                                <p:panel style="border: none; background: none" id="dataPorMes" rendered="#{((relatorioBean.opcaoData == 1)and (relatorioBean.tipoRelatorio != 0))}">
+                                    <p:selectOneMenu value="#{relatorioBean.mes}" required="true" requiredMessage="Selecione um Mês" style="width: 150px">
+                                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                        <f:selectItems value="#{relatorioBean.listaMeses}" />  
+                                    </p:selectOneMenu>
+                                </p:panel>    
+                                <p:panel style="border: none; background: none" id="dataInicialFinal" rendered="#{((relatorioBean.opcaoData == 2)and (relatorioBean.tipoRelatorio != 0))}">
+                                    <h:outputText value="#{labels.DataInicial}: " /><p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{relatorioBean.dataInicial}" pattern="dd/MM/yyyy"/>
+                                    <h:outputText value=" #{labels.DataFinal} : " /><p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{relatorioBean.dataFinal}" pattern="dd/MM/yyyy"/>    
+                                </p:panel>
+                                </p:outputPanel>
+                                <p:commandButton id="gerarRelatorio" value="#{labels.gerarRelatorio}" actionListener="#{relatorioBean.gerarRelatorio}" ajax="false" title="gerarRelatorio"/>
+                            </h:panelGrid>
+                        </p:panel>   
+                    <br/>
+                </h:form>      
+            <script type="text/javascript">
+                window.onload = function() {
+                    spans = document.getElementById('layoutCenter').getElementsByTagName('span');
+                    span = spans[0];
+                    span.innerHTML = "#{relatorioBean.tituloLayoutUnit}";
+                }
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

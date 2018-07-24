@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:t="http://myfaces.apache.org/tomahawk" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" >    
+    <ui:composition template="../generic/genericPage.xhtml">        
+        <ui:define name="CONTEUDO">
+            <t:div style="float: left; width: 55%" rendered="#{interfaceBean.verificarEditar or interfaceBean.verificarIncluir}">
+                <h:panelGrid columns="1" cellpadding="10">
+                    <h:form id="lista">           
+                        <p:messages id="messagesGenerico"/>  
+                        <h:outputText value="#{labels.itensObrigatorios}" style="color: red; font-size: 15px"/>                
+                        <t:panelGrid columns="2" cellpadding="3" columnClasses="col, col0">
+                            <ui:insert name="CAMPOS" />                                        
+                        </t:panelGrid>                                    
+                        <h:panelGrid columns="2" cellpadding="3">
+                            <p:commandButton action="#{bean.save}" value="#{labels.botaoSalvar}" ajax="false" rendered="#{bean.alterando and interfaceBean.verificarEditar}"/>
+                            <p:commandButton action="#{bean.save}" value="#{labels.botaoSalvar}" ajax="false" rendered="#{!bean.alterando and interfaceBean.verificarIncluir}"/>
+                            <p:commandButton action="#{bean.novo}" value="#{labels.botaoCancelar}" ajax="false" immediate="true"/>
+                        </h:panelGrid>
+                    </h:form>
+                </h:panelGrid>
+            </t:div>
+            <t:div style="float: right; margin-left: 20px; margin-top: 50px; width: 40%" id="painelLateral">
+                <ui:insert name="PAINELLATERAL"/>
+            </t:div>
+        </ui:define>            
+    </ui:composition>                                                            
+</html>

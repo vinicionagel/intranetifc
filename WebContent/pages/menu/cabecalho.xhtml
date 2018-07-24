@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:t="http://myfaces.apache.org/tomahawk"  
+      xmlns:f="http://java.sun.com/jsf/core">
+    <f:view locale="#{localeController.currentLocale}">
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <link rel="stylesheet" type="text/css" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <title>Intranet - IFC Rio do Sul</title>
+        </h:head>
+        <ui:composition>  
+            <t:div styleClass="cabecalho">
+
+                <t:div styleClass="logo">
+                    <h:form>
+                        <h:link outcome="home" style="width: 10px" title="Minha página" >
+                            <h:graphicImage value="/images/logo_ifc.png" /> 
+                        </h:link>
+                    </h:form>
+                </t:div>
+
+                <t:div styleClass="banner">
+                    <!-- 550px / 80px -->
+                    <!--<h:graphicImage value="http://www.ifc-riodosul.edu.br/new/templates/reitoria/images/base_logo_degrade.gif" /> -->
+                </t:div>
+
+                <t:div styleClass="menuTopo">
+                    <t:div>
+                        <h:form id="nuncaFuncionara">
+                            <h:outputText value="#{contextoBean.nomeUsuarioLogado}:  " style="display: block; margin: 3px 10px auto -20px; float: left; min-width: 100px "/>
+                            <h:selectOneMenu id="listaContextoCampus" value="#{contextoBean.campus}" disabled="#{contextoBean.listaCampus.size() == 1}" style="float: left;" onchange="submit()" converter="SimpleIndexConverter">                                
+                                <t:selectItems value="#{contextoBean.listaCampus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                               
+                            </h:selectOneMenu>
+                        </h:form>
+                    </t:div>                                                                                                        
+                    
+                    <h:form>
+                        <p:menubar style="background: #FAFAF4; min-width: 300px; margin-top: 40px" autoDisplay="false">
+                            <p:submenu label="sigaEPCT" icon="ui-icon-circle-triangle-e">
+                                <p:menuitem value="SigaEDU" url="http://sistemas.ifc.edu.br/sigaept-edu-web-v1/login.jsf" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="SigaADM" url="http://sigaadm.ifc.edu.br/" icon="ui-icon-circle-triangle-e" target="new"/>
+                            </p:submenu>
+                            <p:submenu label="IFC" icon="ui-icon-flag">
+                                <p:menuitem value="Rio do Sul" url="http://www.ifc-riodosul.edu.br/new/" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Reitoria" url="http://www.ifc.edu.br/site/" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Araquari" url="http://www.ifc.edu.br/site/index.php/ifaraquari" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Camboriú" url="http://www.ifc.edu.br/site/index.php/ifcamboriu" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Concordia" url="http://www.ifc.edu.br/site/index.php/ifconcordia" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Sombrio" url="http://www.ifc.edu.br/site/index.php/ifsombrio" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Videira" url="http://www.ifc.edu.br/site/index.php/videira" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Blumenau" url="http://blumenau.ifc.edu.br/principal/" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="Ibirama" url="http://www.ifc.edu.br/site/index.php/ibirama" icon="ui-icon-circle-triangle-e" target="new"/>
+                                <p:menuitem value="São Francisco do Sul" url="http://www.saofrancisco.ifc.edu.br/portal/" icon="ui-icon-circle-triangle-e" target="new"/>
+                            </p:submenu>
+                             <p:menuitem value="#{labels.campoMinhaPagina}"  outcome="minhaPagina" icon="ui-icon-gear" ajax="false"/>
+                            <p:menuitem value="Sobre" oncomplete="PF('dlgSobre').show();" icon="ui-icon-info" />
+                            <p:menuitem value="#{labels.campoSair}" action="#{contextoBean.logoff}" icon="ui-icon-extlink" ajax="false"/>
+                        </p:menubar>                                                              
+                    </h:form>
+                </t:div>
+            </t:div>
+        </ui:composition>    
+    </f:view>
+</html>

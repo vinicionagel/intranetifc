@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="../generic/genericPage.xhtml">  
+        <ui:param name="bean" value="#{migracaoBean}" /> 
+        <ui:define name="CONTEUDO">  
+            <h:form id="formMigracao">
+                <p:messages id="message" escape="false" />
+                <p:panel header="Ultima atualização:#{bean.dataHoraStringUltimaAtualizacao}" id="painelAtualizacao"> 
+                    <p:progressBar widgetVar="pbAjax" ajax="true" value="#{bean.progress}" labelTemplate="{value}%" styleClass="animated" style="margin-bottom: 20px; margin-top: 20px" id="progress"  >  
+                        <p:ajax event="complete"  oncomplete="PF('startButton2').enable()" update="painelAtualizacao"  />  
+                    </p:progressBar>  
+                    <p:commandButton value="Iniciar Migracão" actionListener="#{bean.migrarDados}" update="message, progress" onclick="PF('pbAjax').start();PF('startButton2').disable();" oncomplete="PF('startButton2').enable();
+                                     PF('pbAjax').cancel();document.getElementsByClassName('ui-progressbar-label')[0].style.display='block';"  immediate="true" widgetVar="startButton2"  />  
+                    <p:commandButton value="Agendar Migração" actionListener="#{bean.setAparecePanelAgendamento(!bean.aparecePanelAgendamento)}" immediate="true" update=":formAgendamento:toUpdateAgendamento" disabled="true"/>  
+                    <p:commandButton value="Configurar base de dados" actionListener="#{bean.setAparecePanelMigracao(!bean.aparecePanelMigracao)}" immediate="true" update=":formBaseDeDados:toUpdateBaseDados"/>  
+                    <h:panelGroup id="myPanel" layout="block">
+                        <h:outputText value="#{bean.dataCriacaoBanco}" styleClass="textoAlinhadoSincronizacao" style="margin-left: -8px" rendered="#{bean.dataCriacaoBanco != null and bean.carregou}"/>
+                        <h:outputText value="#{labels.problemaBancoDados}" styleClass="textoAlinhadoSincronizacao" style="margin-left: -8px" rendered="#{bean.dataCriacaoBanco == null and bean.carregou}"/>
+                        <h:outputText value="Banco de Sincronização atualizado em:" styleClass="textoAlinhadoSincronizacao"/>
+                    </h:panelGroup>
+                    <p:remoteCommand autoRun="true" actionListener="#{bean.initMyValue}" update="myPanel"/>
+                </p:panel>
+            </h:form>
+            <h:form id="formAgendamento">
+                <p:outputPanel id="toUpdateAgendamento">
+                    <p:panel header="Agendamento" rendered="#{bean.aparecePanelAgendamento}">
+                        <h:panelGrid columns="3" cellspacing="10">
+                            <h:selectManyCheckbox id="selectManyDias" value="#{bean.diasSelecionados}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione pelo menos um dia da semana para repetir" enabledClass="flutuadoDireita identado" >  
+                                <t:selectItems value="#{bean.dias}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                                
+                            </h:selectManyCheckbox>  
+                            <h:outputLabel for="horario" value="Horario da migração" />
+                            <p:calendar id="horario"  pattern="HH:mm" timeOnly="true" value="#{bean.horarioAgendamento}" locale="pt" size="5"/>  
+                        </h:panelGrid>
+                        <p:commandButton value="Salvar" actionListener="#{bean.criarAgendamento}" update="agendamentos" style="margin-bottom: 1%"/>
+                        <p:dataTable var="item" value="#{bean.agendamentos}" id="agendamentos" emptyMessage="#{labels.naoHaRegistros}" rows="7" paginatorPosition="bottom">
+                            <f:facet name="header">  
+                                Agendamentos Cadastrados 
+                            </f:facet>  
+                            <p:column headerText="Dia Semana">  
+                                <h:outputText value="#{item.diaSemanaDTO.descricao}" />  
+                            </p:column> 
+                            
+                            <p:column headerText="Horário">  
+                                <h:outputText value="#{item.horario}" >
+                                    <f:convertDateTime pattern='HH:mm' timeZone="America/Sao_Paulo"/>
+                                </h:outputText>  
+                            </p:column> 
+                            
+                            <p:column styleClass="opcoesTH">
+                                <f:facet name="header">
+                                    <h:outputText value="#{labels.campoOpcao}" />
+                                </f:facet>                            
+                                <t:div>
+                                    <t:div styleClass="opcoes">
+                                        <p:commandLink title="Excluir" actionListener="#{bean.setAgendamentoExcluir(item)}" onclick="confirmation.show();" immediate="true">
+                                             <h:outputText styleClass="ui-icon ui-icon-closethick" />  
+                                        </p:commandLink>                                                                                                                                            
+                                    </t:div>                               
+                                </t:div>                            
+                            </p:column>
+                        </p:dataTable> 
+                        <p:confirmDialog id="confirmDialog" message="Deseja mesmo excluir o agendamento?!"  
+                                         header="Deletando agendamento" severity="alert" widgetVar="confirmation" global="true">  
+                            <p:commandLink id="confirm" value="Sim" oncomplete="confirmation.hide()"  
+                                           action="#{bean.excluirAgendamento}" update="agendamentos"  immediate="true" ajax="false" styleClass="alinhamentoConfirmDialogExclusao" />  
+                            <p:commandLink id="decline" value="Não" onclick="confirmation.hide()" type="button" />   
+                        </p:confirmDialog> 
+                    </p:panel>
+                </p:outputPanel>
+            </h:form>
+            <h:form id="formBaseDeDados">
+                <p:outputPanel id="toUpdateBaseDados">
+                    <p:panel header="Configurar Base de Dados" rendered="#{bean.aparecePanelMigracao}">
+                        <h:panelGrid columns="6" cellspacing="10">
+                            <h:outputLabel value="Endereço (IP)" for="enderecoIp"/>
+                            <p:inputText id="enderecoIp" value="#{bean.configuracaoBancoDTO.endereco}" />
+                            <h:outputLabel value="Nome do Banco" for="nomeDoBanco"/>
+                            <p:inputText id="nomeDoBanco" value="#{bean.configuracaoBancoDTO.nomeBanco}" />
+                            <h:outputLabel value="Porta" for="porta" />
+                            <p:inputText id="porta" value="#{bean.configuracaoBancoDTO.porta}" />
+                            <h:outputLabel value="Usuario" for="usuario" />
+                            <p:inputText id="usuario" value="#{bean.configuracaoBancoDTO.usuario}" />
+                            <h:outputLabel value="Senha" for="senha"/>
+                            <p:inputText id="senha"  value="#{bean.configuracaoBancoDTO.senha}" />  
+                        </h:panelGrid>
+                        <p:commandButton value="Testar conexao" actionListener="#{bean.testaConexao}" update=":formMigracao:message" widgetVar="botaoTesteMigracao" 
+                                         onclick="PF('botaoTesteMigracao').disable();" oncomplete="PF('botaoTesteMigracao').enable()"  />
+                        <p:commandButton value="Atualizar" actionListener="#{bean.atualizarBaseDeDados}" update=":formMigracao:message" />
+                    </p:panel>
+                </p:outputPanel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

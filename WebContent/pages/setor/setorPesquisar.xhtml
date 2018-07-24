@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"            
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:t="http://myfaces.apache.org/tomahawk" 
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <ui:composition template="../generic/genericPesquisarDescricao.xhtml">
+        <ui:param name="bean" value="#{setorBean}" />                        
+        <ui:define name="OPCOES">            
+            <p:commandLink action="#{bean.atualizarArvoreServicos}" update=":lista:painelLateral" title="Abrir Árvore">
+                <f:setPropertyActionListener target="#{bean.setorArvore}" value="#{item}" />   
+                <h:outputText styleClass="ui-icon ui-icon-arrowreturnthick-1-e"/>  
+            </p:commandLink>
+        </ui:define>        
+
+        <ui:define name="PAINELLATERAL">
+            <p:panel header="Árvore de serviços por tipo serviço do setor de #{bean.setorArvore.descricao}" 
+                     styleClass="setRelative painelArvore" rendered="#{bean.mostrarArvoreServicos}" id="painelArvore">
+
+                <t:div rendered="#{bean.getTipoServicosDoSetor().size() == 0}">
+                    &lt;<t:htmlTag value="spam" styleClass="textoSpansArvore">Nenhum Tipo Serviço Encontrado</t:htmlTag>&gt;
+                </t:div>
+                <t:dataList value="#{bean.getTipoServicosDoSetor()}" var="tipoServico" >                                       
+                    <t:panelGrid columns="2">
+                        <h:selectBooleanCheckbox value="#{bean.mapArvore[bean.getChave(tipoServico.codigo)]}" />                    
+                        <h:outputText value="#{tipoServico.descricao}:" />                                            
+                    </t:panelGrid>                    
+                    <t:div rendered="#{bean.getServicosDoTipoServico(tipoServico).size() == 0}" style="margin-left: 15px">
+                        &lt;<t:htmlTag value="spam" styleClass="textoSpansArvore">Nenhum Serviço Encontrado</t:htmlTag>&gt;
+                    </t:div>
+                    <t:htmlTag value="br" rendered="#{bean.getServicosDoTipoServico(tipoServico).size() == 0}"/>
+                    <t:dataList value="#{bean.getServicosDoTipoServico(tipoServico)}" var="servico">                       
+                        <t:panelGrid columns="2" styleClass="gridArvoreServicos">
+                            <h:selectBooleanCheckbox value="#{bean.mapArvore[bean.getChave(tipoServico.codigo, servico.codigo)]}"/>
+                            <h:outputText value="#{servico.descricaoCurta}" />                           
+                        </t:panelGrid>          										    
+                    </t:dataList>       
+                </t:dataList> 
+                <h:outputText value="#{labels.campoSetor} de Destino: " styleClass="setAbsolute" style="bottom: 50px"/>
+                <p:selectOneMenu value="#{bean.setorDestino}" styleClass="setAbsolute setoresDestino"  panelStyle="width: 250px" >
+                    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                    <c:forEach items="#{bean.setorSelectItens}" var="item">
+                        <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                    </c:forEach>                                               
+                </p:selectOneMenu>
+                <p:commandButton value="Copiar" action="#{bean.copiarArvore}" ajax="false" styleClass="setAbsolute botaoCopiarArvore" />
+                <style type="text/css">
+                    .setRelative {
+                        position: relative;
+                    }
+
+                    .setAbsolute {
+                        position: absolute;
+                    }
+
+                    .painelArvore {
+                        min-height: 400px; 
+                        min-width: 450px; 
+                        background-image: none !important; 
+                        background-color: #FAFAF4 !important; 
+                    }
+
+                    .textoSpansArvore{
+                        margin-left: -0.8px; 
+                        margin-right: -0.8px;
+                    }
+
+                    .setoresDestino {
+                        width: 250px; 
+                        bottom: 15px; 
+                        left:15px
+                    }
+
+                    .gridArvoreServicos {
+                        margin-left: 15px; 
+                        margin-top: -10px;
+                    }
+
+                    .botaoCopiarArvore {
+                        bottom: 15px; 
+                        right: 30px
+                    }
+                </style>
+            </p:panel>                                  
+        </ui:define>       
+    </ui:composition>                      
+</html>

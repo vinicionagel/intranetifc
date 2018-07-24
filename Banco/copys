@@ -1,0 +1,6 @@
+COPY unidade_federativa FROM '/home/camacho/unidade_federativa.csv' using delimiters ',';
+COPY municipio FROM '/home/camacho/municipio.csv' using delimiters ',';
+COPY necessidade_especial FROM '/home/camacho/necessidade_especial.csv' using delimiters ',';
+COPY tipo_logradouro FROM '/home/camacho/tipo_logradouro.csv' using delimiters ',';
+COPY tipo_sanguineo FROM '/home/camacho/tipo_sanguineo.csv' using delimiters ',';
+COPY tipo_telefone FROM '/home/camacho/tipo_telefone.csv' using delimiters ',';

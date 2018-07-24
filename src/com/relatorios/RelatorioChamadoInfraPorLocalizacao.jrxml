@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.1000000000000019"/>
+	<property name="ireport.x" value="34"/>
+	<property name="ireport.y" value="83"/>
+	<parameter name="Descricao" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dir" class="java.lang.String"/>
+	<parameter name="dataInicial" class="java.util.Date"/>
+	<parameter name="dataFinal" class="java.util.Date"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="codigo" class="java.lang.Long"/>
+	<parameter name="dataAux" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     chamado.codigo AS chamado_codigo,
+     chamado."titulo" AS chamado_titulo,
+     chamado."data_hora_abertura" AS chamado_data_hora_abertura,
+     chamado."data_hora_fechamento" AS chamado_data_hora_fechamento,
+     chamado."data_prevista" AS chamado_data_prevista,	
+     chamado."percentual" AS chamado_percentual,
+     patrimonio.descricao AS patrimonio_descricao,
+     localizacao.descricao AS localizacao,
+     status.descricao AS chamado_status
+FROM
+     chamado_infra , chamado, patrimonio, localizacao, status
+WHERE
+     chamado.status_codigo = status.codigo AND
+     chamado.codigo = chamado_infra.chamado_codigo AND
+     chamado_infra.patrimonio_codigo = patrimonio.codigo AND
+     patrimonio.localizacao_codigo = localizacao.codigo AND
+     localizacao.codigo = $P{codigo}  AND
+     chamado.data_hora_abertura BETWEEN $P{dataInicial} AND $P{dataAux}
+ORDER BY 
+     chamado_codigo]]>
+	</queryString>
+	<field name="chamado_codigo" class="java.lang.Integer"/>
+	<field name="chamado_titulo" class="java.lang.String"/>
+	<field name="chamado_data_hora_abertura" class="java.sql.Timestamp"/>
+	<field name="chamado_data_hora_fechamento" class="java.sql.Timestamp"/>
+	<field name="chamado_data_prevista" class="java.sql.Date"/>
+	<field name="chamado_percentual" class="java.lang.Integer"/>
+	<field name="patrimonio_descricao" class="java.lang.String"/>
+	<field name="localizacao" class="java.lang.String"/>
+	<field name="chamado_status" class="java.lang.String"/>
+	<variable name="chamado_percentual_SUM" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{chamado_percentual}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="137" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="112" width="555" height="25"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="59" width="555" height="30"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="89" width="555" height="23"/>
+			</rectangle>
+			<image>
+				<reportElement x="-1" y="-1" width="455" height="46"/>
+				<imageExpression><![CDATA[$P{dir} + "/images/logo_ifc.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="11" y="91" width="85" height="21"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Localização]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="96" y="91" width="281" height="21"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Descricao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="69" width="387" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Tipo do Relatório: Chamado de Infraestrutura por Localização]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="11" y="117" width="58" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Período:"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="69" y="117" width="77" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataInicial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="117" width="22" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" à "]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="169" y="117" width="102" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataFinal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="1" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="555" height="22"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="48" y="3" width="82" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Chamado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="3" width="73" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patrimônio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="356" y="3" width="56" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fechamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="3" width="50" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Previsão]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="303" y="3" width="49" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Abertura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="526" y="3" width="28" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Perc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="221" y="3" width="61" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Localização]]></text>
+			</staticText>
+			<line>
+				<reportElement x="466" y="0" width="1" height="22"/>
+			</line>
+			<staticText>
+				<reportElement x="5" y="2" width="38" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<line>
+				<reportElement x="137" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement x="44" y="0" width="1" height="22"/>
+			</line>
+			<staticText>
+				<reportElement x="469" y="3" width="53" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Situação]]></text>
+			</staticText>
+			<line>
+				<reportElement x="523" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement x="413" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement x="353" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement x="300" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement x="217" y="0" width="1" height="22"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="555" height="27"/>
+			</rectangle>
+			<textField>
+				<reportElement x="144" y="4" width="73" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patrimonio_descricao}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="303" y="4" width="50" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_data_hora_abertura}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="416" y="4" width="51" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_data_prevista}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="356" y="4" width="56" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_data_hora_fechamento}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="26" width="555" height="1"/>
+			</line>
+			<textField evaluationTime="Auto" pattern="">
+				<reportElement x="526" y="4" width="28" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_percentual} + " %"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="221" y="4" width="79" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{localizacao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="48" y="4" width="82" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_titulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="4" width="38" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_codigo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="44" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="137" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="466" y="1" width="1" height="26"/>
+			</line>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="469" y="4" width="53" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_status}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="523" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="353" y="0" width="1" height="26"/>
+			</line>
+			<line>
+				<reportElement x="413" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="300" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement x="217" y="0" width="1" height="27"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="46" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="59" splitType="Stretch">
+			<textField pattern="dd/MM/yyy  HH:mm:ss z">
+				<reportElement x="-1" y="20" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-1" y="0" width="261" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="436" y="39" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="516" y="39" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="39" width="406" height="20" forecolor="#A59797"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[INTRANET IFC - Sistema elaborado pelo Grupo de Desenvolvimento de Sistemas - Campus Rio do Sul]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

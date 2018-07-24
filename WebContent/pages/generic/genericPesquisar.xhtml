@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:define name="CONTEUDO">
+            <h:panelGrid columns="1" cellpadding="10">
+                <h:form id="lista">
+                    <t:div style="float: left">
+                    <p:messages/>
+                    <h:panelGrid columns="4" cellpadding="1">
+                        <p:panel>                                        
+                            <p:inputText value="#{bean.campoPesquisar}" id="pesquisa" title="digite sua pesquisa"/>
+                            <p:spacer width="30" height="10" />  
+                            <p:commandButton value="#{labels.botaoPesquisar}" actionListener="#{bean.dadosPesquisa}" ajax="false" title="Pesquisar" />                 
+                        </p:panel>                     
+                        <p:panel rendered="#{interfaceBean.verificarIncluir}" > 
+                            <p:commandButton value="#{labels.botaoIncluir}" action="#{bean.include}" ajax="false"/>
+                        </p:panel>
+                    </h:panelGrid>
+
+                    <p:spacer width="10" height="10" />  
+
+                    <ui:insert name="PAINEIS" />
+                    
+                    <p:dataTable value="#{bean.lista}" id="pesquisaData" var="item" paginator="true" emptyMessage="#{labels.naoHaRegistros}" rows="10" paginatorPosition="bottom">
+                        <f:facet name="header"> 
+                            <h:outputText value="#{labels.tituloLista} #{bean.tituloLayoutUnit}" />
+                        </f:facet>
+
+                        <ui:insert name="COLUNAS"/>                        
+
+                        <p:column rendered="#{interfaceBean.verificarEditar or interfaceBean.verificarExcluir}" styleClass="opcoesTH">
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoOpcao}" />
+                            </f:facet>                            
+                            <t:div>
+                                <t:div styleClass="opcoes">
+                                    <h:link outcome="#{bean.incluirAlterar}" rendered="#{interfaceBean.verificarEditar}"> 
+                                        <f:param name="codigo" value="#{item.codigo}"/>
+                                        <h:outputText styleClass="ui-icon ui-icon-pencil"/>  
+                                    </h:link>
+                                </t:div>
+                                <t:div styleClass="opcoes">
+                                    <p:commandLink oncomplete="PF('exclusao').show()" title="Excluir" rendered="#{interfaceBean.verificarExcluir}" >
+                                        <f:setPropertyActionListener target="#{bean.objeto}" value="#{item}" />  
+                                        <h:outputText styleClass="ui-icon ui-icon-closethick" />  
+                                    </p:commandLink>                                                                                                                                            
+                                </t:div>
+                                <t:div styleClass="opcoes">
+                                    <ui:insert name="OPCOES" />
+                                </t:div>                                
+                            </t:div>                            
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:confirmDialog header="#{labels.campoExclusao}" widgetVar="exclusao" global="true" message="#{labels.desejaExcluir} #{bean.tituloLayoutUnit}?">                               
+                        
+                            <t:div>
+                                <p:commandLink value="#{labels.botaoSim}" action="#{bean.remove}" immediate="true" ajax="false" styleClass="alinhamentoConfirmDialogExclusao"/>
+                                <p:commandLink value="#{labels.botaoNao}" onclick="PF('exclusao').hide()"  />    
+                            </t:div>                               
+                    </p:confirmDialog>   
+                    </t:div>
+                    <t:div style="float: left; margin-left: 20px; margin-top: 50px" id="painelLateral">
+                        <ui:insert name="PAINELLATERAL"/>
+                    </t:div>
+                </h:form>                
+            </h:panelGrid>            
+        </ui:define>  
+    </ui:composition>
+</html>

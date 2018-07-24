@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"      
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    
+   <ui:composition template="../generic/genericIncluirAlterarDescricao.xhtml">
+        <ui:param name="bean" value="#{setorBean}" />                
+        <ui:define name="ADICIONAIS">
+            <t:div><h:outputLabel value="#{labels.campoCampus}" /><h:outputLabel value="*" style="color: red"/></t:div> 
+            <h:outputText value="#{bean.objeto.campusDTO.descricao}" style="font-weight: bold" rendered="#{!interfaceBean.verificarSetorTemPermissaoCriarSetores}" />
+            <p:selectOneMenu id="localizacao" value="#{bean.objeto.campusDTO}" effect="fade" converter="SimpleIndexConverter" rendered="#{interfaceBean.verificarSetorTemPermissaoCriarSetores}">  
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{bean.listaCampus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}"  />  
+            </p:selectOneMenu>
+            <t:div><h:outputLabel value="#{labels.interfaceAtivo}" /><h:outputLabel value="*" style="color: red"/></t:div>
+            <h:selectManyCheckbox value="#{bean.objeto.concat}" converter="SimpleIndexConverter">
+                <f:selectItem itemLabel="Chamado"  itemValue="'2:1'" />
+                <f:selectItem itemLabel="Ocorrencia" itemValue="'22:1'" />
+            </h:selectManyCheckbox>
+        </ui:define>
+    </ui:composition>                                       
+</html>

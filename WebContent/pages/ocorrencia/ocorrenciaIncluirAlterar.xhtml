@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:t="http://myfaces.apache.org/tomahawk" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <ui:composition template="../generic/genericIncluirAlterar.xhtml">  
+        <ui:param name="bean" value="#{ocorrenciaBean}" /> 
+        <ui:define name="CAMPOS">  
+                <t:div><h:outputText value="#{labels.campoAssunto}" /><h:outputText value="*" style="color: red"/></t:div> 
+                <p:inputText value="#{bean.ocorrenciaDTO.titulo}"
+                             required="false" label="Nome" size="30" maxlength="45" /> 
+                <t:div><h:outputText value="#{labels.campoAluno}" /><h:outputText value="*" style="color: red"/></t:div> 
+                <p:autoComplete  value="#{bean.ocorrenciaDTO.alunoDTO}" completeMethod="#{bean.alunos}" var="a" itemLabel="#{a.nome}" itemValue="#{a}" converter="AlunoConverter" minQueryLength="4" maxResults="10" forceSelection="true"/>              
+                <t:div><h:outputText value="#{labels.dataAbertura}" /></t:div> 
+                <p:calendar stepMinute="5" maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" pattern="dd/MM/yyyy HH:mm" mask="true" value="#{bean.ocorrenciaDTO.dataHoraAbertura}" />
+                <t:div><h:outputText value="#{labels.campoSetorAutor}" /><h:outputText value="*" style="color: red"/></t:div>
+                <p:selectOneMenu id="setorDTOAutor" value="#{bean.ocorrenciaDTO.setorDTOAutor}"  converter="SimpleIndexConverter">
+                    <t:selectItems value="#{bean.listaSetoresUsuario}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />
+                    <f:ajax render="setorDTOAtribuido" listener="#{bean.setorTroca}" />
+                </p:selectOneMenu>
+                <t:div><h:outputText value="#{labels.encaminharPara}" /><h:outputText value="*" style="color: red"/></t:div>
+                <p:selectOneMenu id="setorDTOAtribuido" value="#{bean.ocorrenciaDTO.setorDTOAtribuido}"  converter="SimpleIndexConverter">  
+                    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                    <t:selectItems value="#{bean.listaSetores}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />    
+                </p:selectOneMenu>
+                <t:div><h:outputText value="#{labels.campoTipoOcorrencia}" /><h:outputText value="*" style="color: red"/></t:div>
+                <p:selectOneMenu id="acaoDisciplinar" value="#{bean.ocorrenciaDTO.acaoDisciplinarDTO}"  converter="SimpleIndexConverter" >  
+                    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                    <t:selectItems value="#{bean.listaAcaoDisciplinar}"   var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />    
+                </p:selectOneMenu>
+                <t:panelGroup colspan="2" style="overflow: visible">
+                    <t:div style="width: 100%; overflow: visible"><h:outputText value="#{labels.campoDescricao}" /><h:outputText value="*" style="color: red"/>                      
+                        <br />
+                        <h:outputText value="Descricao da Ocorrencia, exemplo aluno quebrou a perna enquanto jogava futebol" style="color: darkgrey; font-size: 10px;"/>
+
+                        <p:editor value="#{bean.ocorrenciaDTO.descricao}"  width="700" height="100" />                    
+                    </t:div> 
+                </t:panelGroup>
+                <style type="text/css">
+                    .col{
+                        width: 70px; 
+                    }
+                </style>
+        </ui:define> 
+        <ui:define name="PAINELLATERAL" >
+            <p:panel header="Adicionar arquivos" id="painelArvore" styleClass="setRelative painelArvore">
+                <h:form id="formLateralUploaddsa" enctype="multipart/form-data" >
+                    <h:inputFile value="#{bean.file}" id="file"/>
+                    <h:commandButton value="Upload"
+                                     actionListener="#{bean.criarArquivo()}">
+                        <f:ajax execute="file" render=":lista:messagesGenerico :formLateralUpload:panelasd formLateralUploaddsa"/>
+                    </h:commandButton>
+                </h:form>
+                <h:form id="formLateralUpload" >
+                    <p:outputPanel id="panelasd">
+                        <ui:repeat value="#{bean.arquivos}" var="item"> 
+                            <p:separator  style="color: #327e04"/>
+                            <h:commandLink value="#{item.nome}" action="#{andamentoOcorrenciaBean.downloadArquivo(item)}" />
+                            <p:column>
+                                <p:commandButton actionListener="#{bean.removerArq(item)}" update="formLateralUpload"
+                                                 icon="ui-icon-circle-close" style="margin-left: 10px; padding: 0px; width: 1.5em; height: 1.5em">
+                                    <p:confirm header="Deletando arquivo" message="Deseja mesmo excluir o arquivo ?" />
+                                </p:commandButton>
+                            </p:column>
+                        </ui:repeat>
+                    </p:outputPanel>
+                     <p:confirmDialog id="confirmDialog"   
+                                  severity="alert" widgetVar="confirmation" global="true">
+                         <p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                         <p:commandButton value="Nao" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                    </p:confirmDialog> 
+                </h:form>
+            </p:panel>
+        </ui:define>
+        <style type="text/css">
+            .setRelative {
+                position: relative;
+
+            }
+            .painelArvore {
+                min-height: 400px; 
+                min-width: 450px;
+                margin-right: 50px;
+                background-image: none !important; 
+                background-color: #FAFAF4 !important; 
+            }
+        </style>
+    </ui:composition>
+</html>

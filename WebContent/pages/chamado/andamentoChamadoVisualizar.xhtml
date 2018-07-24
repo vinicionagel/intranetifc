@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <h:form>
+    <h:panelGrid columns="6" cellpadding="5" id="updatePanel">
+        <h:outputText value="#{labels.campoTitulo}" style="font-weight: bold"/>
+        <p:inputText value="#{andamentoBean.chamadoDTO.titulo}" />
+
+        <h:outputText value="#{labels.campoUsuarioAtribuido}" style="font-weight: bold"/>
+        <p:selectOneMenu value="#{andamentoBean.chamadoDTO.usuarioAtribuidoDTO}" converter="SimpleIndexConverter"> 
+            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+            <t:selectItems value="#{chamadoBean.listaUsuario}"  var="item" itemLabel="#{item.nome}" itemValue="#{item}" />  
+        </p:selectOneMenu>                                    
+
+        <h:outputText value="#{labels.campoDataPrevista}" style="font-weight: bold"/>
+        <p:calendar locale="pt" showButtonPanel="true" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" navigator="true" value="#{andamentoBean.chamadoDTO.dataPrevista}" pattern="dd/MM/yyyy" size="8"/>
+
+        <h:outputText value="#{labels.campoPrioridade}" style="font-weight: bold"/>  
+        <p:selectOneMenu value="#{andamentoBean.chamadoDTO.prioridadeDTO}" converter="SimpleIndexConverter">
+            <t:selectItems value="#{chamadoBean.listaPrioridade}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+        </p:selectOneMenu> 
+
+        <h:outputText value="#{labels.campoStatus}" style="font-weight: bold"/>
+        <p:selectOneMenu value="#{andamentoBean.chamadoDTO.statusDTO}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione pelo menos um status">
+            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+            <t:selectItems value="#{andamentoBean.listaStatus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+        </p:selectOneMenu>                                                                         
+    </h:panelGrid>                                
+    <h:panelGrid columns="3" cellpadding="6" >
+        <h:panelGroup layout="block">
+            <h:outputText value="#{labels.campoProgresso} | % " style="font-weight: bold"/>  
+            <h:outputText id="output1" value="#{andamentoBean.chamadoDTO.progresso}"/>
+            <h:inputHidden id="progreso1" value="#{andamentoBean.chamadoDTO.progresso}" />  
+        </h:panelGroup>
+        <h:panelGroup>
+            <p:slider for="progreso1" display="output1" step="10" style="width:170px" minValue="0" maxValue="100"/> 
+        </h:panelGroup> 
+
+        <p:outputPanel id="mostrarUploadPanel" rendered="#{andamentoBean.mostrarPanel}"> 
+            <p:commandLink  value="Adicionar arquivo" onclick="PF('arquivoAdd').show()"/>
+        </p:outputPanel>
+    </h:panelGrid>                                
+
+    <p:panel header="#{labels.campoDescricao}" id="dscd" styleClass="painel" collapsed="true" toggleable="true" toggleSpeed="300" >                                    
+        <p:ajax event="toggle" update="editor" />
+        <p:outputPanel  id="editor">
+            <p:editor id="editar" value="#{andamentoBean.chamadoDTO.descricao}"  width="900" height="100" />
+        </p:outputPanel>
+    </p:panel>
+
+    <p:panel header="#{labels.campoHorasTrabalhadas}">
+        <h:panelGrid columns="4" cellpadding="6">
+            <h:outputText value="#{labels.campoData}" />
+            <p:calendar maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{andamentoBean.horaDTO.dataTrabalho}" pattern="dd/MM/yyyy" />
+            <h:outputText value="#{labels.campoTempoGasto}" />
+            <p:inputText value="#{andamentoBean.horaDTO.tempo}" onkeypress="mascara(this,SubstituiVirgulaPorPonto)" id="Tempo_Gasto" converterMessage="Campo Somente de Numeros" required="false" />                                                                                
+        </h:panelGrid>                                        
+        <h:outputText value="#{labels.campoComentario}" />
+        <p:inputText value="#{andamentoBean.horaDTO.descricao}" style="width: 100%" />
+    </p:panel>
+
+    <p:panel header="#{labels.campoAtualizar}">
+        <p:editor value="#{andamentoBean.campoDescricaoAndamento}"  width="900" height="100" />
+    </p:panel>
+
+    <p:commandButton action="#{andamentoBean.save}" value="#{labels.botaoSalvar}" ajax="false" style="margin-top: 12px" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoBean.chamadoDTO.codigo}'" />
+
+    <p:commandButton action="#{andamentoBean.mostrarPanelAtualizar}" value="#{labels.botaoCancelar}" ajax="false" style="margin-top: 12px" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoBean.chamadoDTO.codigo}'" />
+    </h:form>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk">
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{relatorioOcorrenciaBean}" />  
+        <ui:define name="CONTEUDO">
+            <h:panelGrid columns="1" cellpadding="10">
+                <h:form id="formPrincipalas">
+                    <t:div style="float: left">
+                        <p:messages/>
+                        <h:panelGrid columns="2" cellpadding="1">
+                            <p:panel> 
+                                <h:outputLabel value="#{labels.campoAluno}: " for="listaAlunos" style="margin-right: 10px"/>
+                                <p:autoComplete  value="#{bean.aluno}" completeMethod="#{bean.alunos}" id="listaAlunos" var="a" itemLabel="#{a.nome}" itemValue="#{a}" converter="AlunoConverter" minQueryLength="4" maxResults="10" forceSelection="true" size="35"/> 
+                                <p:spacer width="30" height="10" /> 
+                                <h:outputText value="#{labels.DataInicial}: " /><p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{relatorioOcorrenciaBean.dataInicial}" pattern="dd/MM/yyyy"/>
+                                <p:spacer width="30" height="10" /> 
+                                <h:outputText value=" #{labels.DataFinal}: " /><p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{relatorioOcorrenciaBean.dataFinal}" pattern="dd/MM/yyyy" maxdate="#{relatorioOcorrenciaBean.dataFinal}"/>    
+                                <p:spacer width="30" height="10" /> 
+                                <p:commandButton value="#{labels.gerarRelatorio}" action="#{bean.gerarRelatorio}" title="Emitir Relatório" ajax="false"/> 
+                                
+                            </p:panel>
+                        </h:panelGrid>
+                    </t:div>
+                </h:form>
+            </h:panelGrid>
+            <script type="text/javascript">
+            function updateTitulo(texto) {
+                spans = document.getElementById('layoutCenter').getElementsByTagName('span');
+                span = spans[0];
+                span.innerHTML = "#{labels.tituloCadastro} #{chamadoBean.tituloLayoutUnit}: " + '<span style="color: #408D0E">' + texto + '</span>'
+            }
+            </script>
+       </ui:define>
+    </ui:composition>
+</html>

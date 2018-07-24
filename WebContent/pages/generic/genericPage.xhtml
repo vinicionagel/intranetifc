@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <f:view locale="#{localeController.currentLocale}" encoding="ISO-8859-1" >
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <title>Intranet - IFC Rio do Sul</title>
+            <link rel="stylesheet" type="text/css" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <script type="text/javascript" src="../../js/locale-primefaces.js"/>
+            <script type="text/javascript" src="../../js/mascaras.js"/>
+        </h:head>
+        <h:body> 
+            <p:layout fullPage="true"> 
+                <ui:include src="../menu/menu.xhtml" />
+                <p:layoutUnit position="center" id="layoutCenter" header="#{labels.tituloCadastro} #{bean.tituloLayoutUnit}" > 
+                    <p:ajaxStatus  id="ajaxStatusPanel">  
+                        <f:facet name="start">  
+                            <p:dialog visible="true" closable="false" resizable="false" >
+                                CARREGANDO<br />  
+                                <p:graphicImage value="/images/ajaxloading.gif" styleClass="centralizadoImagemCarregando"/>  
+                            </p:dialog>
+                        </f:facet>  
+                        <f:facet name="complete">  
+                            <h:outputText value="" />  
+                        </f:facet>  
+                    </p:ajaxStatus> 
+                    <ui:insert name="CONTEUDO"/>
+                </p:layoutUnit> 
+            </p:layout>
+        </h:body>
+    </f:view>
+</html>

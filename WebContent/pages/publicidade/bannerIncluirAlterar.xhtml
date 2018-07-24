@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="../publicidade/publicidadeIncluirAlterar.xhtml">  
+        <ui:define name="ADICIONAIS">
+            <h:form id="formPrincipals" enctype="multipart/form-data">
+                <ui:param name="bean" value="#{publicidadeBean}" />
+                <h:outputLabel for="descricao" value="Descricao:" />
+                <p:editor value="#{bean.objeto.descricao}" id="descricao"/>
+                <h:outputLabel for="mensagem" value="Mensagem:" />
+                <p:editor value="#{bean.objeto.mensagem}" id="mensagem" ></p:editor>
+            </h:form>
+        </ui:define>
+    </ui:composition>                                
+</html>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="560dc5bd-59af-41c3-baf5-8f363247ebe8">
+	<property name="ireport.zoom" value="1.6105100000000083"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="27"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="Descricao" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataInicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataFinal" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dir" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="codigo" class="java.lang.Long"/>
+	<parameter name="dataAux" class="java.util.Date"/>
+	<parameter name="contexto" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     usuario.nome AS nome,
+     SUM(hora.tempo) AS tempo
+FROM
+     hora,usuario, usuario_setor
+WHERE
+     hora.usuario_codigo = usuario.codigo AND
+     usuario_setor.usuario_codigo = usuario.codigo AND
+     usuario_setor.setor_codigo in ($P!{contexto}) AND
+     hora.data_trabalho BETWEEN $P{dataInicial} AND $P{dataAux}
+GROUP BY usuario.nome]]>
+	</queryString>
+	<field name="nome" class="java.lang.String"/>
+	<field name="tempo" class="java.lang.Float"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="c561079f-da99-42d4-a86f-c32bf8121a26" mode="Transparent" x="0" y="89" width="555" height="25"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="ff7eee28-cca9-4230-b7cb-01bf8a0f369b" mode="Transparent" x="0" y="59" width="555" height="30"/>
+			</rectangle>
+			<image>
+				<reportElement uuid="ad07e794-93aa-4af7-ac27-9193eda05fe7" x="-1" y="-1" width="455" height="46"/>
+				<imageExpression><![CDATA[$P{dir} + "/images/logo_ifc.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="789a6a29-c678-479d-b5ce-327c33022b2b" x="11" y="69" width="401" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Tipo do Relatório: Horas Trabalhadas por Usuário]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="7bcd36ec-5cba-4c5c-8b48-7cc073fe9442" x="11" y="94" width="58" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Período:"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="fd0a780d-8979-4858-bd1f-8195c1e1a4bb" x="69" y="94" width="77" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataInicial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="dd5b6253-358f-4e76-baa6-49737d392760" x="146" y="94" width="22" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" à "]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="837b20fd-1d54-427c-813a-2af72a6384cb" x="168" y="94" width="102" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataFinal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="82dca01c-e610-4fc0-b746-ceb57ae6a2e9" x="11" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Usuário]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7de2bbe1-37fa-4708-8f14-47b283b71035" x="258" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Horas Trabalhadas]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="2564410e-8f39-4668-b148-0d144cb68837" x="230" y="0" width="1" height="21"/>
+			</line>
+			<rectangle>
+				<reportElement uuid="5ca3bad6-2ba0-4159-b508-7a2a8fa5dd1a" mode="Transparent" x="0" y="0" width="555" height="21"/>
+			</rectangle>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement uuid="368c68da-75d7-4cb8-a724-344b1e6cbe00" x="11" y="3" width="219" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c1f4677e-c07b-4c9d-9929-730d7fb2da1d" x="258" y="1" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{tempo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="d87743b7-3eb4-44a7-94f9-cd96863edbba" x="230" y="0" width="1" height="22"/>
+			</line>
+			<rectangle>
+				<reportElement uuid="7cd44269-5bb3-4778-9089-df83f3e3d932" mode="Transparent" x="0" y="0" width="555" height="23"/>
+			</rectangle>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="59" splitType="Stretch">
+			<textField pattern="dd/MM/yyy  HH:mm:ss z">
+				<reportElement uuid="494d7653-707d-4c8b-88dd-b7754f0f88b6" x="-1" y="20" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="eb877ee6-dd52-4845-837c-4e4ffbd12684" x="-1" y="0" width="261" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="60a7b8a3-2818-4c87-94a1-40cff3da6978" x="436" y="39" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="fe9b9121-90fd-481b-aa57-ac29679d0ce8" x="516" y="39" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="216783d4-bff5-4cc5-9d3d-3591252f3af7" x="0" y="39" width="406" height="20" forecolor="#A59797"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[INTRANET IFC - Sistema elaborado pelo Grupo de Desenvolvimento de Sistemas - Campus Rio do Sul]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

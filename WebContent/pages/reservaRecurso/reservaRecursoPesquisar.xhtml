@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk"
+    xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <ui:composition template="../generic/genericPage.xhtml"> 
+        <ui:param name="bean" value="#{reservaRecursoBean}" /> 
+        <ui:define name="CONTEUDO">            
+            <h:form id="lista">                                                     
+                <p:messages id="message"/>                     
+                <t:div id="div" style="position: absolute; left: 0px">
+                    <p:panel header="Filtro" id="panel" style="background: none; min-width: 350px; min-height: 50px; position: relative; left: 0px;">                                                
+                        <h:selectOneRadio id="options" value="#{reservaRecursoBean.opcao}" enabledClass="flutuadoDireita identado" >  
+                            <f:selectItem itemLabel="Patrimônio" itemValue="1" /> 
+                            <f:selectItem itemLabel="Localização" itemValue="2" /> 
+                            <f:ajax render=":lista:panel"/>
+                        </h:selectOneRadio>
+
+                        <t:div id="opcaoPatrimonio" rendered="#{reservaRecursoBean.opcao == 1}">  
+                            <h:panelGrid columns="1" cellspacing="10" style="margin-top: 10px" >
+                                <p:selectOneMenu id="localizacaoPatrimonio" value="#{reservaRecursoBean.localizacaoDTO}"  converter="SimpleIndexConverter" required="true" requiredMessage="Selecione uma Localização" > 
+                                    <f:selectItem itemLabel="Selecione uma Localização" itemValue="" />
+                                    <t:selectItems value="#{reservaRecursoBean.listaLocalizacao}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                                    <p:ajax update="patrimonioUpdate"/>
+                                </p:selectOneMenu>
+                                <p:selectOneMenu id="patrimonioUpdate" style="min-width: 211px" value="#{reservaRecursoBean.codigoPatrimonio}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione um Patrimônio" >
+                                    <f:selectItem itemLabel="Selecione um Patrimônio" itemValue="" /> 
+                                    <c:forEach items="#{reservaRecursoBean.listaPatrimonios}" var="item" >
+                                        <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                                    </c:forEach>
+                                    <p:ajax update="schedule"/>
+                                </p:selectOneMenu>
+                                <p:commandButton value="#{labels.botaoLimpaCalendario}"  action="#{reservaRecursoBean.clearSchedule}" immediate="true" update="schedule" >
+                                    <f:ajax render=":lista:panel"/>
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </t:div>
+
+                        <t:div id="opcaoLocalizacao" rendered="#{reservaRecursoBean.opcao == 2}">                                                                
+                            <h:panelGrid columns="1" cellspacing="10" style="margin-top: 10px" >
+                                <p:selectOneMenu id="localizacao" value="#{reservaRecursoBean.localizacaoDTO}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione uma Localização"> 
+                                    <f:selectItem itemLabel="Selecione uma Localização" itemValue="" />
+                                    <t:selectItems value="#{reservaRecursoBean.listaLocalizacao}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                                    <p:ajax  update="schedule"/>
+                                </p:selectOneMenu>
+                                <p:commandButton value="#{labels.botaoLimpaCalendario}"  action="#{reservaRecursoBean.clearSchedule}" immediate="true" update="schedule" >
+                                    <f:ajax render=":lista:panel"/>
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </t:div>     
+                    </p:panel>
+
+                    <p:panel header="Consulta" styleClass="painelReservaCalendario"> 
+                        <p:calendar value="#{reservaRecursoBean.dataCalendar}" mode="inline"  pattern="dd/MM/yyyy" locale="pt" styleClass="calendarioEspecial">  
+                            <p:ajax event="dateSelect" update="lista:schedule" />  
+                        </p:calendar>
+                    </p:panel>
+
+                    <p:panel header="Reserva" id="panelReserva" style="margin-top: 10px">
+                        <h:selectOneRadio id="repetir" value="#{reservaRecursoBean.repetir}" enabledClass="flutuadoDireita identado" >  
+                            <f:selectItem itemLabel="Reserva Simples" itemValue="false" /> 
+                            <f:selectItem itemLabel="Multiplas Reservas" itemValue="true" /> 
+                            <p:ajax update="panelReserva"/>
+                        </h:selectOneRadio>
+                        <t:div style="margin-top: 10px">
+                            <h:selectBooleanCheckbox value="#{reservaRecursoBean.diaTodo}">                                
+                                <p:ajax update="panelDatas" />
+                            </h:selectBooleanCheckbox>
+                            <h:outputText value="Dia Todo " styleClass="flutuadoEsquerda identado"/>         
+                        </t:div>
+                        <t:div style="margin-top: 10px">
+                            <p:outputLabel value="Dias:" rendered="#{reservaRecursoBean.repetir}" style="margin-top: 10px"/>
+                            <h:selectManyCheckbox id="selectManyDias" value="#{reservaRecursoBean.listaDiasSemana}" styleClass="divselectonemenu" required="true" requiredMessage="Selecione pelo menos um dia da semana para repetir" enabledClass="flutuadoDireita identado" rendered="#{reservaRecursoBean.repetir}">  
+                                <f:selectItem itemLabel="D" itemValue="1"/>
+                                <f:selectItem itemLabel="S" itemValue="2"/> 
+                                <f:selectItem itemLabel="T" itemValue="3"/> 
+                                <f:selectItem itemLabel="Q" itemValue="4"/> 
+                                <f:selectItem itemLabel="Q" itemValue="5"/>  
+                                <f:selectItem itemLabel="S" itemValue="6"/> 
+                                <f:selectItem itemLabel="S" itemValue="7"/>  
+                            </h:selectManyCheckbox>  
+                        </t:div>
+                        <t:div id="panelDatas" >                                                        
+                            <h:panelGrid columns="2" cellspacing="5px">
+                                <p:outputLabel value="Data Inicial " id="dataInicial" rendered="#{!reservaRecursoBean.diaTodo || reservaRecursoBean.repetir}"/>                            
+                                <p:calendar value="#{reservaRecursoBean.dataInicial}" mindate="#{reservaRecursoBean.diaAtual}" pattern="dd/MM/yyyy HH:mm" size="12" minHour="07" maxHour="22" showButtonPanel="false" locale="lc" stepMinute="5" required="true" requiredMessage="Data e Hora Inicial deve ser selecionada" rendered="#{!(reservaRecursoBean.diaTodo || reservaRecursoBean.repetir)}">
+                                    <p:ajax update="dataFinal" event="dateSelect" />
+                                </p:calendar>
+                                <p:outputLabel value="Data: " id="data" rendered="#{reservaRecursoBean.diaTodo and !reservaRecursoBean.repetir}"/>
+                                <p:calendar value="#{reservaRecursoBean.dataInicial}" mindate="#{reservaRecursoBean.diaAtual}" pattern="dd/MM/yyyy"  size="12" showButtonPanel="true" locale="pt" required="true" requiredMessage="Data Inicial deve ser selecionada" rendered="#{reservaRecursoBean.diaTodo and !reservaRecursoBean.repetir}"/>
+                                <p:calendar value="#{reservaRecursoBean.data}"  mindate="#{reservaRecursoBean.diaAtual}" pattern="dd/MM/yyyy" size="8" showButtonPanel="true" locale="pt" required="true" requiredMessage="Data Inicial deve ser selecionada" rendered="#{reservaRecursoBean.repetir}">
+                                    <p:ajax update="panelDatas" listener="#{reservaRecursoBean.setarFimAno}" event="dateSelect" />
+                                </p:calendar>
+                                <p:outputLabel value="Data Final: " id="horaFim" rendered="#{!(reservaRecursoBean.repetir || reservaRecursoBean.diaTodo)}" /> 
+                                <p:calendar id="dataFinal" value="#{reservaRecursoBean.dataFinal}"  mindate="#{reservaRecursoBean.dataInicial}" pattern="dd/MM/yyyy HH:mm" size="12" minHour="07" maxHour="22"  locale="lc" stepMinute="5"  required="true" requiredMessage="Data Final deve ser selecionada" rendered="#{!(reservaRecursoBean.repetir || reservaRecursoBean.diaTodo)}"/>  
+                                <p:outputLabel value="Repetir até: " rendered="#{reservaRecursoBean.repetir and reservaRecursoBean.data != null}"/>
+                                <p:calendar value="#{reservaRecursoBean.dataFimRepetir}" pattern="dd/MM/yyyy" size="8" mindate="#{reservaRecursoBean.data}" maxdate="#{reservaRecursoBean.ultimoDiaAno}" showButtonPanel="true" locale="pt" required="true" requiredMessage="Selecione a Data do Fim da Repetição" rendered="#{reservaRecursoBean.repetir and reservaRecursoBean.data != null}"/>                                
+                            </h:panelGrid>
+                            <h:panelGrid cellspacing="5px" columns="2" id="horaInicialFinal" rendered="#{reservaRecursoBean.data != null and reservaRecursoBean.repetir and !reservaRecursoBean.diaTodo}">
+                                <h:outputText value="Hora Inicial: " />         
+                                <p:calendar value="#{reservaRecursoBean.dataInicial}" pattern="HH:mm" size="4" minHour="07" maxHour="22" timeOnly="true" showButtonPanel="true" locale="pt" required="true" requiredMessage="Hora Inicial deve ser selecionada" />
+                                <h:outputText value="Hora Final: " />         
+                                <p:calendar value="#{reservaRecursoBean.dataFinal}" pattern="HH:mm" size="4" minHour="07" maxHour="22" timeOnly="true"  showButtonPanel="true" locale="pt" required="true" requiredMessage="Hora Final deve ser selecionada" />
+                            </h:panelGrid>   
+                        </t:div>                                                                        
+                        <p:commandButton value="Gravar" action="#{reservaRecursoBean.adicionarReserva}" update="schedule, lista:message"/>
+                    </p:panel>   
+                    <p:panel style="position: absolute; top:0px; left:370px" >                    
+                        <p:schedule id="schedule" minTime="07:00" maxTime="23:00" value="#{reservaRecursoBean.eventModel}"  timeFormat="HH:mm{ - HH:mm}', columnFormat : {month : 'ddd',week : 'ddd dd/MM', day : 'dddd dd/MM'}, dummy:'"
+                                    locale="ls" view="agendaWeek" axisFormat="HH:mm" draggable="false" resizable="false" initialDate="#{reservaRecursoBean.dataCalendar}"
+                                    allDaySlot="false" leftHeaderTemplate="prev,next,today" rightHeaderTemplate="agendaWeek, month" style="width: 850px; height: 650px; ">
+                            <p:ajax event="eventSelect" listener="#{reservaRecursoBean.selecionaEvento}" oncomplete="confirmation.show();"/>  
+                        </p:schedule> 
+                        <p:confirmDialog id="eventDialog" global="true" message="Deseja mesmo excluir o arquivo?!"  
+                                         header="Deletando arquivo" severity="alert" widgetVar="confirmation" >  
+                            <h:commandLink id="confirm"  onclick="confirmation.hide()" 
+                                           action="#{reservaRecursoBean.removeReserva}" immediate="true" style="margin-left: 40%; margin-right: 10px" value="Sim" /> 
+                            <p:commandLink id="decline" onclick="confirmation.hide()" ajax="true" value="Não" />
+                        </p:confirmDialog> 
+                    </p:panel> 
+                </t:div>  
+            </h:form> 
+        </ui:define>
+    </ui:composition>
+</html>

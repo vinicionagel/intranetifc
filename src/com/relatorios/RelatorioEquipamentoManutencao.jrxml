@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f153060a-515c-4ea5-8f9e-d0f54a3278d4">
+	<property name="ireport.zoom" value="1.6105100000000045"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="35"/>
+	<parameter name="Descricao" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dir" class="java.lang.String"/>
+	<parameter name="dataInicial" class="java.util.Date"/>
+	<parameter name="dataFinal" class="java.util.Date"/>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="codigo" class="java.lang.Long"/>
+	<parameter name="dataAux" class="java.util.Date"/>
+	<parameter name="contexto" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     chamado.codigo AS chamado_codigo,
+     chamado."titulo" AS chamado_titulo,
+     chamado."data_hora_abertura" AS chamado_data_hora_abertura,
+     chamado."data_hora_fechamento" AS chamado_data_hora_fechamento,
+     chamado."data_prevista" AS chamado_data_prevista,
+     chamado."percentual" AS chamado_percentual,
+     patrimonio.descricao AS patrimonio_descricao,
+     localizacao.descricao AS localizacao
+FROM
+     chamado_infra , chamado, patrimonio, localizacao
+WHERE
+     chamado.codigo = chamado_infra.chamado_codigo AND
+     chamado_infra.patrimonio_codigo = patrimonio.codigo AND
+     patrimonio.localizacao_codigo = localizacao.codigo AND
+     chamado.data_hora_abertura BETWEEN $P{dataInicial} AND $P{dataAux} AND
+     chamado.status_codigo = 7 AND
+     patrimonio.setor_codigo in ($P!{contexto})
+ORDER BY
+     chamado_data_hora_abertura DESC, patrimonio_descricao]]>
+	</queryString>
+	<field name="chamado_codigo" class="java.lang.Integer"/>
+	<field name="chamado_titulo" class="java.lang.String"/>
+	<field name="chamado_data_hora_abertura" class="java.sql.Timestamp"/>
+	<field name="chamado_data_hora_fechamento" class="java.sql.Timestamp"/>
+	<field name="chamado_data_prevista" class="java.sql.Date"/>
+	<field name="chamado_percentual" class="java.lang.Integer"/>
+	<field name="patrimonio_descricao" class="java.lang.String"/>
+	<field name="localizacao" class="java.lang.String"/>
+	<variable name="chamado_percentual_SUM" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{chamado_percentual}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="113" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="6190ad4b-98ff-4b72-b5c7-0955a0bd3cae" mode="Transparent" x="0" y="59" width="555" height="30"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="a3d5ca66-c45e-4c47-89fe-0bff5e66f09e" mode="Transparent" x="0" y="89" width="555" height="23"/>
+			</rectangle>
+			<image>
+				<reportElement uuid="20b03a17-c16f-407c-ad5a-07c542f5f14c" x="-1" y="-1" width="455" height="46"/>
+			</image>
+			<staticText>
+				<reportElement uuid="ae092042-0d81-4e8e-b746-3b6cce994e5e" x="11" y="69" width="387" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Tipo do Relatório: Equipamentos em Manutenção]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="380e78ae-4757-4108-9f7b-54dbd02235cb" x="11" y="92" width="58" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Período:"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="bc0ef2fe-4476-4632-a6c8-dd80aa0817de" x="69" y="92" width="77" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataInicial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="49a1a78a-f85d-443a-bfc0-2cb99a3ebe41" x="148" y="92" width="22" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" à "]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="66a69a6d-3dbc-46e3-819b-c1c210be8ee6" x="169" y="92" width="102" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataFinal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="b5d63fec-413b-4ae9-9b0b-b9306b3b1e9c" mode="Transparent" x="0" y="0" width="555" height="22"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="7defd2a9-6666-410f-b7e7-81ec8cf79b9f" x="11" y="3" width="84" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patrimonio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9a0f8bd4-2d53-4392-a7f1-4bc6b641eb15" x="372" y="3" width="58" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data  de Fechamento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b1d9c13a-e53b-421d-ba1b-6271e8e732b2" x="440" y="3" width="53" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data Prevista]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="98033475-caa5-4018-9370-0e78662727d0" x="300" y="3" width="60" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Data de Abertura]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="52e854bb-a520-47ca-bdea-09b15a112abe" x="502" y="4" width="51" height="18"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Percentual]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="039cdf6e-cbcc-4d62-b4f2-6ac1f427c3dd" x="210" y="3" width="61" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Localização]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="9bab2f54-dc56-493d-8409-366bfc056324" x="101" y="3" width="102" height="19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Chamado]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="e696a98e-343c-4462-b864-3bd3ee35fce6" x="96" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement uuid="4e37fb59-519e-4b5d-a0c4-add168b211d5" x="365" y="0" width="1" height="22"/>
+			</line>
+			<line>
+				<reportElement uuid="4c2da47c-3b82-4acb-9fc4-430d43b53a9f" x="435" y="0" width="1" height="22"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="b56d2acc-bad9-4eda-a849-4c9c40c9a47b" mode="Transparent" x="0" y="0" width="555" height="27"/>
+			</rectangle>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="e5a1f4d1-3142-4825-ac70-1288e73c8886" x="300" y="4" width="61" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_data_hora_abertura}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="2980f9a4-f0ec-4fac-b5e3-91932de37b2b" x="440" y="4" width="54" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_data_prevista}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement uuid="0236b93b-addb-431f-a5ee-9795d91d8fc8" x="372" y="4" width="58" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_data_hora_fechamento}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="5163026b-4823-415f-8af4-32ede01e1b47" x="203" y="-22" width="1" height="48"/>
+			</line>
+			<line>
+				<reportElement uuid="1e770200-72c1-48da-a077-d2b266052edc" x="293" y="-21" width="1" height="47"/>
+			</line>
+			<line>
+				<reportElement uuid="b418a240-6259-490f-b6cf-cc071e31dcbe" x="497" y="-21" width="1" height="47"/>
+			</line>
+			<line>
+				<reportElement uuid="ccd8440f-b89d-4a69-aac7-07a92a263773" x="0" y="26" width="555" height="1"/>
+			</line>
+			<textField evaluationTime="Auto" pattern="">
+				<reportElement uuid="c9d42624-7691-4276-9c7a-bb34c370c0e7" x="502" y="4" width="51" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_percentual} + " %"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="21f4a98b-5fa7-42e6-8b42-99acefef31f1" x="210" y="4" width="80" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{localizacao}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="686218cc-7243-4e5b-a9e9-7ed1b122712b" x="101" y="6" width="102" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chamado_titulo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d20b4d7c-864e-4b1c-b0a6-dd0447005505" x="11" y="7" width="84" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patrimonio_descricao}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="c0df1db5-4284-44ee-bf82-22adbe0a0750" x="96" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement uuid="b9700d55-11fb-4ca2-b9fe-ba7f2f74e6d5" x="365" y="0" width="1" height="27"/>
+			</line>
+			<line>
+				<reportElement uuid="eaea2de6-4a2d-4f20-a3c3-70301240351e" x="435" y="0" width="1" height="27"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="46" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="59" splitType="Stretch">
+			<textField pattern="dd/MM/yyy  HH:mm:ss z">
+				<reportElement uuid="e932c7eb-f2fb-4db8-82c5-0e3b7861db1b" x="-1" y="20" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7ca62139-39e3-4d56-84e3-d4e960740cf1" x="-1" y="0" width="261" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b436e86d-bc7f-4a18-a236-22445cc44e24" x="436" y="39" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="ac2a6c9e-c1c3-4bd4-b61e-ea3c538d4b2d" x="516" y="39" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="13d7f015-db53-46d7-adda-888868d53ba4" x="0" y="39" width="406" height="20" forecolor="#A59797"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[INTRANET IFC - Sistema elaborado pelo Grupo de Desenvolvimento de Sistemas - Campus Rio do Sul]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

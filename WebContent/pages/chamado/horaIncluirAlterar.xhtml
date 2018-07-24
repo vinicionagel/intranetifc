@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{horaBean}" />         
+        <ui:define name="CONTEUDO">
+            <f:event type="preRenderComponent" listener="#{bean.verificaERedireciona()}" />
+            <h:form>     
+                <h:panelGrid columns="1" cellpadding="1" >
+                    <p:messages />
+                    <h:outputText value="#{labels.itensObrigatorios}" style="color: red; font-size: 15px"/>
+                    <h:panelGrid columns="2" cellpadding="6" >
+                        <t:div><h:outputText value="#{labels.campoData}:" /><h:outputText value="*" style="color: red"/></t:div>
+                        <p:calendar  maxlength="10" onkeypress="mascara(this, data)" onkeyup="mascara(this, data)" locale="pt" 
+                                     showButtonPanel="true" navigator="true" value="#{bean.objeto.dataTrabalho}" 
+                                     pattern="dd/MM/yyyy"  requiredMessage="#{labels.campoValidacaoData}" required="true"/>
+                        <t:div><h:outputText value="#{labels.campoTempoGasto}:" /><h:outputText value="*" style="color: red"/></t:div>
+                        <p:inputText value="#{bean.objeto.tempo}" onkeypress="mascara(this, soNumerosReais)" required="true" onkeyup="mascara(this, soNumerosReais)" converterMessage="Campo Somente de Numeros"  requiredMessage="#{labels.campoValidacaoTempoGasto}"/>
+                    </h:panelGrid>                                        
+                    <h:outputText value="#{labels.campoComentario}"  />
+                    <p:inputText value="#{bean.objeto.descricao}" id="descricao" style="width: 99%"/>
+
+                    <h:panelGrid columns="3" cellpadding="2">
+                        <p:commandButton action="#{horaBean.save}" value="#{labels.botaoSalvar}" rendered="#{!bean.alterando}" ajax="false"/>
+                        <p:commandButton action="#{horaBean.save}" value="#{labels.botaoSalvar}" ajax="true" update="@form" rendered="#{bean.alterando}"/>
+                        <p:commandButton action="#{horaBean.cancelarEdicao}" value="#{labels.botaoCancelarEdicao}" ajax="true" update="@form" process="@this" 
+                                         rendered="#{bean.alterando}"/>
+                        <p:commandButton value="#{labels.botaoVoltar}" oncomplete="window.location='andamentoChamado.jsf?codigo=#{bean.chamadoDTO.codigo}'" immediate="true" />
+                    </h:panelGrid>
+                    <p:dataTable id="pesquisaHora" var="item" value="#{bean.lista}" paginator="true" emptyMessage="#{labels.naoHaRegistros}"
+                                 rows="10" paginatorPosition="bottom"  >
+                        <f:facet name="header"> 
+                            <h:outputText value="#{labels.tituloLista} #{labels.campoHorasTrabalhadas}" />
+                        </f:facet>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoData}" />
+                            </f:facet>
+                            <h:outputText value="#{item.dataTrabalho}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoUsuario}" />
+                            </f:facet>
+                            <h:outputText value="#{item.usuarioDTO.nome}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoComentario}" />
+                            </f:facet>
+                            <h:outputText value="#{item.descricao}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoTempoGasto}" />
+                            </f:facet>
+                            <h:outputText value="#{item.tempo}" />
+                        </p:column>              
+
+                        <p:column>
+                            <f:facet name="header" >
+                                <h:outputText value="#{labels.campoOpcao}" />
+                            </f:facet>                            
+                            <t:div>
+                                <t:div styleClass="opcoes">
+                                    <p:commandLink action="#{bean.update(item)}" rendered="#{homeBean.nomeUsuario == item.usuarioDTO.nome}" 
+                                                   update="@form" process="@this"  >
+                                        <h:outputText styleClass="ui-icon ui-icon-pencil" style="border: none"/>  
+                                    </p:commandLink>
+                                </t:div>
+                                <t:div styleClass="opcoes">
+                                    <p:commandLink action="#{bean.remove}" immediate="true" rendered="#{homeBean.nomeUsuario == item.usuarioDTO.nome}" 
+                                                   update="@form">
+                                        <f:setPropertyActionListener target="#{bean.objeto}" value="#{item}" />  
+                                        <h:outputText styleClass="ui-icon ui-icon-closethick" style="border: none"/>  
+                                    </p:commandLink>                                                                                                                                            
+                                </t:div>
+                                <t:div styleClass="opcoes">
+                                    <ui:insert name="OPCOES" />
+                                </t:div>                                
+                            </t:div>            
+                        </p:column>                    
+                    </p:dataTable>                
+                </h:panelGrid>
+            </h:form>         
+        </ui:define>      
+    </ui:composition>
+</html>

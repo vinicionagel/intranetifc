@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <ui:composition template="../generic/genericIncluirAlterar.xhtml">
+        <ui:param name="bean" value="#{vincularUsuarioSetorBean}" />                
+        <ui:define name="CAMPOS">
+            <t:div><h:outputText value="#{labels.campoUsuario}"/><h:outputText value="*" style="color: red"/></t:div> 
+            <p:selectOneMenu required="true" requiredMessage="#{labels.CampoValidacaoUsuario}" value="#{bean.usuarioDTO}" converter="SimpleIndexConverter" id="usu">
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{bean.listaUsuarios}"  var="item" itemLabel="#{item.nome}" itemValue="#{item}" />
+                <p:ajax listener="#{bean.carregarListaSetoresFuncoes}"  
+                        immediate="false"  
+                        event="change"  
+                        update="listaInclusao"  
+                        process="usu" />
+            </p:selectOneMenu>
+            <t:div><h:outputText value="#{labels.campoCampus}"/><h:outputText value="*" style="color: red"/></t:div> 
+            <p:selectOneMenu required="true" requiredMessage="#{labels.CampoValidacaoCampus}" value="#{bean.campusDTO}" converter="SimpleIndexConverter" id="listaCampus">
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{bean.listaCampus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />
+                <p:ajax listener="#{bean.carregarListaSetoresFuncoes}"  
+                        immediate="false"  
+                        event="change"  
+                        update="listaInclusao"  
+                        process="listaCampus" />
+            </p:selectOneMenu>    
+            <t:panelGroup colspan="2">
+                <p:dataTable id="listaInclusao" var="setor" value="#{bean.listaVinculosPersistencia}" paginator="true" emptyMessage="Não há Registros"
+                             rows="10" paginatorPosition="bottom" editable="true" style="width: 600px">
+                    <f:facet name="header"> 
+                        <h:outputText value="#{labels.tituloLista}" />
+                    </f:facet>
+
+                    <p:column width="15">                    
+                        <h:selectBooleanCheckbox value="#{setor.isSelecionado}" />
+                    </p:column>   
+
+                    <p:column width="200">
+                        <f:facet name="header">
+                            <h:outputText value="#{labels.campoSetor}" />
+                        </f:facet>
+                        <h:outputText value=" #{setor.setorDTO.descricao}" />
+                    </p:column>                                
+
+                    <p:column width="200">
+                        <f:facet name="header">
+                            <h:outputText value="#{labels.campoFuncao}" />
+                        </f:facet>
+                        <p:selectOneMenu value="#{setor.funcao}" disabled="#{!bean.alterando and !bean.incluindo}" >
+                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                            <f:selectItems value="#{bean.listaFuncoesInclusao}" />  
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column width="100">
+                        <f:facet name="header">
+                            <h:outputText value="Responsavel"/>
+                        </f:facet>
+                        <p:selectBooleanButton value="#{setor.responsavelBool}" onLabel="Sim" offLabel="Não" disabled="#{!bean.alterando and !bean.incluindo}" styleClass="centralizadoBotaoTable" /> 
+                    </p:column>
+                </p:dataTable>
+            </t:panelGroup>
+            <style type="text/css">
+                .col{
+                    width: 40px; 
+                }
+            </style>
+        </ui:define>
+    </ui:composition>
+</html>

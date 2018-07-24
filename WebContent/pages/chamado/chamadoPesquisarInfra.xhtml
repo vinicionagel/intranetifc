@@ -1,0 +1,181 @@
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"    
+    xmlns:t="http://myfaces.apache.org/tomahawk" 
+    xmlns:c="http://java.sun.com/jsp/jstl/core" >
+    <p:panel id="panelPesquisarInfra" header="Filtro" collapsed="true" toggleable="true" toggleSpeed="300" >
+        <p:ajax event="toggle" listener="#{chamadoInfraBean.carregarBuscaAvancada}" update="panelPesquisarInfra"/> 
+        <h:panelGrid columns="6" cellpadding="6">
+            <h:outputText value="#{labels.campoUsuarioAtribuido}" />
+            <h:selectOneMenu value="#{chamadoInfraBean.chamadoInfraFiltro.usuarioAtribuidoDTO}" converter="SimpleIndexConverter" style="width: 160px">
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />
+                <t:selectItems value="#{chamadoBean.listaUsuario}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />  
+            </h:selectOneMenu>
+
+            <h:outputText value="#{labels.campoPrioridade}" />  
+            <h:selectOneMenu value="#{chamadoInfraBean.chamadoInfraFiltro.prioridadeDTO}"  converter="SimpleIndexConverter" style="width: 160px">
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />  
+                <t:selectItems value="#{chamadoBean.listaPrioridade}" var="item" itemValue="#{item}" itemLabel="#{item.descricao}" />
+            </h:selectOneMenu> 
+
+            <h:outputText value="#{labels.campoStatus}" />
+            <h:selectOneMenu value="#{chamadoInfraBean.chamadoInfraFiltro.statusDTO}" converter="SimpleIndexConverter" style="width: 160px">
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />                                        
+                <t:selectItems value="#{andamentoBean.listaStatus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                                          
+            </h:selectOneMenu> 
+
+            <h:outputText value="#{labels.campoSetor}" />
+            <h:selectOneMenu value="#{chamadoInfraBean.codigoSetor}" style="width: 160px" >
+                <f:selectItem itemLabel="#{labels.todos}" itemValue="" />
+                <c:forEach items="#{chamadoBean.setorSelectItens}" var="item">
+                    <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                </c:forEach>   
+            </h:selectOneMenu> 
+        </h:panelGrid>
+
+        <p:commandButton value="#{labels.botaoFiltrar}" update="tabView" >
+            <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="filtrando" /> 
+        </p:commandButton> 
+    </p:panel>
+    
+    <p:dataTable id="pesquisaDataInfra" var="chamadosInfra" value="#{chamadoInfraBean.chamadosInfra}" paginator="true" emptyMessage="#{labels.naoHaRegistros}" 
+                 rows="25" paginatorPosition="bottom" rowStyleClass="#{chamadosInfra.prioridadeDTO.codigo == 3 ? 'prioridadeAlta' : null}" selection="#{chamadoInfraBean.chamadosInfraSelecionados}" rowKey="#{chamadosInfra.codigo}">
+        <f:facet name="header"> 
+            <h:outputText value="#{labels.tituloLista} #{labels.campoChamado} de Infra-Estrutura" />
+        </f:facet>
+        
+        <p:column selectionMode="multiple"/>
+        
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoCodigo}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.codigo}" />
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoTitulo}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.titulo}" />
+        </p:column>        
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoUsuarioAtribuido}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.usuarioAtribuidoDTO.nome}" />
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoDataHoraAbertura}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.dataHoraAbertura}" >
+                <f:convertDateTime pattern='dd/MM/yyyy'/>
+            </h:outputText>  
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoDataPrevista}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.dataPrevista}" >
+                <f:convertDateTime pattern='dd/MM/yyyy'/>
+            </h:outputText>  
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoProgresso}" />
+            </f:facet>
+            <p:column>
+                <p:progressBar widgetVar="pb" labelTemplate="#{chamadosInfra.progresso}%" styleClass='#{chamadosInfra.progresso == 0 ? "animated2" : "animated"}' />
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        PF('pb').setValue(#{chamadosInfra.progresso});
+                        var x = #{chamadosInfra.progresso};
+                                                
+                        if (x === 0){
+                            PF('pb').setValue(0.00001);
+                        }
+                    });
+                </script>
+            </p:column>
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoPrioridade}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.prioridadeDTO.descricao}" />
+        </p:column>
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoStatus}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.statusDTO.descricao}" />
+        </p:column>       
+
+        <p:column>
+            <f:facet name="header">
+                <h:outputText value="#{labels.campoPatrimonio}" />
+            </f:facet>
+            <h:outputText value="#{chamadosInfra.patrimonioDTO.descricao} -- #{chamadosInfra.patrimonioDTO.localizacaoDTO.descricao}" title="Unidade: #{chamadosInfra.patrimonioDTO.localizacaoDTO.campusDTO.descricao}"/>
+        </p:column>       
+
+        <p:column >
+            <f:facet name="header" >
+                <h:outputText value="#{labels.campoOpcao}" />
+            </f:facet>
+            <t:div style="padding-left: 10px !important">  
+                <h:outputLink value="andamentoChamado.jsf?codigo=#{chamadosInfra.codigo}">
+                    <h:outputText styleClass="ui-icon ui-icon-pencil"/>  
+                </h:outputLink>
+            </t:div>   
+        </p:column>  
+        
+        <f:facet name="footer">
+            <p:commandButton id="editarStatus" value="Editar Status" icon="ui-icon-pencil" oncomplete="PF('dialogStatus').show()"/>
+            <p:commandButton id="editarPrioridade" value="Editar Prioridade" icon="ui-icon-pencil" oncomplete="PF('dialogPrioridade').show()"/>
+            <p:commandButton id="editarProgresso" value="Editar Progresso" icon="ui-icon-pencil" oncomplete="PF('dialogProgresso').show()"/>
+            <p:dialog id="dialogStatus" header="Editar Status" widgetVar="dialogStatus" resizable="false"
+              showEffect="fade" hideEffect="explode">
+                <c:forEach items="#{andamentoBean.listaStatus}" var="item" >
+                    <p:commandButton value="#{item.descricao}" action="#{chamadoInfraBean.editarStatus(item.codigo)}" update="pesquisaDataInfra" ajax="false"/>
+                </c:forEach>
+            </p:dialog>
+            <p:dialog id="dialogPrioridade" header="Editar Prioridade" widgetVar="dialogPrioridade" resizable="false"
+              showEffect="fade" hideEffect="explode">
+                <c:forEach items="#{andamentoBean.listaPrioridade}" var="item" >
+                    <p:commandButton value="#{item.descricao}" action="#{chamadoInfraBean.editarPrioridade(item.codigo)}" update="pesquisaDataInfra" ajax="false"/>
+                </c:forEach>
+            </p:dialog>
+            <p:dialog id="dialogProgresso" header="Editar Progresso" widgetVar="dialogProgresso" resizable="false"
+              showEffect="fade" hideEffect="explode">
+                <h:panelGroup layout="block">
+                    <h:outputText id="outputSlider" value="#{chamadoBean.progresso}"/>
+                    <h:inputHidden id="progresso" value="#{chamadoBean.progresso}" />  
+                </h:panelGroup>
+                <h:panelGroup>
+                    <p:slider for="progresso" display="outputSlider" step="10" style="width:170px" minValue="0" maxValue="100"/> 
+                </h:panelGroup> 
+                <p:commandButton value="Gravar" action="#{chamadoInfraBean.editarProgresso(chamadoBean.progresso)}" update="pesquisaDataInfra" ajax="false"/>
+            </p:dialog>
+        </f:facet>
+    </p:dataTable>
+    <h:outputScript id="jsonConverterJS" target="body">  
+        function openLinkInPopup(param) {
+            var inputValue = param;   
+            alert(inputValue);
+            if (inputValue !== null) {  
+                window.open(inputValue, 'Test JsonConverter with URL parameters',  
+                'width=auto,height=auto,resizable=yes,scrollbars=yes,toolbar=yes,menubar=yes,location=yes');  
+            }  
+        }         
+    </h:outputScript>  
+    
+</html>

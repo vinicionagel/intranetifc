@@ -1,0 +1,334 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.1"
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+    http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
+  
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>sincronizacao</from-outcome>
+            <to-view-id>/pages/migracao/sincronizacao.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>imagemLoginIncluir</from-outcome>
+            <to-view-id>/pages/publicidade/imagemLogin.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>permissaoUsuarioRelatorioPesquisar</from-outcome>
+            <to-view-id>/pages/permissao/permissaoUsuarioRelatorioPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>reservaRecursoPesquisar</from-outcome>
+            <to-view-id>/pages/reservaRecurso/reservaRecursoPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>relatorioPesquisar</from-outcome>
+            <to-view-id>/pages/relatorio/relatorioPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>graficoPesquisar</from-outcome>
+            <to-view-id>/pages/grafico/graficoPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>chamadoPesquisar</from-outcome>
+            <to-view-id>/pages/chamado/chamadoPesquisar.xhtml</to-view-id>
+             <redirect></redirect>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>chamadoIncluirAlterar</from-outcome>
+            <to-view-id>/pages/chamado/chamadoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>chamadoInfraIncluirAlterar</from-outcome>
+            <to-view-id>/pages/chamado/chamadoInfraIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>chamadoServicoIncluirAlterar</from-outcome>
+            <to-view-id>/pages/chamado/chamadoServicoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>andamentoChamado</from-outcome>
+            <to-view-id>/pages/chamado/andamentoChamado.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>andamentoMultiplosChamados</from-outcome>
+            <to-view-id>/pages/chamado/andamentoMultiplosChamados.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>permissaoPesquisar</from-outcome>
+            <to-view-id>/pages/permissao/permissaoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>permissaoIncluirAlterar</from-outcome>
+            <to-view-id>/pages/permissao/permissaoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>vincularUsuarioSetorPesquisar</from-outcome>
+            <to-view-id>/pages/vincularUsuarioSetor/vincularUsuarioSetorPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>   
+            <from-outcome>vincularUsuarioSetorInclirAlterar</from-outcome>
+            <to-view-id>/pages/vincularUsuarioSetor/vincularUsuarioSetorIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>fabricantePesquisar</from-outcome>
+            <to-view-id>/pages/fabricante/fabricantePesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>fabricanteIncluirAlterar</from-outcome>
+            <to-view-id>/pages/fabricante/fabricanteIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>funcaoPesquisar</from-outcome>
+            <to-view-id>/pages/funcao/funcaoPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>funcaoIncluirAlterar</from-outcome>
+            <to-view-id>/pages/funcao/funcaoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>home</from-outcome>
+            <to-view-id>/pages/home/home.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>cadastrese</from-outcome>
+            <to-view-id>/publico/usuario/cadastrese.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>erroPaginaNaoEncontrada</from-outcome>
+            <to-view-id>/publico/erros/paginaNaoEncontrada.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>novaSenha</from-outcome>
+            <to-view-id>/publico/usuario/novaSenha.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>localizacaoPesquisar</from-outcome>
+            <to-view-id>/pages/localizacao/localizacaoPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>localizacaoIncluirAlterar</from-outcome>
+            <to-view-id>/pages/localizacao/localizacaoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>patrimonioPesquisar</from-outcome>
+            <to-view-id>/pages/patrimonio/patrimonioPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>patrimonioIncluirAlterar</from-outcome>
+            <to-view-id>/pages/patrimonio/patrimonioIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>setorPesquisar</from-outcome>
+            <to-view-id>/pages/setor/setorPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>setorIncluirAlterar</from-outcome>
+            <to-view-id>/pages/setor/setorIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>servicoPesquisar</from-outcome>
+            <to-view-id>/pages/servico/servicoPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>servicoIncluirAlterar</from-outcome>
+            <to-view-id>/pages/servico/servicoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>statusPesquisar</from-outcome>
+            <to-view-id>/pages/status/statusPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>statusIncluirAlterar</from-outcome>
+            <to-view-id>/pages/status/statusIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>tipoPatrimonioPesquisar</from-outcome>
+            <to-view-id>/pages/tipoPatrimonio/tipoPatrimonioPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>tipoPatrimonioIncluirAlterar</from-outcome>
+            <to-view-id>/pages/tipoPatrimonio/tipoPatrimonioIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+            
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>tipoServicoPesquisar</from-outcome>
+            <to-view-id>/pages/tipoServico/tipoServicoPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>tipoServicoIncluirAlterar</from-outcome>
+            <to-view-id>/pages/tipoServico/tipoServicoIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule> 
+        <navigation-case>
+            <from-outcome>publicidadePesquisar</from-outcome>
+            <to-view-id>/pages/publicidade/publicidadePesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>bannerIncluir</from-outcome>
+            <to-view-id>/pages/publicidade/bannerIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>campusPesquisar</from-outcome>
+            <to-view-id>/pages/campus/campusPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>campusIncluirAlterar</from-outcome>
+            <to-view-id>/pages/campus/campusIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>acaoDisciplinarPesquisar</from-outcome>
+            <to-view-id>/pages/acaoDisciplinar/acaoDisciplinarPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>acaoDisciplinarIncluirAlterar</from-outcome>
+            <to-view-id>/pages/acaoDisciplinar/acaoDisciplinarIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>usuarioPesquisar</from-outcome>
+            <to-view-id>/pages/usuario/usuarioPesquisar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>usuarioIncluirAlterar</from-outcome>
+            <to-view-id>/pages/usuario/usuarioIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>ocorrenciaPesquisar</from-outcome>
+            <to-view-id>/pages/ocorrencia/ocorrenciaPesquisar.xhtml</to-view-id>
+            <redirect></redirect>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>ocorrenciaIncluirAlterar</from-outcome>
+            <to-view-id>/pages/ocorrencia/ocorrenciaIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>andamentoOcorrencia</from-outcome>
+            <to-view-id>/pages/ocorrencia/andamentoOcorrencia.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>minhaConta</from-outcome>
+            <to-view-id>/pages/home/minhaConta.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>minhaPagina</from-outcome>
+            <to-view-id>/pages/home/home.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/*</from-view-id>
+   
+        <navigation-case>
+            <from-outcome>loginPage</from-outcome>
+            <to-view-id>/pages/home/index.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>horaIncluirAlterar</from-outcome>
+            <to-view-id>/pages/chamado/horaIncluirAlterar.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+        <navigation-rule>
+        <navigation-case>
+            <redirect></redirect>
+            <from-outcome>andamentoMultiplosChamados</from-outcome>
+            <to-view-id>/pages/chamado/andamentoMultiplosChamados.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>loginSiga</from-outcome>
+            <to-view-id>/publico/usuario/loginSigaConfiguracao.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <navigation-case>
+            <from-outcome>relatorioOcorrencia</from-outcome>
+            <to-view-id>/pages/relatorioOcorrencia/relatorioOcorrencia.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <lifecycle>
+        <phase-listener>com.filter.AuthorizationListener</phase-listener>
+    </lifecycle>
+   <application>
+        <el-resolver>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver</el-resolver>
+    </application>
+ 
+    <factory>
+        <exception-handler-factory>org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory</exception-handler-factory>
+    </factory>
+		
+
+</faces-config>

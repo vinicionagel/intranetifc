@@ -1,0 +1,81 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk">
+    <h:panelGrid columns="6" cellpadding="6" id="mostrar" >   
+        <h:outputText value="#{labels.campoAluno}" style="font-weight: bold"/>  
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.alunoDTO.nome}"/> 
+        
+        <h:outputText value="#{labels.campoSetorAutor}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.setorDTOAutor.descricao}"/>
+
+        <h:outputText value="#{labels.campoSetorAtribuido}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.setorDTOAtribuido.descricao}" />  
+
+        <h:outputText value="#{labels.campoDataHoraAbertura}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.dataHoraAbertura}" >
+            <f:convertDateTime pattern='dd/MM/yyyy'/>
+        </h:outputText>  
+
+        <h:outputText value="#{labels.campoDataPrevista}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.dataPrevista}" >
+            <f:convertDateTime pattern='dd/MM/yyyy'/>
+        </h:outputText>  
+
+        <h:outputText value="#{labels.campoDataHoraFechamento}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.dataHoraFechamento}" >
+            <f:convertDateTime pattern='dd/MM/yyyy'/>
+        </h:outputText>            
+
+        <h:outputText value="#{labels.campoPrioridade}" style="font-weight: bold"/>  
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.prioridadeDTO.descricao}"/>                                      
+
+        <h:outputText value="#{labels.campoStatus}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.statusOcorrenciaDTO.descricao}"/>
+        
+        <h:outputText value="#{labels.campoTipoOcorrencia}" style="font-weight: bold"/>  
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.acaoDisciplinarDTO.tipoOcorrenciaDTO.descricao}"/> 
+        
+        <h:outputText value="#{labels.campoAcaoDisciplinar}" style="font-weight: bold"/>  
+        <h:outputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.acaoDisciplinarDTO.descricao}"/> 
+        
+        <h:panelGroup>
+            <h:outputText value="#{labels.campoProgresso}" style="font-weight: bold"/>  
+        </h:panelGroup>
+        <p:progressBar widgetVar="pb" labelTemplate="#{andamentoOcorrenciaBean.ocorrenciaDTO.progresso}%"  styleClass='#{andamentoOcorrenciaBean.ocorrenciaDTO.progresso == 0 ? "animated2" : "animated"}' style="width:170px" />
+        <script type="text/javascript">
+            $(document).ready(function() {
+                PF('pb').setValue(#{andamentoOcorrenciaBean.ocorrenciaDTO.progresso});
+                var x = #{andamentoOcorrenciaBean.ocorrenciaDTO.progresso};
+                if (x === 0){
+                    PF('pb').setValue(0.00001);
+                }
+            });
+        </script>
+    </h:panelGrid>
+
+    <p:panel header="#{labels.campoDescricao}" id="dscd2" widgetVar="dsc" styleClass="painel" collapsed="false" style="background: none; border: none">
+        <h:outputText styleClass="area"  value="#{andamentoOcorrenciaBean.ocorrenciaDTO.descricao}" style="width: 100%" escape="false" />				
+    </p:panel>
+    <p:commandButton immediate="true" action="#{andamentoOcorrenciaBean.mostrarPanelAtualizar(true)}" styleClass="botaoAtualizarOcorrencia" value="#{labels.registrarAndamento}" ajax="false" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoOcorrenciaBean.ocorrenciaDTO.codigo}'" />
+    
+    <p:commandButton immediate="true" action="#{andamentoOcorrenciaBean.mostrarPanelAtualizar(false)}" styleClass="botaoAtualizarOcorrencia" value="#{labels.alterarOcorrencia}" ajax="false" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoOcorrenciaBean.ocorrenciaDTO.codigo}'" />
+
+    <p:commandButton immediate="true"  styleClass="botaoAtualizarOcorrencia" rendered="#{andamentoOcorrenciaBean.ocorrenciaDTO.acaoDisciplinarDTO.tipoOcorrenciaDTO.codigo == 1}" action="#{andamentoOcorrenciaBean.converterAcao}" value="#{labels.converterAcaoDisciplinar}" ajax="true" onclick="PF('dlg2').show();"  />
+    
+    <p:dialog  header="#{labels.converterAcaoDisciplinar}" widgetVar="dlg2" height="150" width="500" closeOnEscape="true" >
+        <h:panelGrid columns="4" cellpadding="5">
+            <t:div><h:outputText value="#{labels.campoAcaoDisciplinar}" style="font-weight: bold"/></t:div>
+            <p:selectOneMenu  id="acaoDisciplinar" value="#{andamentoOcorrenciaBean.ocorrenciaDTO.acaoDisciplinarDTO}"  converter="SimpleIndexConverter">  
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{andamentoOcorrenciaBean.listaAcaoDisciplinar}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />    
+            </p:selectOneMenu>
+            <h:outputText value="#{labels.campoDataPrevista}" style="font-weight: bold" />
+            <p:calendar locale="pt" showButtonPanel="true" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" navigator="true" value="#{andamentoOcorrenciaBean.ocorrenciaDTO.dataPrevista}"  pattern="dd/MM/yyyy" size="8"/>
+         </h:panelGrid>
+        <p:commandButton action="#{andamentoOcorrenciaBean.save()}" value="#{labels.converter}" ajax="false" style="margin-top: 12px"/>                                
+    </p:dialog>   
+    
+    <p:commandButton action="#{andamentoOcorrenciaBean.novo}" value="#{labels.botaoVoltar}" ajax="false" style="margin-top: 12px"/>                                
+</html>

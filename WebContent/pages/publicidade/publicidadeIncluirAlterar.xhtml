@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <ui:composition template="../generic/genericPage.xhtml">   
+        <ui:define name="CONTEUDO">
+            <h:panelGrid columns="1" cellpadding="10">
+                <h:form id="formPrincipal" enctype="multipart/form-data">  
+                    <p:messages id="messagesGenerico"/>  
+                    <h:outputText value="#{labels.itensObrigatorios}" style="color: red; font-size: 15px"/>                
+                    <t:panelGrid columns="2" cellpadding="3" columnClasses="col, col0">
+                                  <h:outputText value="#{labels.campoDataFimVisualizacao}" />
+                        <p:calendar  maxlength="10" onkeypress="mascara(this, data)" onkeyup="mascara(this, data);" locale="pt" showButtonPanel="true" navigator="true" value="#{publicidadeBean.objeto.dataFimVisualizacao}" pattern="dd/MM/yyyy"/>            
+                        <ui:insert name="ADICIONAIS"/>
+                        <h:outputText value="#{labels.linkDaImagem}" />
+                        <p:inputText value="#{publicidadeBean.objeto.link}" />
+                        <h:outputText value="#{labels.selecioneImagem} " />
+                        
+                        <h:inputFile value="#{publicidadeBean.file}" required="true" requiredMessage="Você precisa fazer o upload de alguma imagem" style="border-top: 10px" id="arquivoUpload" />
+                        <h:panelGrid columns="2" cellpadding="3">
+                            <p:commandButton action="#{publicidadeBean.save}" value="#{labels.botaoSalvar}" ajax="false"/>
+                            <p:commandButton action="#{publicidadeBean.novo}" value="#{labels.botaoCancelar}" ajax="false" immediate="true"/>
+                        </h:panelGrid>                         
+                    </t:panelGrid>
+                </h:form>
+            </h:panelGrid>
+        </ui:define>            
+    </ui:composition>            
+</html>

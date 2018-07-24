@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{usuarioBean}" />        
+        <ui:define name="CONTEUDO">
+            <h:form>  
+                <p:messages/>
+                <h:outputText value="#{labels.itensObrigatorios}" style="color: red; font-size: 15px"/>
+                <h:panelGrid columns="2" cellpadding="3" rendered="#{!bean.alterandoSenha}">
+                    <t:div><h:outputText value="#{labels.campoNome}" /><h:outputText value="*" style="color: red"/></t:div> 
+                    <p:inputText value="#{bean.objeto.nome}" label="Nome" size="50" />
+
+                    <t:div><h:outputText value="#{labels.campoEmail}" /><h:outputText value="*" style="color: red"/></t:div>                                             
+                    <p:inputText value="#{bean.objeto.email}" label="Email" size="50" />
+
+                    <t:div><h:outputText value="#{labels.campoLogin}" /><h:outputText value="*" style="color: red"/></t:div> 
+                    <p:inputText value="#{bean.objeto.login}" label="Login" size="50" />
+
+                    <t:div><h:outputText value="#{labels.campoSenha}" /><h:outputText value="*" style="color: red"/></t:div> 
+                    <p:commandButton value="#{labels.botaoAtualizar} #{labels.campoSenha}" actionListener="#{bean.alterarSenha}" update="@form" />
+
+                    <h:outputText value="#{labels.campoTelefone}" />
+                    <p:inputMask value="#{bean.objeto.telefone}" mask="(99) 9999-9999"/>  
+
+                    <h:outputText value="#{labels.campoDataNascimento}" />
+                    <p:inputMask value="#{bean.objeto.dataNascimento}" maxlength="10" mask="99/99/9999">
+                        <f:convertDateTime pattern='dd/MM/yyyy'  locale="pt_BR" timeZone="America/Sao_Paulo"/>
+                    </p:inputMask>
+                </h:panelGrid>
+                <h:panelGrid columns="2" cellpadding="3" rendered="#{!bean.alterandoSenha}">
+                    <p:commandButton action="#{bean.save}" value="#{labels.botaoSalvar}" ajax="false" />
+                    <p:commandButton action="#{bean.home}" value="#{labels.botaoCancelar}" ajax="false" immediate="true"/>
+                </h:panelGrid>
+		
+                <h:panelGrid columns="2" cellpadding="3" rendered="#{bean.alterandoSenha}">
+                    <t:div><h:outputText value="#{labels.campoSenha} Atual" /><h:outputText value="*" style="color: red"/></t:div>
+                    <p:password feedback="false" value="#{bean.senha}" promptLabel="Digite sua senha atual" />
+
+                    <t:div><h:outputText value="#{labels.campoSenha} Nova" /><h:outputText value="*" style="color: red"/></t:div> 
+                    <p:password feedback="true" maxlength="20" value="#{bean.objeto.senha}"
+                                promptLabel="Digite A Nova Senha" weakLabel="Senha Fraca"   
+                                goodLabel="Senha Segura" strongLabel="Senha Super Segura" />
+
+                    <t:div><h:outputText value="#{labels.campoConfirmarSenha} Nova" /><h:outputText value="*" style="color: red"/></t:div> 
+                    <p:password id="confirmaSenha" feedback="false" maxlength="20" value="#{bean.confirmaSenha}"
+                                promptLabel="Confirme Sua Senha" />
+                </h:panelGrid>
+                <h:panelGrid columns="2" cellpadding="3" rendered="#{bean.alterandoSenha}">
+                    <p:commandButton value="#{labels.botaoSalvar} #{labels.campoSenha}" actionListener="#{bean.saveSenha}" update="@form" />
+                    <p:commandButton value="#{labels.botaoCancelar}" actionListener="#{bean.cancelAlteracaoSenha}" update="@form" immediate="true" />
+                </h:panelGrid>
+            </h:form>
+        </ui:define>       
+    </ui:composition>
+</html>

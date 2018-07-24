@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.1"
+    xmlns="http://java.sun.com/xml/ns/javaee" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+    http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
+
+
+    <converter>
+        <converter-id>SimpleIndexConverter</converter-id>
+        <converter-class>com.core.SimpleIndexConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>AlunoConverter</converter-id>
+        <converter-class>com.converter.AlunoConverter</converter-class>
+    </converter>
+    <converter>
+        <converter-id>UsuarioConverter</converter-id>
+        <converter-class>com.converter.UsuarioConverter</converter-class>
+    </converter>
+    <application>
+        <resource-bundle>
+            <base-name>com.properties.labels</base-name>
+            <var>labels</var>
+        </resource-bundle>
+        <locale-config>
+            <default-locale>pt_BR</default-locale>  
+        </locale-config>
+        <message-bundle>  
+            com.properties.labels
+        </message-bundle> 
+    </application>
+    
+</faces-config>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"      
+      xmlns:t="http://myfaces.apache.org/tomahawk" >    
+    <ui:composition template="../generic/genericIncluirAlterar.xhtml">                                                            
+        <ui:define name="CAMPOS">                                                
+            <t:div><h:outputText value="#{labels.campoDescricao}" /><h:outputText value="*" style="color: red"/></t:div>
+            <p:inputText value="#{bean.objeto.descricao}" required="false" label="Descricao" size="50" />
+
+            <ui:insert name="ADICIONAIS" />
+        </ui:define>
+    </ui:composition>                                
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <ui:composition template="../chamado/chamadoIncluirAlterar.xhtml">                                        
+        <ui:param name="bean" value="#{chamadoInfraBean}" />
+        <ui:define name="ADICIONAIS">                                    
+            <t:div><h:outputText value="#{labels.campoCampus}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <h:outputText value="#{bean.campusDTO.descricao}" style="font-weight: bold" />
+            <t:div><h:outputText value="#{labels.campoLocalizacao}" /><h:outputText value="*" style="color: red"/></t:div>
+            <p:selectOneMenu id="localizacao" value="#{bean.localizacaoDTO}"  converter="SimpleIndexConverter">  
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{bean.listaLocalizacao}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" /> 
+                <p:ajax listener="#{bean.refreshPatrimonio}"  
+                        immediate="true"  
+                        event="change"  
+                        update="patrimonios"  
+                        process="localizacao" />    
+            </p:selectOneMenu>
+            <h:outputText value="#{labels.variosPatrimonios}" />
+            <h:selectBooleanCheckbox label="Vários patrimonios" value="#{bean.variosPatrimonios}" id="variosPatrimonios"> 
+                <p:ajax listener="#{bean.mostrarPatrimonios}"  
+                        immediate="true" 
+                        update="patrimonios"/>
+            </h:selectBooleanCheckbox>
+            <t:div><h:outputText value="#{labels.campoPatrimonio}(s)" /><h:outputText value="*" style="color: red"/></t:div>
+            <p:outputPanel id="patrimonios">
+                <p:selectOneMenu id="patrimonio" value="#{bean.objeto.patrimonioDTO}" converter="SimpleIndexConverter" rendered="#{!bean.variosPatrimonios}"> 
+                    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                    <t:selectItems value="#{bean.listaPatrimonio}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                              
+                </p:selectOneMenu> 
+                
+                <t:selectManyCheckbox  layoutWidth="4" layout="pageDirection" value="#{bean.patrimonioDestino}" rendered="#{bean.variosPatrimonios}" converter="SimpleIndexConverter" id="fundo">
+                    <t:selectItems value="#{bean.listaPatrimonio}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                </t:selectManyCheckbox>
+            </p:outputPanel>
+            <t:panelGroup colspan="2" style="overflow: visible">
+                <t:div style="width: 100%; overflow: visible"><h:outputText value="#{labels.campoDescricao}" /><h:outputText value="*" style="color: red"/>                      
+                    <br />
+                    <h:outputText value="Ex: Computador não está ligando" style="color: darkgrey; font-size: 10px;"/>
+                    
+                    <p:editor value="#{bean.objeto.descricao}"  width="700" height="100" />                    
+                </t:div> 
+            </t:panelGroup>
+            <style type="text/css">
+                .col{
+                    width: 70px; 
+                }
+            </style>
+        </ui:define>
+    </ui:composition>                                
+</html>

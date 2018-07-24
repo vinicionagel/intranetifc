@@ -1,0 +1,62 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <h:form>
+        <h:panelGrid columns="8" cellpadding="5" id="updatePanel" rendered="#{!andamentoOcorrenciaBean.somenteAndamento}">
+            <h:outputText value="#{labels.campoAssunto}" style="font-weight: bold" />
+            <p:inputText value="#{andamentoOcorrenciaBean.ocorrenciaDTO.titulo}" />
+
+            <h:outputText value="#{labels.campoSetorAtribuido}" style="font-weight: bold" />
+            <p:selectOneMenu value="#{andamentoOcorrenciaBean.ocorrenciaDTO.setorDTOAtribuido}" converter="SimpleIndexConverter" > 
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{ocorrenciaBean.listaSetores}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+            </p:selectOneMenu>                                    
+
+            <h:outputText value="#{labels.campoDataPrevista}" rendered="#{andamentoOcorrenciaBean.ocorrenciaDTO.acaoDisciplinarDTO.tipoOcorrenciaDTO.codigo == 2}" style="font-weight: bold"  />
+            <p:calendar locale="pt" showButtonPanel="true" onkeypress="mascara(this,data)" rendered="#{andamentoOcorrenciaBean.ocorrenciaDTO.acaoDisciplinarDTO.tipoOcorrenciaDTO.codigo == 2}" onkeyup="mascara(this,data)" navigator="true" value="#{andamentoOcorrenciaBean.ocorrenciaDTO.dataPrevista}"  pattern="dd/MM/yyyy" size="8"/>
+
+            <h:outputText value="#{labels.campoPrioridade}" style="font-weight: bold" />  
+            <p:selectOneMenu value="#{andamentoOcorrenciaBean.ocorrenciaDTO.prioridadeDTO}" converter="SimpleIndexConverter" >
+                <t:selectItems value="#{andamentoOcorrenciaBean.listaPrioridade}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+            </p:selectOneMenu>
+            
+            <h:outputText value="#{labels.campoAcaoDisciplinar}" style="font-weight: bold"/>
+            <p:selectOneMenu  id="acaoDisciplinar" value="#{andamentoOcorrenciaBean.ocorrenciaDTO.acaoDisciplinarDTO}"  converter="SimpleIndexConverter">  
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{andamentoOcorrenciaBean.listaAcaoDisciplinar}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />    
+            </p:selectOneMenu>
+        </h:panelGrid>  
+        <p:panel header="#{labels.campoDescricao}" id="dscd" styleClass="painel" toggleSpeed="300" rendered="#{!andamentoOcorrenciaBean.somenteAndamento}" >                                    
+            <p:ajax event="toggle" update="editor" />
+            <p:outputPanel  id="editor">
+                <p:editor id="editar" value="#{andamentoOcorrenciaBean.ocorrenciaDTO.descricao}"  width="900" height="100" />
+            </p:outputPanel>
+        </p:panel>
+        <h:panelGrid columns="8" cellpadding="6" rendered="#{andamentoOcorrenciaBean.somenteAndamento}" >
+            <h:outputText value="#{labels.campoStatus}" style="font-weight: bold"/>
+            <p:selectOneMenu value="#{andamentoOcorrenciaBean.ocorrenciaDTO.statusOcorrenciaDTO}" converter="SimpleIndexConverter" required="true" requiredMessage="Selecione pelo menos um status">
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{andamentoOcorrenciaBean.listaStatus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+            </p:selectOneMenu>   
+            <h:outputText value="#{labels.campoProgresso} | % " style="font-weight: bold"/>  
+            <h:outputText id="output1" value="#{andamentoOcorrenciaBean.ocorrenciaDTO.progresso}" style="margin-left: -10px;"/>
+            <h:inputHidden id="progreso1" value="#{andamentoOcorrenciaBean.ocorrenciaDTO.progresso}" />  
+            <p:slider for="progreso1" display="output1" step="10" style="width:170px" minValue="0" maxValue="100"/> 
+
+            <p:outputPanel id="mostrarUploadPanel"> 
+                <p:commandLink  value="Adicionar arquivo" onclick="PF('arquivoAdd').show()"/>
+            </p:outputPanel>
+        </h:panelGrid>                                
+
+      
+        <p:panel header="#{labels.campoAtualizar}" rendered="#{andamentoOcorrenciaBean.somenteAndamento}">
+            <p:editor value="#{andamentoOcorrenciaBean.campoDescricaoAndamento}"  width="900" height="100" />
+        </p:panel>
+
+        <p:commandButton action="#{andamentoOcorrenciaBean.save}" value="#{labels.botaoSalvar}"  ajax="false" style="margin-top: 12px" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoOcorrenciaBean.ocorrenciaDTO.codigo}'" />
+
+        <p:commandButton action="#{andamentoOcorrenciaBean.mostrarPanelAtualizar(false)}" value="#{labels.botaoCancelar}" ajax="false" style="margin-top: 12px" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoOcorrenciaBean.ocorrenciaDTO.codigo}'" />
+    </h:form>
+</html>

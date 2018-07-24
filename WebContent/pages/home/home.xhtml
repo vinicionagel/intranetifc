@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <f:view locale="#{localeController.currentLocale}" >
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <title>Intranet - IFC Rio do Sul</title>
+            <link rel="stylesheet" type="text/css" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <link rel="stylesheet" type="text/css" href="../../css/styleHome.css" />
+            <script type="text/javascript" src="../../js/menu.js"/>
+        </h:head>       
+        <h:body>
+                          
+
+            <p:layout fullPage="true">
+                <p:ajaxStatus  id="ajaxStatusPanel">  
+                    <f:facet name="start">  
+                        <p:dialog visible="true" closable="false" resizable="false"  >
+                            <p:graphicImage value="/images/ajaxloading.gif" styleClass="centralizadoImagemCarregando"/>  
+                        </p:dialog>
+                    </f:facet>  
+                    <f:facet name="complete">  
+                        <h:outputText value="" />  
+                    </f:facet>  
+                </p:ajaxStatus>    
+                <ui:include src="../menu/menu.xhtml" />
+                <p:layoutUnit position="center" id="layoutCenter"> 
+                    <ui:param name="bean" value="#{minhaPaginaBean}" /> 
+
+                    <h:form id="formPrincipal">                                                                                                
+                        <p:messages id="messages" closable="true"/>
+                        <p:tabView id="tabView" cache="false"  dynamic="true" styleClass="tabView" activeIndex="#{bean.tabIndex}" effect="blind">			    
+                            <p:ajax event="tabChange" listener="#{bean.onTabChange}" update=":formPrincipal:tabView" />
+
+                            <p:tab id="tab0" title="Dados Pessoais">
+                                <t:div style="float: left; margin-right: 10px; width: 70%">
+
+                                    <!--
+                                        Dados do usuário
+                                    -->
+                                    <p:panel header="#{labels.campoMeusDados}" styleClass="paineis">
+                                        <f:facet name="actions">
+                                            <h:link outcome="#{usuarioBean.minhaConta()}" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" title="#{labels.campoAlterarDados}">
+                                                <h:outputText styleClass="ui-icon ui-icon-pencil" />  
+                                                <f:param name="codigo" value="minhaPagina"/>
+                                            </h:link>
+                                        </f:facet>
+
+                                        <t:panelGrid columns="2" cellpadding="3" style="font-size: 12px;">
+                                            <h:outputText value="#{labels.campoNome}: " />
+                                            <h:outputText value="#{bean.usuario.nome}" />
+
+                                            <h:outputText value="#{labels.campoEmail}: " />
+                                            <h:outputText value="#{bean.usuario.email}"  />
+
+                                            <h:outputText value="#{labels.campoLogin}: " />
+                                            <h:outputText value="#{bean.usuario.login}"  />
+
+                                            <h:outputText value="#{labels.campoTelefone}: " />
+                                            <h:outputText value="#{bean.usuario.telefone}" />  
+
+                                            <h:outputText value="#{labels.campoDataNascimento}: " />
+                                            <h:outputText value="#{bean.usuario.dataNascimento}">
+                                                <f:convertDateTime pattern='dd/MM/yyyy'  locale="pt_BR" timeZone="America/Sao_Paulo"/>
+                                            </h:outputText>
+
+                                            <t:panelGroup colspan="2" style="padding-left: 15px">
+                                                <h:outputText value="#{labels.campoCampus} / #{labels.campoSetor}:" style="margin-left: -15px" />
+                                                <t:htmlTag value="br"/>                                        
+                                                <t:dataList value="#{bean.campusUsuarioLogado}" var="campus" >
+                                                    <p:spacer height="20" width="0" />
+                                                    <h:outputText value="#{campus.descricao}:" />                                            
+                                                    <t:htmlTag value="br"/>
+                                                    <t:dataList value="#{bean.getSetoresUsuarioPorCampus(campus)}" var="setor">
+                                                        <h:outputText value="- #{setor.descricao}" style="margin-left: 10px"/>
+                                                        <t:htmlTag value="br"/>
+                                                    </t:dataList>											    
+                                                </t:dataList>
+                                            </t:panelGroup>
+                                        </t:panelGrid>
+                                    </p:panel>                                    
+                                </t:div>                                
+
+                                <t:div>
+                                    <!--
+                                        Resumo de tempo trabahado
+                                    -->
+
+                                    <p:panel styleClass="paineis" header="#{labels.configuracoesRecebimentoEmail}">                                                                                    
+                                        <h:outputText value="#{labels.receberEmail}:"/>
+                                        <h:selectManyCheckbox value="#{configuracaoBean.configuracoesEmailSelecionadas}" layout="pageDirection" converter="SimpleIndexConverter">
+                                            <t:selectItems value="#{configuracaoBean.configuracoesEmail}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}"/>
+                                        </h:selectManyCheckbox>
+                                        <p:commandButton action="#{configuracaoBean.definirConfiguracoes}" value="#{labels.definir}" update=":formPrincipal:messages"/>
+                                    </p:panel>
+                                </t:div>
+
+                                <t:div>
+                                    <!--
+                                        Configuração de Email
+                                    -->
+
+                                    <p:panel header="#{labels.campoTempoTrabalhado}"  styleClass="paineis" >
+                                        <ul>
+                                            <li><h:outputText value="#{labels.campoUltimosSeteDias}: "/>
+                                                <h:outputText value="#{bean.horasSeteDias}" /></li>
+
+                                            <li><h:outputText value="#{labels.campoMesAnterior}: "/>
+                                                <h:outputText value="#{bean.horasMesAnterior}" /></li>
+
+                                            <li><h:outputText value="#{labels.campoMesAtual}: "/>
+                                                <h:outputText value="#{bean.horasMesAtual}" /></li>
+                                        </ul>
+                                    </p:panel>
+                                </t:div>
+                            </p:tab>
+                            <!--
+                                Referente a Chamado
+                            -->
+
+                            <p:tab id="tab1" title="Chamados" rendered="#{interfaceBean.interfaceChamado}">
+                                <t:div>
+                                    <!--
+                                        Links para chamados
+                                    -->
+                                    <p:splitButton value="#{labels.botaoChamadosAtribuidos}" ajax="false" action="#{chamadoBean.pesquisar()}">
+                                        <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="chamadosAtribuidos" />
+                                        <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="chamadosAtribuidos" />
+
+                                        <p:menuitem value="#{labels.botaoMeusChamados}" ajax="false" action="#{chamadoBean.pesquisar()}">
+                                            <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="meusChamados" />
+                                            <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="meusChamados" />
+                                        </p:menuitem>                                                                                             
+
+                                        <p:separator />                                              
+
+                                        <p:menuitem value="#{labels.botaoChamadosObservados}" ajax="false" action="#{chamadoBean.pesquisar()}">
+                                            <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="chamadosObservados" /> 
+                                            <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="chamadosObservados" /> 
+                                        </p:menuitem>                                                                                        
+                                    </p:splitButton>
+
+                                    <p:splitButton action="#{chamadoInfraBean.incluirAlterar}" value="Abrir Chamado de Infra-Estrutura" ajax="false" immediate="false">
+                                        <p:menuitem action="#{chamadoServicoBean.incluirAlterar}" value="Abrir Chamado de Serviço" ajax="false" immediate="false" style="width: 100%" />
+                                    </p:splitButton> 
+                                </t:div>                                
+
+                                <t:div styleClass="tituloAbaChamado1">
+                                    <h:outputText value="Criados por Você" />                                
+                                </t:div>
+                                <h:outputText rendered="#{empty bean.meusChamados}" value="Você não criou nenhum chamado" />
+                                <p:carousel styleClass="paineis" vertical="true" rendered="#{not empty bean.meusChamados}">
+                                    <f:facet name="header">
+                                        <h:outputText value="#{labels.campoChamadosAbertosPor} #{contextoBean.nomeUsuarioLogado}" />
+                                    </f:facet>
+
+                                    <c:forEach items="#{bean.meusChamados}" var="lista">
+                                        <t:div rendered="#{not empty lista}" >
+                                            <t:div styleClass="tituloData">
+                                                <h:outputText value="#{lista.get(0).dataHoraAbertura}" />
+                                            </t:div>
+                                            <c:forEach items="#{lista}" var="chamado">
+                                                <h:outputLink value="../chamado/andamentoChamado.jsf?codigo=#{chamado.codigo}" style="text-decoration: none ">
+                                                    <h:outputText id="meuChamado#{chamado.codigo}"  value="#{chamado.titulo}" styleClass="chamado#{chamado.statusDTO.codigo}" />
+                                                </h:outputLink>
+                                                <p:spacer height="15" width="15" />
+                                                <t:htmlTag value="br" />
+                                                <p:tooltip for="meuChamado#{chamado.codigo}">
+                                                    <h:outputText value="" />
+
+                                                    <h:outputText value="#{chamado.titulo}" />
+                                                    <h:outputText value=" &lt;#{chamado.codigo}&gt;:"/>
+                                                    <h:outputText value="#{chamado.descricao}" escape="false" />
+                                                    <br />
+                                                    <p:progressBar widgetVar="pb" value="#{chamado.progresso}" labelTemplate="#{chamado.progresso}%" styleClass="animated" style="float: left; height: 1em; margin-right: 4px; width: 42px" />
+                                                    <script type="text/javascript">
+                                                        $(document).ready(function() {
+                                                            PF('pb').setValue(#{chamado.progresso});
+                                                        });
+                                                    </script>
+                                                    <h:outputText value=" #{chamado.statusDTO.descricao}" />
+                                                    <t:htmlTag value="br" />
+                                                    <h:outputText value="#{labels.campoDataHoraAbertura}: "/>
+                                                    <h:outputText value="#{chamado.dataHoraAbertura}" />
+                                                    <t:htmlTag value="br" />
+                                                    <h:outputText value="#{labels.campoDataPrevista}: " />
+                                                    <h:outputText value="#{chamado.dataPrevista}" />
+                                                    <t:htmlTag value="br" />
+                                                    <h:outputText value="#{labels.campoPrioridade}: " />
+                                                    <h:outputText value=" #{chamado.prioridadeDTO.descricao}" />
+                                                </p:tooltip>
+                                            </c:forEach>
+                                        </t:div>
+                                    </c:forEach>
+                                    <f:facet name="footer" class="teste">
+                                        <h:outputText styleClass="chamado1" value="Novo " />
+                                        <h:outputText styleClass="chamado2" value="Atribuido " />
+                                        <h:outputText styleClass="chamado3" value="Em Andamento " />
+                                        <h:outputText styleClass="chamado4" value="Devolvido " />
+                                        <h:outputText styleClass="chamado5" value="Cancelado " />
+                                        <h:outputText styleClass="chamado6" value="Fechado " />
+                                        <h:outputText styleClass="chamado7" value="Retirado/Manutenção " />
+                                    </f:facet>
+                                </p:carousel>
+
+
+
+                                <t:div styleClass="tituloAbaChamado2">
+                                    <h:outputText value="Previstos para Semana" />
+                                </t:div>
+
+                                <t:div style="text-align: center">
+                                    <h:outputText value="#{labels.nullProximosEventos}" rendered="#{bean.eventosProximaSemana.size() > 0 and bean.eventosProximaSemana.get(0).size() == 0}" />
+                                </t:div>                               
+
+                                <c:forEach items="#{bean.eventosProximaSemana}" var="lista">
+                                    <t:div styleClass="diaEvento">
+                                        <t:div styleClass="tituloData">
+                                            <h:outputText value="#{lista.get(0).dataPrevista}" />
+                                        </t:div>
+
+                                        <c:forEach items="#{lista}" var="chamado" rendered="#{lista.get(0).codigo != null}">
+                                            <h:outputLink value="../chamado/andamentoChamado.jsf?codigo=#{chamado.codigo}" style="text-decoration: none ">
+                                                <h:outputText value="#{chamado.titulo}" styleClass="chamado#{chamado.statusDTO.codigo}" />
+                                            </h:outputLink>
+                                            <p:spacer height="15" width="15" />
+                                            <t:htmlTag value="br" />
+                                        </c:forEach>
+                                    </t:div>
+                                </c:forEach>                                                                                                                                    
+                            </p:tab>
+
+                            <!--
+                                Resumo de atividades registradas
+                            -->
+                            <p:tab id="tab2" title="Resumo de suas atividades" disabled="#{contextoBean.campus == null}"> 
+                                <p:panel id="resumoAtividades" header="#{labels.campoResumoAtividades} (#{labels.campoUltimosSeteDias}) : #{bean.horasSeteDias} #{labels.campoHoras}" rendered="#{!bean.mostrarDetalhesChamados}" styleClass="resumoHoras">
+                                    <f:facet name="actions">  
+                                        <p:commandLink action="#{bean.alterarDetalhesChamados}" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" update="@form" 
+                                                       rendered="#{bean.resumoAtividadesSemana.get(0).get(0).tempo != null}" title="#{labels.campoMostrarDetalhes}">
+                                            <h:outputText styleClass="ui-icon ui-icon-circlesmall-plus" />  
+                                        </p:commandLink>
+                                    </f:facet>
+
+                                    <t:div style="text-align: center">
+                                        <h:outputText value="#{labels.nullAtividadesRegistradas}" rendered="#{bean.resumoAtividadesSemana.get(0).get(0).tempo == null}" />
+                                    </t:div>
+
+                                    <c:forEach items="#{bean.resumoAtividadesSemana}" var="dia">
+
+                                        <p:dataTable var="item" value="#{dia}" paginator="false" style="margin-bottom: 4px" rendered="#{bean.resumoAtividadesSemana.get(0).get(0).tempo != null}">
+
+                                            <p:column style="width: 80%">
+                                                <f:facet name="header">
+                                                    <!-- Mostra o texto apenas no topo da tabela -->
+                                                    <h:outputText value="#{labels.campoChamado}" rendered="#{bean.resumoAtividadesSemana.get(0).get(0).dataTrabalho == dia.get(0).dataTrabalho}" />
+
+                                                    <h:outputText value="#{dia.get(0).dataTrabalho}" style="float: left" />
+                                                </f:facet>
+
+                                                <h:outputLink value="../chamado/andamentoChamado.jsf?codigo=#{item.chamadoDTO.codigo}" style="text-decoration: none ">
+                                                    <h:outputText value="#{item.chamadoDTO.titulo}" />
+                                                </h:outputLink>
+                                            </p:column>
+
+                                            <p:column style="width: 20%">
+                                                <f:facet name="header">
+                                                    <!-- Mostra o texto apenas no topo da tabela -->
+                                                    <h:outputText value="#{labels.campoTempoTrabalhado}" rendered="#{bean.resumoAtividadesSemana.get(0).get(0).dataTrabalho == dia.get(0).dataTrabalho}" />
+                                                </f:facet>
+
+                                                <h:outputText value="#{item.tempo}" />
+                                            </p:column>
+                                        </p:dataTable>    
+
+                                    </c:forEach>
+                                </p:panel>
+
+                                <!--
+                                    Detalhando atividades registradas
+                                -->
+
+                                <p:panel id="resumoHoras" header="#{labels.campoResumoHorasTrabalhadas} (#{labels.campoUltimosSeteDias}) : #{bean.horasSeteDias} #{labels.campoHoras}" rendered="#{bean.mostrarDetalhesChamados}" styleClass="resumoHoras">
+
+                                    <f:facet name="actions">  
+                                        <p:commandLink action="#{bean.alterarDetalhesChamados}" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default" update="@form"
+                                                       rendered="#{bean.resumoAtividadesSemana.get(0).get(0).tempo != null}" title="#{labels.campoOcultarDetalhes}">
+                                            <h:outputText styleClass="ui-icon ui-icon-circlesmall-minus" />  
+                                        </p:commandLink>
+                                    </f:facet> 
+
+                                    <t:div style="text-align: center">
+                                        <h:outputText value="#{labels.nullAtividadesRegistradas}" rendered="#{bean.resumoAtividadesSemana.get(0).get(0).tempo == null}" />
+                                    </t:div>
+
+                                    <c:forEach items="#{bean.resumoHorasTrabalhadasSemana}" var="dia" rendered="#{bean.resumoHorasTrabalhadasSemana.get(0).size() == 0}">
+
+                                        <p:dataTable var="item" value="#{dia}" paginator="false" style="margin-bottom: 4px" rendered="#{bean.resumoAtividadesSemana.get(0).get(0).tempo != null}">
+
+                                            <p:column style="width: 15%">
+                                                <f:facet name="header">
+                                                    <!-- Mostra o texto apenas no topo da tabela -->
+                                                    <h:outputText value="#{labels.campoChamado}" rendered="#{bean.resumoHorasTrabalhadasSemana.get(0).get(0).dataTrabalho == dia.get(0).dataTrabalho}" />
+
+                                                    <h:outputText value="#{dia.get(0).dataTrabalho}" style="float: left" />
+                                                </f:facet>
+
+                                                <h:outputLink value="../chamado/andamentoChamado.jsf?codigo=#{item.chamadoDTO.codigo}" style="text-decoration: none ">
+                                                    <h:outputText value="#{item.chamadoDTO.titulo}" />
+                                                </h:outputLink>
+                                            </p:column>
+
+
+                                            <p:column style="width: 65%">
+                                                <f:facet name="header">
+                                                    <!-- Mostra o texto apenas no topo da tabela -->
+                                                    <h:outputText value="#{labels.campoComentario}" rendered="#{bean.resumoAtividadesSemana.get(0).get(0).dataTrabalho == dia.get(0).dataTrabalho}" />
+                                                </f:facet>
+
+                                                <h:outputText value="#{item.descricao}" />
+                                            </p:column>
+
+                                            <p:column style="width: 20%">
+                                                <f:facet name="header">
+                                                    <!-- Mostra o texto apenas no topo da tabela -->
+                                                    <h:outputText value="#{labels.campoTempoGasto}" rendered="#{bean.resumoHorasTrabalhadasSemana.get(0).get(0).dataTrabalho == dia.get(0).dataTrabalho}" />
+                                                </f:facet>
+
+                                                <h:outputText value="#{item.tempo}" />
+                                            </p:column>              
+
+                                        </p:dataTable>    
+
+                                    </c:forEach>
+                                </p:panel>
+                            </p:tab>
+                        </p:tabView>
+                    </h:form>
+                </p:layoutUnit>                  
+            </p:layout>
+        </h:body>
+    </f:view>
+</html>

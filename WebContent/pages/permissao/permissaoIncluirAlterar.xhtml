@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:t="http://myfaces.apache.org/tomahawk"  
+      xmlns:ui="http://java.sun.com/jsf/facelets"             
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="../generic/genericIncluirAlterar.xhtml">
+        <ui:param name="bean" value="#{permissaoBean}" />                
+        <ui:define name="CAMPOS">
+            <script type="text/javascript">
+                function updateTitulo(texto) {
+                    spans = document.getElementById('layoutCenter').getElementsByTagName('span');
+                    span = spans[0];
+                    span.innerHTML = "#{labels.tituloCadastro} #{bean.tituloLayoutUnit}: " + '<span style="color: #408D0E">' + texto.toUpperCase();
+                    +'</span>';
+                }
+            </script>
+            <h:head>
+                <script type="text/javascript" src="../../js/permissao.js"/>
+            </h:head>
+            <h:body onload="updateTitulo('#{bean.usuarioDTO.nome}');">
+                <t:panelGroup colspan="2">
+                    <p:tabView>
+                        <p:tab title="Permissões do Sistema"> 
+                            <p:panel style="width: 1000px">
+                                <p:autoComplete cache="true" cacheTimeout="30000" value="#{bean.usuarioDTO}" 
+                                                completeMethod="#{bean.usuarios}" var="a" itemLabel="#{a.nome}" itemValue="#{a}" 
+                                                converter="UsuarioConverter" minQueryLength="4" maxResults="10" forceSelection="true"
+                                                /> 
+                                <p:spacer width="30" height="10" />  
+                                <p:commandButton value="#{labels.botaoPesquisar}" title="Pesquisar" action="#{bean.update}" ajax="false"  /> 
+                            </p:panel>
+                            <p:spacer width="10" height="10" />
+                            <t:div rendered="#{bean.usuarioDTO != null}">
+                                <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Selecionar todos" type="button" onclick="selecionarTodos(this);"  style="margin: 10px 10px 10px -7px" title="#{labels.campoSelecionarTodos}"  />
+                                <c:forEach  items="#{bean.interefacePai}" var="interPai" >
+                                    <p:fieldset legend="#{interPai.descricaoCompleta}"   >
+                                        <input class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="Selecionar todos" type="button" style="float: right" onclick="selecionarTodosPorCampo(this,'#{interPai.descricaoCompleta}')"   />  
+                                        <p:panel header="#{interPai.descricaoCompleta}" style="float: left; margin: 8px; min-width: 300px" >
+                                            <c:forEach items="#{interPai.permissoes}" var="interPais">
+                                                <h:selectBooleanCheckbox value="#{bean.checkMapPermissao[interPais]}" id="a#{interPai.codigo}" style="color: red" onclick="desmarcarTodosPai(this)"  />
+                                                <h:outputLabel for="a#{interPai.codigo}" value="#{interPais.descricao}" />
+                                            </c:forEach>
+                                        </p:panel>
+                                        <c:forEach items="#{bean.interfaces(interPai)}" var="interFilho" > 
+                                            <p:panel header="#{interFilho.descricaoCompleta}" style="min-width: 300px; float: left; margin: 8px"  >
+                                                <c:forEach items="#{interFilho.permissoes}" var="inter2">
+                                                    <h:selectBooleanCheckbox value="#{bean.checkMapPermissao[inter2]}" id="a#{interPai.codigo}b#{inter2.codigo}"  onclick="setX(this.parentNode.id, this, this.parentNode.parentNode.parentNode.parentNode), pegaNome('#{interFilho.descricaoCompleta}', this)"  />
+                                                    <h:outputLabel for="a#{interPai.codigo}b#{inter2.codigo}" value="#{inter2.descricao}" />
+                                                </c:forEach>
+                                            </p:panel>
+                                        </c:forEach>
+                                    </p:fieldset>
+                                    <p:spacer width="10" height="10" />
+                                </c:forEach>
+                            </t:div>
+                        </p:tab>
+                        <p:tab id="tba2" title="Permissão dos Relatórios" disabled="#{bean.validaPermissaoRelatorio()}" >
+                            <h:selectManyCheckbox  layout="pageDirection" value="#{bean.setoresSelecionados}" converter="SimpleIndexConverter" id="fundo" >
+                                <t:selectItems value="#{bean.setores}"  var="item" itemLabel="#{item.campusDTO.descricao} - #{item.descricao}" itemValue="#{item}"/>  
+                            </h:selectManyCheckbox>
+                        </p:tab>
+                    </p:tabView>
+                </t:panelGroup>
+            </h:body>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <ui:composition template="../generic/genericPesquisar.xhtml">
+        <ui:param name="bean" value="#{usuarioBean}" />  
+        <ui:define name="COLUNAS">
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoNome}" />
+                </f:facet>
+                <h:outputText value="#{item.nome}" />
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoEstado}" />
+                </f:facet>
+		<h:outputText value="Ativação Pendente" rendered="#{item.estado == 2}" />
+                <h:outputText value="Ativo" rendered="#{item.estado == 1}" />
+                <h:outputText value="Inativo" rendered="#{item.estado == 0}" />
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoDataNascimento}" />
+                </f:facet>
+                <h:outputText value="#{item.dataNascimento}" >
+                    <f:convertDateTime pattern='dd/MM/yyyy'/>
+                </h:outputText>
+            </p:column>
+        </ui:define>
+	
+	<ui:define name="OPCOES">
+             <p:commandLink action="#{bean.ativarUsuario()}" title="#{labels.botaoAtivarUsuario}"
+			     rendered="#{item.estado == 2 and bean.getPermissaoAtivarUsuario(item)}" update="@form" ajax="true" >
+		<f:setPropertyActionListener target="#{bean.objeto}" value="#{item}" />
+                <h:outputText styleClass="ui-icon ui-icon-check"  /> 
+	    </p:commandLink>
+	</ui:define>	
+    </ui:composition>
+</html>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk"  
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <f:view locale="#{localeController.currentLocale}" encoding="ISO-8859-1">
+        <h:head>
+            <meta http-equiv="Carontent-Type" content="text/html; charset=UTF-8" />
+            <link rel="stylesheet" type="text/css" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <script type="text/javascript" src="../../js/locale-primefaces.js"></script>
+            <script type="text/javascript" src="../../js/mascaras.js"></script>
+            <title>Intranet - IFC Rio do Sul</title> 
+
+            <f:metadata>
+                <f:viewParam name="codigo" value="#{chamadoBean.codigoPesquisa}" />
+                <f:viewParam name="codigo" value="#{andamentoBean.codigoChamadoPesquisa}" />
+            </f:metadata>
+
+            <script type="text/javascript">
+                function updateURL() {
+                    loc = document.location;
+
+                    if (loc.search == "") {
+                        window.history.pushState("", "", loc.href + "?codigo=#{andamentoBean.chamadoDTO.codigo}");
+                    }
+                }
+            </script>
+            <style>                
+                .qualquercoisa .ui-panel-titlebar-icon{
+                    background: transparent !important;
+                }
+            </style>
+        </h:head>
+        <h:body onload="updateURL()">
+            <p:layout fullPage="true">      	 	
+                <ui:include src="../menu/menu.xhtml" />
+                <p:layoutUnit position="center" style="border: none">
+                    <p:layout id="layout">                                         
+                        <p:layoutUnit position="center" header="#{andamentoBean.chamadoDTO.titulo}">
+                            <h:form id="formPrincipal">                                                  
+                                <p:messages id="messages"/>
+                                <t:div  rendered="#{!andamentoBean.mostrarPanel}" >
+                                    <ui:include src="andamentoChamadoAtualizar.xhtml"/> 
+                                </t:div>
+                                <t:div rendered="#{andamentoBean.mostrarPanel}" >
+                                    <ui:include src="andamentoChamadoVisualizar.xhtml" />
+                                </t:div>                                                                
+                            </h:form>
+
+                            <p:separator style="color: #327e04"/>                             
+
+                            <h:form id="andamentoss">
+                                <c:forEach items="#{andamentoBean.andamentos}" var="andamento" id="forEachAndamentos" >
+                                    <p:panel header="Atualizado por #{andamento.usuarioDTO.nome} em #{andamentoBean.arrumarData(andamento.dataHora)} " id="a#{andamento.codigo}" styleClass="qualquercoisa" style="background: none">                                        
+                                        <f:facet name="actions" >
+                                            <p:commandLink styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default"  action="#{andamentoBean.habilitarEditarAndamento}" rendered="#{homeBean.id == andamento.usuarioDTO.codigo and andamento.descricao != null and !andamentoBean.alterandoAndamento}"  update="a#{andamento.codigo}" title="Editar" >  
+                                                <h:outputText styleClass="ui-icon ui-icon-pencil" />  
+                                                <f:setPropertyActionListener target="#{andamentoBean.andamentoDTO}" value="#{andamento}" />  
+                                            </p:commandLink>  
+                                        </f:facet>                                         
+                                        <t:div>
+                                            <h:outputText  value="#{andamento.log}" rendered="#{andamento.log != null}" escape="false" style="width:95%; height:100px; font-style: italic; font-weight: bold "/>
+
+                                            <h:outputText rendered="#{andamento.descricao != null and (andamentoBean.andamentoDTO.codigo != andamento.codigo || andamentoBean.alterandoAndamento == false)}"
+                                                          value="#{andamento.descricao}" style="width:95%; height:100px;" escape="false"/>
+
+                                            <p:editor rendered="#{andamentoBean.alterandoAndamento == true and andamentoBean.andamentoDTO.codigo == andamento.codigo}"
+                                                      value="#{andamentoBean.andamentoDTO.descricao}"  width="900" height="100" />                                                                                                                         
+                                        </t:div>
+
+                                        <p:commandButton action="#{andamentoBean.update}" value="#{labels.botaoSalvar}" rendered="#{andamentoBean.alterandoAndamento == true and andamentoBean.andamentoDTO.codigo == andamento.codigo}" style="margin-top: 12px" update="a#{andamento.codigo}"/>                           
+                                        <p:commandButton action="#{andamentoBean.habilitarEditarAndamento}" value="#{labels.botaoCancelar}" rendered="#{andamentoBean.alterandoAndamento == true and andamentoBean.andamentoDTO.codigo == andamento.codigo}" style="margin-top: 12px" update="a#{andamento.codigo}" /> 
+                                    </p:panel>                                                                        
+                                </c:forEach>
+                            </h:form>
+                        </p:layoutUnit>                                                                                      
+
+                        <p:layoutUnit position="east" header="Observadores" id="LALAL" size="18%" style="border: none">
+                            <h:form id="formLateral">
+                                <p:panel style="border: none; background: none" id="panelObersvadores">
+                                    <p:commandLink action="#{andamentoBean.mostrarObservadorAtualizar}" update="panelObersvadores" value="#{labels.botaoIncluir}" rendered="#{!andamentoBean.mostrarObservador}"/>
+                                    <p:separator id="separator" style="color: #327e04" rendered="#{!empty andamentoBean.chamadoDTO.observadores and !andamentoBean.mostrarObservador}"/>   
+
+                                    <p:selectOneMenu rendered="#{andamentoBean.mostrarObservador}" value="#{andamentoBean.observador}" converter="SimpleIndexConverter" style="margin-bottom: 15px" id="observadores">
+                                        <f:selectItem itemLabel="Selecione um Observador" itemValue="" />
+                                        <t:selectItems value="#{andamentoBean.listaUsuarioObservador}"  var="item" itemLabel="#{item.nome}" itemValue="#{item}" />  
+                                    </p:selectOneMenu>                    
+                                    <p:commandLink actionListener="#{andamentoBean.adicionarObservador}" value="#{labels.botaoIncluir}" rendered="#{andamentoBean.mostrarObservador}" update="panelObersvadores :formLateral"/> 
+                                    <p:spacer height="10px" rendered="#{andamentoBean.mostrarObservador}"/>
+                                    <p:commandLink action="#{andamentoBean.mostrarObservadorAtualizar}" value="#{labels.botaoCancelar}" rendered="#{andamentoBean.mostrarObservador}" update="panelObersvadores :formLateral" />       
+                                </p:panel>
+                                    <p:dataList  value="#{andamentoBean.chamadoDTO.observadores}" var="item" rendered="#{not empty andamentoBean.chamadoDTO.observadores}" style="background: none">
+                                    #{item.nome}
+                                        <p:column>
+                                            <p:commandLink actionListener="#{andamentoBean.removerObservador(item)}" update=":formLateral"   >
+                                                <p:graphicImage value="/images/trash.gif" />                                      
+                                            </p:commandLink>  
+                                        </p:column>
+                                    </p:dataList>  
+                            </h:form>
+                            <h:form id="formLateralUpload" enctype="multipart/form-data" >
+                                <p:dialog id="teste" header="Upload de arquivo" widgetVar="arquivoAdd" hideEffect="explode" style="min-width: 400px" resizable="false">                               
+                                    <h:panelGrid columns="1" cellpadding="5">
+                                        <h:inputFile value="#{andamentoBean.file}" id="file"/>
+                                        <h:commandButton value="Upload"
+                                                         actionListener="#{andamentoBean.criarArquivo()}">
+                                            <f:ajax execute="file" render=":formLateralDownload :formPrincipal:messages :formLateralUpload:file"/>
+                                        </h:commandButton>
+                                    </h:panelGrid>                                
+                                </p:dialog>  
+                            </h:form>
+                            <h:form id="formLateralDownload">
+                                    <p:panel header="Arquivos" id="download" widgetVar="download" styleClass="painel" rendered="#{not empty andamentoBean.chamadoDTO.arquivos}" >
+                                        <ui:repeat value="#{andamentoBean.chamadoDTO.arquivos}" var="item">
+                                            <p:separator  style="color: #327e04"/>
+                                            <h:commandLink value="#{item.nome}" action="#{andamentoBean.downloadArquivo(item)}" >
+                                            </h:commandLink>
+                                            <p:column >
+                                                <p:commandButton onclick="PF('confirmation').show();" action="#{andamentoBean.setArquivo(item)}" immediate="true" icon="ui-icon-circle-close" style="margin-left: 10px; padding: 0px; width: 1.5em; height: 1.5em"/>
+                                            </p:column>
+                                        </ui:repeat>				
+                                    </p:panel>
+                            </h:form>
+                        </p:layoutUnit> 
+                    </p:layout>
+                </p:layoutUnit> 
+                <h:form id="formExclusao">
+                    <p:confirmDialog id="confirmDialog" message="Deseja mesmo excluir o arquivo?!"  
+                                     header="Deletando arquivo" severity="alert" widgetVar="confirmation">  
+                        <p:commandButton id="confirm" value="Sim" oncomplete="PF('confirmation').hide()"  
+                                         action="#{andamentoBean.removerArq}" update=":formLateralDownload, :andamentoss" />  
+                        <p:commandButton id="decline" value="Não" onclick="PF('confirmation').hide()" type="button" />   
+                    </p:confirmDialog> 
+                </h:form>
+            </p:layout>                
+        </h:body>            
+    </f:view>
+</html>

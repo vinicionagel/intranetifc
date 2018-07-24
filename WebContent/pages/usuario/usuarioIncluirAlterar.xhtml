@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    
+       <ui:composition template="../generic/genericIncluirAlterar.xhtml">
+        <ui:param name="bean" value="#{usuarioBean}" />                
+        <ui:define name="CAMPOS">
+            <t:div><h:outputText value="#{labels.campoNome}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:inputText value="#{bean.objeto.nome}" label="Nome" size="50" required="true" requiredMessage="Campo NOME deve ser informado"/>
+
+            <t:div><h:outputText value="#{labels.campoEmail}" /><h:outputText value="*" style="color: red"/></t:div>                                             
+            <p:inputText value="#{bean.objeto.email}" label="Email" size="50" required="true" requiredMessage="Campo EMAIL deve ser informado"/>
+
+            <t:div><h:outputText value="#{labels.campoLogin}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:inputText value="#{bean.objeto.login}" label="Login" size="50" required="true" requiredMessage="Campo LOGIN deve ser informado"/>
+
+            <t:div rendered="#{!bean.alterandoUsuarioAdmin}"><h:outputText  value="#{labels.campoSenha}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:password rendered="#{!bean.alterandoUsuarioAdmin}" feedback="true" maxlength="20" value="#{bean.objeto.senha}"
+                        promptLabel="Digite Sua Senha" weakLabel="Senha Fraca"   
+                        goodLabel="Senha Segura" strongLabel="Senha Super Segura" required="true" requiredMessage="Campo SENHA deve ser informado" />
+            <t:div rendered="#{!bean.alterandoUsuarioAdmin}" ><h:outputText  value="#{labels.campoConfirmarSenha}" rendered="#{!bean.alterandoUsuarioAdmin}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:password rendered="#{!bean.alterandoUsuarioAdmin}" id="confirmaSenha" feedback="false"  maxlength="20" value="#{bean.confirmaSenha}"
+                        promptLabel="Confirme Sua Senha" required="true" requiredMessage="Campo CONFIRMAR SENHA deve ser informado"/>
+            <h:outputText value="#{labels.campoTelefone}" />
+            <p:inputMask value="#{bean.objeto.telefone}" mask="(99) 9999-9999"/>  
+            <h:outputText value="#{labels.campoDataNascimento}" />
+            <p:inputMask value="#{bean.objeto.dataNascimento}" maxlength="10" mask="99/99/9999">
+                <f:convertDateTime pattern='dd/MM/yyyy'  locale="pt_BR" timeZone="America/Sao_Paulo"/>
+            </p:inputMask> 
+            <p:outputPanel rendered="#{bean.alterando and bean.objeto.estado != 2}">
+            <h:outputText value="#{labels.campoSituacao}" />
+            <h:selectOneRadio id="options" value="#{bean.objeto.estado}">
+                <f:selectItem itemLabel="Ativo" itemValue="1" />
+                <f:selectItem itemLabel="Inativo" itemValue="0" />
+            </h:selectOneRadio>
+            </p:outputPanel>
+        </ui:define>
+   </ui:composition>
+</html>

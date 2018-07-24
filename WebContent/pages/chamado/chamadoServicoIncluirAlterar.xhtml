@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" 
+      xmlns:c="http://java.sun.com/jsp/jstl/core">        
+    <ui:composition template="../chamado/chamadoIncluirAlterar.xhtml">                                                
+        <ui:param name="bean" value="#{chamadoServicoBean}" />
+        <ui:define name="ADICIONAIS">               
+            <t:div><h:outputText value="#{labels.campoSetor}" /><h:outputText value="*" style="color: red"/></t:div>
+            <p:selectOneMenu value="#{bean.codigoSetor}" id="setores" style="width: 250px"  panelStyle="width: 250px">
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <c:forEach items="#{chamadoBean.setorSelectItens}" var="item">
+                    <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                </c:forEach>
+                <p:ajax listener="#{bean.refreshServico}"  
+                        immediate="true"  
+                        event="change"  
+                        update="tipoServico"  
+                        process="setores" /> 
+            </p:selectOneMenu>
+            <t:div><h:outputText value="#{labels.campoTipoServico}" /><h:outputText value="*" style="color: red"/></t:div>
+            <p:selectOneMenu id="tipoServico" value="#{bean.tipoServicoDTO}"  converter="SimpleIndexConverter">
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{bean.listaTipoServico}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />
+                <f:ajax listener="#{bean.refreshServico}"  
+                        event="change"
+                        immediate="true"
+                        render="servico"/> 
+            </p:selectOneMenu>
+            <t:div><h:outputText value="#{labels.campoServico}" /><h:outputText value="*" style="color: red"/></t:div>
+            <p:selectOneMenu id="servico" value="#{bean.objeto.servicoDTO}"  converter="SimpleIndexConverter">  
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{bean.listaServico}"  var="item" itemLabel="#{item.descricaoCurta}" itemValue="#{item}" />                                 
+            </p:selectOneMenu>            
+            <t:panelGroup colspan="2" style="overflow: visible">               
+                <h:outputText value="Ex: Laboratório 103 - Tomada no fundo da sala (centro)" style="color: darkgrey; font-size: 10px; margin-left: 80px; "/>
+            </t:panelGroup>                       
+            <h:outputText value="#{labels.campoLocal}" />    
+            <t:panelGroup colspan="2" style="overflow: visible">
+                <h:panelGrid columns="2" cellpadding="0">
+                    <p:selectOneMenu id="localizacao" value="#{bean.localizacaoDTO}"  converter="SimpleIndexConverter" style="margin-right: 5px">  
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaLocalizacao}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                                 
+                    </p:selectOneMenu>  
+                    <p:inputText value="#{bean.local}" required="false" label="" size="30" maxlength="45" />     
+                </h:panelGrid>
+            </t:panelGroup>
+            <t:panelGroup colspan="2" style="overflow: visible">
+                <t:div style="width: 100%; overflow: visible"><h:outputText value="#{labels.campoDescricao}" /><h:outputText value="*" style="color: red"/>                                          
+                    <t:htmlTag value="br"/>
+                    <h:outputText value="Ex: Tomada não está funcionando" style="color: darkgrey; font-size: 10px;"/>
+                    <p:editor value="#{bean.objeto.descricao}"  width="700" height="100" />                    
+                </t:div> 
+            </t:panelGroup>
+            <style type="text/css">
+                .col{
+                    width: 70px; 
+                }
+            </style>
+        </ui:define>
+    </ui:composition>                                            
+</html>

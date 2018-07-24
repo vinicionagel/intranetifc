@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:f="http://java.sun.com/jsf/core" >
+    <f:view locale="#{localeController.currentLocale}" transient="true">
+        <h:head>
+            <title>::.. Sessão expirou ..::</title>
+            <link type="text/css" rel="stylesheet" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        </h:head>
+        <h:body>
+            <p:layout fullPage="true">
+                <p:layoutUnit position="center"  >
+                    <h:form>
+                        <p:messages />
+                        <p:panel>
+                            <div align="center">
+                                <h1>Sua sessão expirou</h1>
+                                <h:link outcome="loginPage" value="Voltar"/>
+                              </div>
+                        </p:panel>
+                    </h:form> 
+                </p:layoutUnit>
+            </p:layout>
+        </h:body>
+    </f:view>
+</html>

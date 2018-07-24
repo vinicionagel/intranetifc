@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets" >
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{chamadoBean}" /> 
+        <ui:define name="CONTEUDO">
+            <h:panelGrid columns="1" cellpadding="8">
+                <h:form id="lista">
+                    <p:messages/>                            
+                    <h:panelGrid columns="3" cellpadding="1">
+                        <p:panel>                                        
+                            <p:inputText value="#{chamadoInfraBean.campoPesquisar}" id="pesquisa" title="digite sua pesquisa"/>
+                            <p:spacer width="10" height="0" />  
+                            <p:commandButton value="#{labels.botaoPesquisar}" ajax="false" title="Pesquisar" >
+                                <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="porTitulo" /> 
+                                <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="porTitulo" />                                             
+                                <f:setPropertyActionListener target="#{chamadoServicoBean.campoPesquisar}" value="#{chamadoInfraBean.campoPesquisar}" />                                
+                            </p:commandButton>                                                                                    
+                            <p:spacer width="20" height="0" />  
+                            <p:splitButton value="#{labels.botaoChamadosAtribuidos}" ajax="true" update="@form" onclick="updateTitulo('#{labels.botaoChamadosAtribuidos}')">
+                                <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="chamadosAtribuidos" /> 
+                                <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="chamadosAtribuidos" />                                 
+                                <p:menuitem value="#{labels.botaoMeusChamados}" ajax="true" update="@form" onclick="updateTitulo('#{labels.botaoMeusChamados}')">  
+                                    <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="meusChamados" /> 
+                                    <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="meusChamados" />                                                                                   
+                                </p:menuitem>                                                                                             
+                                <p:separator />                                              
+                                <p:menuitem value="#{labels.botaoChamadosObservados}" ajax="true" update="@form" onclick="updateTitulo('#{labels.botaoChamadosObservados}')">
+                                    <f:setPropertyActionListener target="#{chamadoInfraBean.opBusca}" value="chamadosObservados" /> 
+                                    <f:setPropertyActionListener target="#{chamadoServicoBean.opBusca}" value="chamadosObservados" />                                     
+                                </p:menuitem>                                                                                        
+                            </p:splitButton>                                          
+                        </p:panel>                                       
+                        <p:spacer width="10" height="0" />  
+                        <p:splitButton action="#{chamadoInfraBean.incluirAlterar}" value="Abrir Chamado de Infra-Estrutura" ajax="false" immediate="false">                                        
+                            <p:menuitem action="#{chamadoServicoBean.incluirAlterar}" value="Abrir Chamado de Serviço" ajax="false" immediate="false" style="min-width: 250px"/>                                          
+                        </p:splitButton>                                                                                                                                           
+
+                    </h:panelGrid>                            
+                    <br/>                           
+
+                    <p:tabView id="tabView" style="width: 100%; height: 100%;" activeIndex="#{chamadoBean.tabIndex}">
+			<p:ajax event="tabChange" listener="#{chamadoBean.onTabChange}" />
+			
+                        <p:tab id="tab0" title="Infra-Estrutura">                                      
+                            <ui:include src="chamadoPesquisarInfra.xhtml" />
+                        </p:tab>  
+
+                        <p:tab id="tab1" title="#{labels.campoServico}"> 
+                            <ui:include src="chamadoPesquisarServico.xhtml" />
+                        </p:tab>                                  
+                    </p:tabView>  
+                </h:form>
+            </h:panelGrid>
+            <script type="text/javascript">
+            
+                function updateTitulo(texto) {
+                    spans = document.getElementById('layoutCenter').getElementsByTagName('span');
+                    span = spans[0];
+                    span.innerHTML = "#{labels.tituloCadastro} #{chamadoBean.tituloLayoutUnit}: " + '<span style="color: #408D0E">' + texto + '</span>'
+                }
+
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

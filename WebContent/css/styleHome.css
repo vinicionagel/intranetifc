@@ -1,0 +1,184 @@
+/* 4 8 15 16 23 42 */
+
+/* último char do nome da classe indica o status do chamado */
+
+.chamado1, .chamado2, .chamado3, .chamado4, .chamado5, .chamado6, .chamado7 {
+    border-radius: 5px;
+    color: #fff !important;
+    margin-bottom: 15px !important;
+    margin-right: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.chamado1:hover, .chamado2:hover, .chamado3:hover,
+.chamado4:hover, .chamado5:hover, .chamado6:hover, .chamado7:hover {
+    font-weight: bold;
+}
+
+/* 1 = novo */
+.chamado1 {
+    background: #df0024;
+    text-decoration: none;
+}
+
+/* 2 = atribuido */
+.chamado2 {
+    background: #cccc33;
+    text-decoration: none !important;
+}
+
+/* 3 = em andamento */
+.chamado3 {
+    background: #327E04;
+    text-decoration: none;
+}
+
+/* 4 = devolvido */
+.chamado4 {
+    background: #724c21;
+    text-decoration: line-through !important;
+}
+
+/* 5 = cancelado */
+.chamado5 {
+    background: #332a29;
+    text-decoration: line-through !important;
+}
+ /* 6 = fechado */
+.chamado6 {
+    background: #0669b2;
+    text-decoration: line-through !important;
+}
+
+/* 7 = retirado/manutenção */
+.chamado7 {
+    background: #cbb99d;
+    text-decoration: line-through !important;
+}
+
+.diaEvento {
+    background: url("/Intranet-IFC/javax.faces.resource/images/ui-bg_highlight-hard_100_f5f3e5_1x100.png.jsf?ln=primefaces-south-street") repeat-x scroll 50% top rgb(245, 243, 229);
+    color: rgb(49, 46, 37);
+    border: 1px solid #DFD9C3;
+    border-radius: 4px;
+    float: left;
+    height: 100px;
+    margin: 1px;
+    text-align: center;
+    width: 13.8%;
+}
+
+.paineis {
+    background: none !important;    
+}
+
+.paineis, .resumoHoras {
+    margin-top: 8px;
+    overflow: auto;
+}
+
+.resumoHoras {
+    background: none !important;
+}
+
+.tituloData {
+    background: rgb(223, 217, 195);
+    font-weight: bold;
+    padding-bottom: 3px;
+    width: 100%
+}
+
+/* CAROUSEL */
+
+.ui-carousel {
+    margin-top: 8px;
+    width: 99% !important;
+}
+
+.ui-carousel-item {
+    overflow: auto !important;
+    text-align: center;
+    width: 19.5%;
+}
+
+.ui-carousel .ui-carousel-dropdown {
+    display: none;
+}
+
+.ui-carousel .ui-carousel-header .ui-carousel-header-title {
+    width: auto;
+}
+
+.ui-carousel .ui-carousel-vertical-viewport ul {    
+    width: 100% !important;
+}
+
+.ui-carousel .ui-carousel-vertical-viewport ul li {
+    height: 130px;
+    float: left !important;
+}
+
+.ui-carousel .ui-carousel-footer {
+    background: none;
+    border: none;
+    margin-left: 10px;
+}
+
+.ui-carousel-viewport {
+    height: 135px !important;
+    margin-top: 6px !important;
+    width: 100% !important;
+}
+
+/* DATALIST */
+
+.ui-datalist-content.ui-widget-content {
+    background:  transparent !important;
+    border: 0px !important;
+    float: left;
+
+}
+
+.ui-datalist-content.ui-widget-content ul {
+    padding-left: 15px;
+}
+
+.tabView{
+    width: 90%; 
+    height: 100%;
+    border: none !important
+}
+
+.ui-corner-all ul{
+    background: none;
+    border: none
+}
+
+.ui-corner-all li{    
+    border-radius: 10px;    
+}
+
+.tituloAbaChamado1, .tituloAbaChamado2{
+    font-size: 30px;    
+    font-variant: small-caps;
+}
+
+.tituloAbaChamado1{    
+    padding: 10px 0px 10px 15px
+}
+
+.tituloAbaChamado2{    
+    padding: 30px 0px 20px 15px
+}
+
+.ui-dialog .ui-dialog-content {     
+    width: 190px;    
+    font-weight: bold;
+    font-size: 12px;
+}
+.centralizadoImagemCarregando{
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+}

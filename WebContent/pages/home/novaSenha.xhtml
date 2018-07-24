@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <f:view locale="#{localeController.currentLocale}">
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <title>Intranet - IFC Rio do Sul</title>
+            <link rel="stylesheet" type="text/css" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <script type="text/javascript" src="../../js/locale-primefaces.js"/>
+            <script type="text/javascript" src="../../js/mascaras.js"/>
+        </h:head>
+        <h:body>
+            <p:layout fullPage="true">
+                <p:layoutUnit position="center" id="layoutCenter" header="#{labels.tituloRecuperarSenha}" >
+		    <h:panelGrid columns="1" cellpadding="10">
+			<h:form>
+			    <p:messages/>  
+			    <t:htmlTag value="p">
+				Para recuperar sua senha, informe o e-mail associado ao seu usuário.
+				<t:htmlTag value="br" />
+				Você receberá, no e-mail informado, uma nova senha válida e sua senha antiga será desativada.
+				<t:htmlTag value="br" />
+				Por motivos de sua segurança, é recomendado que você altere a nova senha que receber.
+			    </t:htmlTag>
+			    
+			    <h:outputText value="#{labels.itensObrigatorios}" style="color: red; font-size: 15px"/>                
+			    <h:panelGrid columns="2" cellpadding="3">
+				
+				<t:div><h:outputText value="#{labels.campoEmail}" /><h:outputText value="*" style="color: red"/></t:div>                                             
+				<p:inputText value="#{usuarioBean.objeto.email}" label="Email" size="50" required="true" requiredMessage="Campo EMAIL deve ser informado"/>
+				
+			    </h:panelGrid>
+			    <h:panelGrid columns="2" cellpadding="3">
+				<p:commandButton action="#{usuarioBean.criarNovaSenha}" value="#{labels.botaoSolicitarSenha}" ajax="false"/>
+				<p:commandButton action="loginPage" value="#{labels.botaoCancelar}" ajax="false" immediate="true"/>
+			    </h:panelGrid>
+			</h:form>
+		    </h:panelGrid>
+                </p:layoutUnit>  
+            </p:layout>
+        </h:body>
+    </f:view>
+</html>

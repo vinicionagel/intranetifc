@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+
+    <ui:composition template="../generic/genericPesquisarDescricao.xhtml">
+        <ui:param name="bean" value="#{patrimonioBean}" />  
+
+        <ui:define name="PAINEIS">
+            <p:panel header="Filtro" collapsed="true" toggleable="true" toggleSpeed="300">
+                <h:panelGrid columns="4" cellpadding="6">                                       
+                    <h:outputText value="#{labels.campoLocalizacao}" />
+                    <p:selectOneMenu value="#{bean.patrimonioDTOPesquisa.localizacaoDTO}" converter="SimpleIndexConverter" style="width: 160px">
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaLocalizacao}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                    </p:selectOneMenu> 
+
+                    <h:outputText value="#{labels.campoFabricante}" />
+                    <p:selectOneMenu value="#{bean.patrimonioDTOPesquisa.fabricanteDTO}" converter="SimpleIndexConverter" style="width: 160px">
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaFabricante}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                    </p:selectOneMenu> 
+
+                    <h:outputText value="#{labels.campoTipoPatrimonio}" />
+                    <p:selectOneMenu value="#{bean.patrimonioDTOPesquisa.tipoPatrimonioDTO}" converter="SimpleIndexConverter" style="width: 160px">
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaTipoPatrimonio}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                    </p:selectOneMenu> 
+                </h:panelGrid>
+
+                <p:commandButton value="#{labels.botaoFiltrar}" update="pesquisaData" action="null" />                                    
+            </p:panel>
+        </ui:define>
+
+        <ui:define name="ADICIONAIS">
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoCampus}" />
+                </f:facet>
+                <h:outputText value="#{item.localizacaoDTO.campusDTO.descricao}" />
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoLocalizacao}" />
+                </f:facet>
+                <h:outputText value="#{item.localizacaoDTO.descricao}" />
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoFabricante}" />
+                </f:facet>
+                <h:outputText value="#{item.fabricanteDTO.descricao}" />
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoTipoPatrimonio}" />
+                </f:facet>
+                <h:outputText value="#{item.tipoPatrimonioDTO.descricao}" />
+            </p:column>
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoNumeroEtiqueta}" />
+                </f:facet>
+                <h:outputText value="#{item.numEtiqueta}" />
+            </p:column>            
+        </ui:define>
+    </ui:composition>
+</html>

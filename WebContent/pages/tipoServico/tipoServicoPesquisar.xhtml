@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"            
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" >
+
+    <ui:composition template="../generic/genericPesquisarDescricao.xhtml">
+        <ui:param name="bean" value="#{tipoServicoBean}" />   
+
+        <ui:define name="ADICIONAIS">                        
+            <p:column>
+                <f:facet name="header">
+                    <h:outputText value="#{labels.campoSetor}" />
+                </f:facet>
+                <h:outputText value="#{item.setorDTO.descricao}" />
+            </p:column>
+        </ui:define>
+    </ui:composition>                  
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"      
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:t="http://myfaces.apache.org/tomahawk" >
+    <ui:composition template="../generic/genericIncluirAlterarDescricao.xhtml">
+        <ui:param name="bean" value="#{localizacaoBean}" />  
+        <ui:define name="ADICIONAIS">
+            <t:div><h:outputText value="#{labels.campoCampus}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <h:outputText value="#{bean.objeto.campusDTO.descricao}" style="font-weight: bold" />
+        </ui:define>            
+    </ui:composition>                  
+</html>

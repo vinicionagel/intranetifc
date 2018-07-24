@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene Scope="Project" version="2">
+    <Scope Scope="Faces Configuration Only"/>
+    <Scope Scope="Project">
+        <Node id="pages/tipoUsuario/tipoUsuarioPesquisar.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="pages/tipoUsuario/tipoUsuarioIncluirAlterar.xhtml" x="150" y="750" zoom="true"/>
+        <Node id="pages/patrimonio/patrimonioPesquisar.xhtml" x="400" y="600" zoom="true"/>
+        <Node id="pages/localizacao/localizacaoPesquisar.xhtml" x="1150" y="450" zoom="true"/>
+        <Node id="pages/tipoPatrimonio/tipoPatrimonioPesquisar.xhtml" x="650" y="600" zoom="true"/>
+        <Node id="pages/home/sobre.xhtml" x="150" y="600" zoom="true"/>
+        <Node id="pages/menu/menu.xhtml" x="900" y="450" zoom="true"/>
+        <Node id="pages/status/statusPesquisar.xhtml" x="1650" y="150" zoom="true"/>
+        <Node id="pages/setor/setorIncluirAlterar.xhtml" x="900" y="150" zoom="true"/>
+        <Node id="pages/setor/setorPesquisar.xhtml" x="400" y="300" zoom="true"/>
+        <Node id="pages/fabricante/fabricantePesquisar.xhtml" x="650" y="300" zoom="true"/>
+        <Node id="pages/tipoPatrimonio/tipoPatrimonioIncluirAlterar.xhtml" x="1400" y="150" zoom="true"/>
+        <Node id="pages/chamado/chamadoPesquisar.xhtml" x="650" y="750" zoom="true"/>
+        <Node id="pages/menu/rodape.xhtml" x="150" y="150" zoom="true"/>
+        <Node id="pages/campus/campusPesquisar.xhtml" x="1400" y="450" zoom="true"/>
+        <Node id="pages/fabricante/fabricanteIncluirAlterar.xhtml" x="900" y="600" zoom="true"/>
+        <Node id="pages/chamado/chamadoIncluirAlterar.xhtml" x="650" y="450" zoom="true"/>
+        <Node id="pages/funcao/funcaoPesquisar.xhtml" x="150" y="450" zoom="true"/>
+        <Node id="pages/localizacao/localizacaoIncluirAlterar.xhtml" x="400" y="150" zoom="true"/>
+        <Node id="pages/usuario/usuarioPesquisar.xhtml" x="150" y="1050" zoom="true"/>
+        <Node id="pages/usuario/usuarioIncluirAlterar.xhtml" x="900" y="300" zoom="true"/>
+        <Node id="pages/patrimonio/patrimonioIncluirAlterar.xhtml" x="1400" y="300" zoom="true"/>
+        <Node id="pages/funcao/funcaoIncluirAlterar.xhtml" x="400" y="750" zoom="true"/>
+        <Node id="pages/status/statusIncluirAlterar.xhtml" x="150" y="900" zoom="true"/>
+        <Node id="pages/home/home.xhtml" x="400" y="900" zoom="true"/>
+        <Node id="index.html" x="150" y="300" zoom="true"/>
+        <Node id="pages/menu/cabecalho.xhtml" x="1650" y="300" zoom="true"/>
+        <Node id="pages/chamado/andamentoChamado.xhtml" x="1150" y="300" zoom="true"/>
+        <Node id="pages/campus/campusIncluirAlterar.xhtml" x="1900" y="150" zoom="true"/>
+        <Node id="pages/home/index.xhtml" x="400" y="450" zoom="true"/>
+        <Node id="pages/generic/genericPage.xhtml" x="1150" y="150" zoom="true"/>
+    </Scope>
+    <Scope Scope="All Faces Configurations"/>
+</Scene>

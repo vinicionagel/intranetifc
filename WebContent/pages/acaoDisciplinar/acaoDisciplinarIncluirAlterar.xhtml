@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:t="http://myfaces.apache.org/tomahawk" >   
+    <ui:composition template="../generic/genericIncluirAlterarDescricao.xhtml">
+        <ui:param name="bean" value="#{acaoDisciplinarBean}" />                
+        <ui:define name="ADICIONAIS">
+            <t:div><h:outputText value="#{labels.campoTipoOcorrencia}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <h:selectOneRadio id="tipoOcorrencia" value="#{bean.objeto.tipoOcorrenciaDTO}" converter="SimpleIndexConverter">  
+                <t:selectItems value="#{bean.tipoOcorrencia}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />    
+            </h:selectOneRadio>
+            <t:div><h:outputText value="#{labels.campoCor}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:colorPicker value="#{bean.objeto.cor}" style="color:\##{bean.objeto.cor}" id="botaoFodistico" mode="inline"/>
+        </ui:define>
+    </ui:composition>       
+</html>

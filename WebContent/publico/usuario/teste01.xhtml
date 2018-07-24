@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:t="http://myfaces.apache.org/tomahawk">
+    <f:view locale="#{localeController.currentLocale}">
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <title>Intranet - IFC Rio do Sul</title>
+            <link rel="stylesheet" type="text/css" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <script type="text/javascript" src="../../js/locale-primefaces.js"/>
+            <script type="text/javascript" src="../../js/mascaras.js"/>
+        </h:head>
+        <h:body>
+
+            <p:layout fullPage="true">
+                <p:layoutUnit position="center" id="layoutCenter" header="#{labels.tituloCadastro} #{testBean.tituloLayoutUnit}" >
+                    <h:form>
+                        <p:messages id="messagesGenerico" closable="true" />  
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <h:outputLabel for="name" value="Cadastro hehe"/>
+
+                        </h:panelGrid>
+                        <p:commandButton label="Teste" value="teste" actionListener="#{testBean.testButton}" update="messagesGenerico" ></p:commandButton>
+                    </h:form>  
+                </p:layoutUnit>  
+            </p:layout>
+
+        </h:body>
+    </f:view>
+</html>

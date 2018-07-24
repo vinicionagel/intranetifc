@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4f74954e-93e2-45ad-832c-3197ae7c93f3">
+	<property name="ireport.zoom" value="0.8264462809917393"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="Descricao" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataInicial" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataFinal" class="java.util.Date">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dir" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="usuario" class="java.lang.String"/>
+	<parameter name="codigo" class="java.lang.Long"/>
+	<parameter name="dataAux" class="java.util.Date"/>
+	<parameter name="contexto" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+    descricao, sum(tempo)
+FROM
+    (SELECT
+        st.descricao, sum(h.tempo) AS tempo
+    FROM
+        hora h, chamado_servico cs, servico s, tipo_servico ts, setor st
+    WHERE
+        h.chamado_codigo = cs.chamado_codigo AND
+        cs.servico_codigo = s.codigo AND
+        s.tipo_servico_codigo = ts.codigo AND
+        ts.setor_codigo = st.codigo AND
+        h.data_trabalho BETWEEN $P{dataInicial} AND $P{dataFinal}
+    GROUP BY st.codigo
+    UNION
+    SELECT
+        st.descricao, sum(h.tempo) AS tempo
+    FROM
+        hora h, chamado_infra ci, patrimonio p, setor st
+    WHERE
+        h.chamado_codigo = ci.chamado_codigo AND
+        ci.patrimonio_codigo = p.codigo AND
+        p.setor_codigo = st.codigo AND
+        st.codigo in ($P!{contexto}) AND
+        h.data_trabalho BETWEEN $P{dataInicial} AND $P{dataAux}
+    GROUP BY st.codigo) AS setor
+GROUP BY
+    descricao]]>
+	</queryString>
+	<field name="descricao" class="java.lang.String"/>
+	<field name="sum" class="java.lang.Float"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="114" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="25eb0261-37eb-432e-add8-9591f647a37e" mode="Transparent" x="0" y="89" width="555" height="25"/>
+			</rectangle>
+			<rectangle>
+				<reportElement uuid="15d09531-8e08-414d-871f-f4c064fc242d" mode="Transparent" x="0" y="59" width="555" height="30"/>
+			</rectangle>
+			<image>
+				<reportElement uuid="d5ed7c01-c172-432b-9050-90150a188042" x="-1" y="-1" width="455" height="46"/>
+				<imageExpression><![CDATA[$P{dir} + "/images/logo_ifc.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="755e6e52-7ad3-4e7d-a08f-36121a98655e" x="11" y="69" width="401" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Tipo do Relatório: Horas Trabalhadas por Setor]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="cfff071b-99d4-46c1-8f29-896533b2697f" x="11" y="94" width="58" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Período:"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="bc7e2600-021a-444a-9a50-002c31ee33f5" x="69" y="94" width="77" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataInicial}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="446c2661-9960-40ec-a8ad-82adc3501e27" x="146" y="94" width="22" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" à "]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement uuid="9b03d492-adac-4a0c-b529-a15d8c44db36" x="168" y="94" width="102" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dataFinal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="687af7be-3632-4fcc-9237-481fdfbbfd50" x="11" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Setor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="88dce893-2c46-418e-82d0-e70c3248b332" x="258" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Horas Trabalhadas]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="9050b468-71c2-4cc1-a6ee-f7d9e4bb3923" x="230" y="0" width="1" height="21"/>
+			</line>
+			<rectangle>
+				<reportElement uuid="933eaf37-26e2-4033-a3d0-505e3d6fe736" mode="Transparent" x="0" y="0" width="555" height="21"/>
+			</rectangle>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c2662cdd-3c56-4c6b-95e1-9c0f538f0f96" x="11" y="3" width="219" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a6aefabf-ef1d-483d-9d14-6b2dc2d4849d" x="258" y="1" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{sum}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="b71a856c-f2df-495a-b95c-40b293516ce1" x="230" y="0" width="1" height="22"/>
+			</line>
+			<rectangle>
+				<reportElement uuid="2e1338c8-2bfb-43b0-bb42-58d87d39d30b" mode="Transparent" x="0" y="0" width="555" height="23"/>
+			</rectangle>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="59" splitType="Stretch">
+			<textField pattern="dd/MM/yyy  HH:mm:ss z">
+				<reportElement uuid="4d79b313-ea3e-4f9a-8511-abc00aed8eb1" x="-1" y="20" width="131" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="f50387c2-60d7-406d-b865-7322f2d0165d" x="-1" y="0" width="261" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{usuario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="292e78c1-f943-41a7-8dd6-faf096f94010" x="436" y="39" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="d957cf68-2a70-4338-b48f-97ee2295c9c9" x="516" y="39" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="382d19f2-0314-44c9-a21b-168c7414892b" x="0" y="39" width="406" height="20" forecolor="#A59797"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[INTRANET IFC - Sistema elaborado pelo Grupo de Desenvolvimento de Sistemas - Campus Rio do Sul]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

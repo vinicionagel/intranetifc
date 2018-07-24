@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk"  xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="../generic/genericPage.xhtml">    
+        <ui:param name="bean" value="#{vincularUsuarioSetorBean}" />
+        <ui:define name="CONTEUDO">            
+            <h:panelGrid columns="1" cellpadding="10">
+                <h:form id="lista">
+                    <p:messages/>                            
+                    <h:panelGrid columns="2" cellpadding="1">                                
+                        <p:panel header="#{labels.botaoPesquisar} " id="painelPesquisa">                                    
+                            <p:selectOneRadio id="options" value="#{bean.opcao}">  
+                                <f:selectItem itemLabel="Usuários do Setor" itemValue="1" />                                  
+                                <f:selectItem itemLabel="Setores do Usuário" itemValue="2" />  
+                                <p:ajax listener="#{bean.mostrarOpcaoPesquisa}"  
+                                        event="change"  
+                                        update="painelPesquisa"
+                                        process="options" />
+                            </p:selectOneRadio>
+                            <t:div id="opcao1" rendered="#{bean.opcao1}">
+                                <h:panelGrid columns="2" cellpadding="1">
+                                    <h:outputText value="#{labels.campoSetor} " />
+                                    <p:selectOneMenu value="#{bean.setorDTOPesquisa}" converter="SimpleIndexConverter">
+                                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                        <c:forEach items="#{bean.setorSelectItens}" var="item">
+                                            <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                                        </c:forEach> 
+                                    </p:selectOneMenu>
+                                </h:panelGrid>
+                            </t:div>
+
+                            <t:div id="opcao2" rendered="#{bean.opcao2}">
+                                <h:panelGrid columns="2" cellpadding="1">
+                                    <h:outputText value="#{labels.campoUsuario} " />
+                                    <p:selectOneMenu value="#{bean.usuarioDTOPesquisa}" converter="SimpleIndexConverter"> 
+                                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                        <t:selectItems value="#{bean.listaUsuarios}" var="item" itemLabel="#{item.nome}" itemValue="#{item}" />  
+                                    </p:selectOneMenu>
+                                </h:panelGrid>                                
+                            </t:div>
+
+                            <p:commandButton value="#{labels.botaoPesquisar}" actionListener="#{bean.dadosPesquisa}" ajax="false" title="Pesquisar" />
+                        </p:panel>                                                        
+                        <p:panel rendered="#{interfaceBean.verificarIncluir or interfaceBean.verificarEditar or interfaceBean.verificarExcluir}"> 
+                            <p:button outcome="vincularUsuarioSetorInclirAlterar" value="#{labels.botaoVincular}" rendered="#{interfaceBean.verificarIncluir}">  
+                                <f:param name="incluindo" value="true" />  
+                            </p:button>
+                            <p:button outcome="vincularUsuarioSetorInclirAlterar" value="#{labels.editarVinculo}" rendered="#{interfaceBean.verificarEditar}">  
+                                <f:param name="incluindo" value="false" />  
+                            </p:button>
+                            <p:button outcome="vincularUsuarioSetorInclirAlterar" value="#{labels.excluirVinculo}" rendered="#{interfaceBean.verificarExcluir}">
+                                <f:param name="incluindo" value="excluindo" />  
+                            </p:button>
+                        </p:panel>
+                    </h:panelGrid>
+                    <p:spacer width="10" height="10" />
+                    <p:dataTable id="pesquisaData" var="vinculo" value="#{bean.lista}" paginator="true" emptyMessage="#{labels.naoHaRegistros}"
+                                 rows="10" paginatorPosition="bottom" >
+                        <f:facet name="header"> 
+                            <h:outputText value="#{labels.tituloLista} #{labels.campoVinculo}" />
+                        </f:facet>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoUsuario}" />
+                            </f:facet>
+                            <h:outputText value="#{vinculo.usuarioDTO.nome}" />
+                        </p:column>                                
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoSetor}" />
+                            </f:facet>
+                            <h:outputText value="#{vinculo.setorDTO.campusDTO.descricao} | #{vinculo.setorDTO.descricao}" />
+                        </p:column>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoFuncao}" />
+                            </f:facet>
+                            <h:outputText value="#{vinculo.funcaoDTO.descricao}" />
+                        </p:column>                      
+                    </p:dataTable>                    
+                </h:form>
+            </h:panelGrid>        
+        </ui:define>
+    </ui:composition>
+</html>

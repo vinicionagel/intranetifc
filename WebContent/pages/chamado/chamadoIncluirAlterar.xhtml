@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"       
+      xmlns:t="http://myfaces.apache.org/tomahawk" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      >
+    <ui:composition template="../generic/genericIncluirAlterar.xhtml">                                                            
+        <ui:define name="CAMPOS">      
+            <t:div><h:outputText value="#{labels.campoTitulo}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:inputText value="#{bean.objeto.titulo}"
+                         required="false" label="Nome" size="30" maxlength="45" />                                                                  
+            <h:outputText value="#{labels.campoDataPrevista}" />
+            <p:calendar  maxlength="10" onkeypress="mascara(this, data)" onkeyup="mascara(this, data)" locale="pt" showButtonPanel="true" navigator="true" value="#{bean.objeto.dataPrevista}" pattern="dd/MM/yyyy"/>            
+            <ui:insert name="ADICIONAIS"/>  
+        </ui:define> 
+        <ui:define name="PAINELLATERAL" >
+            <p:panel header="Adicionar arquivos" id="painelArvore" styleClass="setRelative painelArvore">
+                <h:form id="formLateralUploaddsa" enctype="multipart/form-data" >
+                    <h:inputFile value="#{bean.file}" id="file"/>
+                    <h:commandButton value="Upload"
+                                     actionListener="#{bean.criarArquivo()}">
+                        <f:ajax execute="file" render=":lista:messagesGenerico :formLateralUpload:panelasd formLateralUploaddsa"/>
+                    </h:commandButton>
+                </h:form>
+                <h:form id="formLateralUpload" >
+                    <p:outputPanel id="panelasd">
+                        <ui:repeat value="#{bean.arquivos}" var="item">
+                            <p:separator  style="color: #327e04"/>
+                            <h:commandLink value="#{item.nome}" action="#{andamentoBean.downloadArquivo(item)}" />
+                            <p:column>
+                                <p:commandButton onclick="PF('confirmation').show();" actionListener="#{bean.setArquivo(item)}" immediate="true" icon="ui-icon-circle-close" style="margin-left: 10px; padding: 0px; width: 1.5em; height: 1.5em"/>
+                            </p:column>
+                        </ui:repeat>
+                    </p:outputPanel>
+                     <p:confirmDialog id="confirmDialog" message="Deseja mesmo excluir o arquivo?!"  
+                                 header="Deletando arquivo" severity="alert" widgetVar="confirmation" global="true">
+                    <h:commandLink id="confirm"  onclick="PF('confirmation').hide()" 
+                                   action="#{bean.removerArq}" immediate="true" style="margin-left: 40%; margin-right: 10px" value="Sim" >
+                         <f:ajax render=":formLateralUpload" /> 
+                    </h:commandLink> 
+                    <p:commandLink id="decline" onclick="PF('confirmation').hide()" ajax="true" value="Não" />
+                </p:confirmDialog> 
+                </h:form>
+            </p:panel>
+        </ui:define>
+        <style type="text/css">
+            .setRelative {
+                position: relative;
+
+            }
+            .painelArvore {
+                min-height: 400px; 
+                min-width: 450px;
+                margin-right: 50px;
+                background-image: none !important; 
+                background-color: #FAFAF4 !important; 
+            }
+        </style>
+    </ui:composition>
+</html>

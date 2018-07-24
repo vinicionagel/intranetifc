@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk" >
+
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{permissaoBean}" />
+        <ui:define name="CONTEUDO">
+            <h:panelGrid columns="1" cellpadding="10">
+                <h:form id="lista">
+                    <p:messages/>
+                    <h:panelGrid columns="4" cellpadding="1">
+                        <p:panel>                                        
+                            <p:inputText value="#{bean.campoPesquisar}" id="pesquisa" title="digite sua pesquisa"/>
+                            <p:spacer width="30" height="10" />  
+                            <p:commandButton value="#{labels.botaoPesquisar}" action="#{bean.dadosPesquisa}" ajax="false" title="Pesquisar" />                 
+                        </p:panel>                     
+                    </h:panelGrid>
+                    <p:spacer width="10" height="10" />
+                    <p:dataTable id="pesquisaUsuario" var="usuario" value="#{bean.lista}" paginator="true" emptyMessage="Não há Registros"
+                                 rows="10" paginatorPosition="bottom">
+                        <f:facet name="header"> 
+                            <h:outputText value="#{labels.tituloCadastro} #{labels.campoUsuario}" />
+                        </f:facet>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoDescricao}" />
+                            </f:facet>
+                            <h:outputText value="#{usuario.nome}" />
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{labels.campoEstado}" />
+                            </f:facet>
+                            <h:outputText value="Ativo" rendered="#{usuario.estado == 1}" />
+                            <h:outputText value="Inativo" rendered="#{usuario.estado == 0}" />
+                        </p:column>
+                        <p:column rendered="#{interfaceBean.verificarIncluir}">
+                            <f:facet name="header" >
+                                <h:outputText value="#{labels.campoOpcao}" />
+
+                            </f:facet>
+                            <t:div style="text-align: center">
+                                <h:commandLink  action="#{bean.update}" immediate="true" value="Definir permissoes">
+                                    <f:setPropertyActionListener  target="#{bean.usuarioDTO}" value="#{usuario}" />  
+                                </h:commandLink>
+                            </t:div> 
+                        </p:column>
+                    </p:dataTable> 
+                </h:form>
+            </h:panelGrid>        
+        </ui:define>  
+    </ui:composition>    
+</html>

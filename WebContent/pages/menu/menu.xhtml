@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"       
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <f:view locale="#{localeController.currentLocale}" encoding="ISO-8859-1" >
+        <ui:composition>
+            <p:layoutUnit position="north" size="14%" resizable="false" closable="false" collapsible="false"  style="border: none">
+                <ui:include src="cabecalho.xhtml" />                  
+            </p:layoutUnit>
+            <p:layoutUnit position="west" size="15%" resizable="true" closable="false" collapsible="false" style="border: none" rendered="#{contextoBean.campus != null}">
+                <h:form id="menuForm">
+                    <p:panelMenu style="width:98%" widgetVar="hbPanelMenu" >
+                        <c:forEach items="#{interfaceBean.pais}" var="pai" >
+                            <p:submenu label="#{pai.descricaoCompleta}">
+                                <c:forEach items="#{interfaceBean.getFilhos(pai)}" var="item">
+                                    <p:menuitem  value="#{item.descricaoCompleta}"  action="#{interfaceBean.execute(item.url, pai.descricaoCompleta)}" ajax="false" style="color:#{item.cor}; padding: 6px 0 1px 14px">
+                                    </p:menuitem>
+                                </c:forEach>
+                            </p:submenu>
+                        </c:forEach>
+                    </p:panelMenu>
+                    <h:outputScript>
+$(document).ready(function() {
+     $(function menu() {
+         var nomeMenu = '#{interfaceBean.activeIndex}';
+         PF('hbPanelMenu').headers.each(function() {
+             var header = $(this);
+             if (nomeMenu === "") {
+                 PF('hbPanelMenu').collapseRootSubmenu(header);
+             } else if (header.text() === nomeMenu) {
+                 PF('hbPanelMenu').expandRootSubmenu(header, false);
+             } else {
+                 PF('hbPanelMenu').collapseRootSubmenu(header);
+             }
+         });
+
+         PF('hbPanelMenu').headers.click(function(e) {
+             var currHeader = $(this);
+
+             PF('hbPanelMenu').headers.each(function() {
+                 var header = $(this);
+                 if (header.text() !== currHeader.text()) {
+                     PF('hbPanelMenu').collapseRootSubmenu(header);
+                 }
+             });
+         });
+     })
+ })
+                    </h:outputScript>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit position="south" style="overflow-y: hidden !important" id="southPainel"  size="3%" resizable="false" closable="false" collapsible="false" styleClass="rodape">   
+                <ui:include src="rodape.xhtml" class="rodape" />
+                <h:outputScript>
+                    document.getElementById("southPainel").getElementsByClassName("ui-layout-unit-content ui-widget-content")[0].style.overflowY = "hidden";
+                </h:outputScript>
+            </p:layoutUnit>
+            <p:dialog header="INTRANET INSTITUCIONAL IFC" widgetVar="dlgSobre" resizable="false" modal="true" width="700" height="500" showEffect="clip" hideEffect="clip">
+                <ui:include src="../home/sobre.xhtml" />
+            </p:dialog>
+        </ui:composition>
+    </f:view>
+</html>

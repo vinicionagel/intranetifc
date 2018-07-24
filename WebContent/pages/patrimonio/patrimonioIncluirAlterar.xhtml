@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk" 
+      xmlns:c="http://java.sun.com/jsp/jstl/core" >
+
+    <ui:composition template="../generic/genericIncluirAlterar.xhtml">
+        <ui:param name="bean" value="#{patrimonioBean}" />  
+        <ui:define name="CAMPOS">                         
+            <t:panelGroup colspan="2" id="cadastroMultiplo" rendered="#{!bean.alterando}">                
+                <p:selectBooleanCheckbox value="#{bean.cadastroMultiplo}" rendered="#{not bean.cadastroMultiplo or bean.patrimoniosInclusao.size() == 0}">  
+                    <p:ajax update="painelPadrao, cadastroMultiplo, botaoAdd, patrimoniosIncluir, messagesGenerico" />  
+                </p:selectBooleanCheckbox>  
+                <h:outputText value="Habilitar Cadastro Múltiplo" rendered="#{not bean.cadastroMultiplo or bean.patrimoniosInclusao.size() == 0}"/>
+            </t:panelGroup>            
+
+
+
+            <t:panelGroup colspan="2" id="painelPadrao">
+                <t:panelGrid columns="2" >
+                    <t:div rendered="#{not bean.cadastroMultiplo}" >                        
+                        <h:outputText value="#{labels.campoDescricao}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <p:inputText value="#{bean.objeto.descricao}" required="false" label="Descricao" size="50" rendered="#{not bean.cadastroMultiplo}" />
+
+                    <t:div>
+                        <h:outputText value="#{labels.campoCampus}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div> 
+                    <h:outputText value="#{bean.campusDTO.descricao}" style="font-weight: bold" />
+                    
+                    <t:div>
+                        <h:outputText value="#{labels.campoLocalizacao}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <p:selectOneMenu id="localizacao" value="#{bean.objeto.localizacaoDTO}" effect="fade" converter="SimpleIndexConverter">  
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaLocalizacao}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                    </p:selectOneMenu>
+                    <t:div>
+                        <h:outputText value="#{labels.campoSetor}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <p:selectOneMenu id="setores" value="#{bean.objeto.setorDTO}" effect="fade" converter="SimpleIndexConverter">
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaSetores}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />
+                    </p:selectOneMenu>
+                    <t:div rendered="#{not bean.mapCamposDinamicos['fabricante']}" >
+                        <p:selectBooleanCheckbox value="#{bean.mapCamposDinamicos['fabricante']}" rendered="#{bean.cadastroMultiplo and bean.patrimoniosInclusao.size() == 0}" />
+                        <h:outputText value="#{labels.campoFabricante}" /><h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <p:selectOneMenu value="#{bean.objeto.fabricanteDTO}" effect="fade" converter="SimpleIndexConverter" rendered="#{not bean.mapCamposDinamicos['fabricante']}">                  
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaFabricante}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                    </p:selectOneMenu> 
+                    <t:div rendered="#{not bean.mapCamposDinamicos['tipoPatrimonio']}">
+                        <p:selectBooleanCheckbox value="#{bean.mapCamposDinamicos['tipoPatrimonio']}" rendered="#{bean.cadastroMultiplo and bean.patrimoniosInclusao.size() == 0}" />
+                        <h:outputText value="#{labels.campoTipoPatrimonio}" /><h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <p:selectOneMenu value="#{bean.objeto.tipoPatrimonioDTO}" effect="fade" converter="SimpleIndexConverter" rendered="#{not bean.mapCamposDinamicos['tipoPatrimonio']}">                  
+                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                        <t:selectItems value="#{bean.listaTipoPatrimonio}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />  
+                    </p:selectOneMenu>
+                    <t:div rendered="#{not bean.mapCamposDinamicos['aquisicao']}">
+                        <p:selectBooleanCheckbox value="#{bean.mapCamposDinamicos['aquisicao']}" rendered="#{bean.cadastroMultiplo and bean.patrimoniosInclusao.size() == 0}" />
+                        <h:outputText value="#{labels.campoDataAquisicao}" />
+                    </t:div>
+                    <p:calendar maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" pattern="dd/MM/yyyy" value="#{bean.objeto.dataAquisicao}" effect="explode" rendered="#{not bean.mapCamposDinamicos['aquisicao']}"/>
+                    <h:outputText value="#{labels.campoDataBaixa}" rendered="#{bean.alterando}"/>
+                    <p:calendar maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" pattern="dd/MM/yyyy" value="#{bean.objeto.dataBaixa}" effect="explode" rendered="#{bean.alterando}"/>
+                    <t:div rendered="#{not bean.mapCamposDinamicos['notaFiscal']}" >
+                        <p:selectBooleanCheckbox value="#{bean.mapCamposDinamicos['notaFiscal']}" rendered="#{bean.cadastroMultiplo and bean.patrimoniosInclusao.size() == 0}" />
+                        <h:outputText value="#{labels.campoNotaFiscal}" />
+                    </t:div>
+                    <p:inputText value="#{bean.objeto.notaFiscal}" required="false" size="50" rendered="#{not bean.mapCamposDinamicos['notaFiscal']}" />
+                    <t:div rendered="#{not bean.cadastroMultiplo}" >
+                        <h:outputText value="#{labels.campoNumeroEtiqueta}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <p:inputText value="#{bean.objeto.numEtiqueta}" required="false" size="50" rendered="#{not bean.cadastroMultiplo}"/>
+                </t:panelGrid>
+            </t:panelGroup>            
+
+
+
+
+            <t:panelGroup colspan="2" id="patrimoniosIncluir" rendered="#{not bean.alterando }">                                                
+                <t:panelGrid columns="#{bean.quantidadeCamposDinamicos}">
+                    <t:div rendered="#{bean.cadastroMultiplo and bean.patrimoniosInclusao.size() > 0}">
+                        <h:outputText value="#{labels.campoDescricao}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>                    
+                    <t:div rendered="#{bean.mapCamposDinamicos['fabricante']}" >                        
+                        <h:outputText value="#{labels.campoFabricante}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <t:div rendered="#{bean.mapCamposDinamicos['tipoPatrimonio']}">                        
+                        <h:outputText value="#{labels.campoTipoPatrimonio}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <h:outputText value="#{labels.campoDataAquisicao}" rendered="#{bean.mapCamposDinamicos['aquisicao']}"/>                    
+                    <h:outputText value="#{labels.campoNotaFiscal}" rendered="#{bean.mapCamposDinamicos['notaFiscal']}"/> 
+                    <t:div rendered="#{bean.cadastroMultiplo and bean.patrimoniosInclusao.size() > 0}">
+                        <h:outputText value="#{labels.campoNumeroEtiqueta}" />
+                        <h:outputText value="*" style="color: red"/>
+                    </t:div>
+                    <h:outputText value="" />
+                    <c:forEach items="#{bean.patrimoniosInclusao}" var="item">                                                                
+
+                        <p:inputText value="#{item.descricao}" required="false" label="Descricao" size="30" />            
+
+                        <p:selectOneMenu value="#{item.fabricanteDTO}" effect="fade" converter="SimpleIndexConverter" rendered="#{bean.mapCamposDinamicos['fabricante']}">                  
+                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                            <t:selectItems value="#{bean.listaFabricante}"  var="fab" itemLabel="#{fab.descricao}" itemValue="#{fab}" />  
+                        </p:selectOneMenu> 
+
+                        <p:selectOneMenu value="#{item.tipoPatrimonioDTO}" effect="fade" converter="SimpleIndexConverter" rendered="#{bean.mapCamposDinamicos['tipoPatrimonio']}">                  
+                            <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                            <t:selectItems value="#{bean.listaTipoPatrimonio}" var="tipoP" itemLabel="#{tipoP.descricao}" itemValue="#{tipoP}" />  
+                        </p:selectOneMenu>
+
+                        <p:calendar maxlength="10" size="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" pattern="dd/MM/yyyy" value="#{item.dataAquisicao}" effect="explode" rendered="#{bean.mapCamposDinamicos['aquisicao']}"/>
+
+                        <p:inputText value="#{item.notaFiscal}" required="false" size="15" rendered="#{bean.mapCamposDinamicos['notaFiscal']}"/>
+
+                        <p:inputText value="#{item.numEtiqueta}" required="false" size="15" />                                                    
+
+                        <t:panelGroup colspan="2" >
+                            <p:commandButton actionListener="#{bean.removerPatrimonio(item)}" update="painelPadrao, patrimoniosIncluir, cadastroMultiplo, messagesGenerico" value="-"/>
+                        </t:panelGroup>
+
+                    </c:forEach>
+                </t:panelGrid>                    
+            </t:panelGroup>
+            
+            <t:panelGroup colspan="2" id="botaoAdd">
+                <p:commandButton actionListener="#{bean.adicionarPatrimonio}" update="painelPadrao, patrimoniosIncluir, cadastroMultiplo, messagesGenerico" value="+" rendered="#{bean.cadastroMultiplo}" style="margin-left: 15px"/>
+            </t:panelGroup>
+        </ui:define>            
+    </ui:composition>   
+</html>

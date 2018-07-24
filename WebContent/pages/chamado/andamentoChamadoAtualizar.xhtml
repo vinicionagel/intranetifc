@@ -1,0 +1,80 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"      
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:panelGrid columns="6" cellpadding="6" id="mostrar" >                                
+        <h:outputText value="#{labels.campoUsuarioAutor}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoBean.chamadoDTO.usuarioAutorDTO.nome}"/>
+
+        <h:outputText value="#{labels.campoUsuarioAtribuido}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoBean.chamadoDTO.usuarioAtribuidoDTO.nome}" />  
+
+        <h:outputText value="#{labels.campoPatrimonio}" style="font-weight: bold" rendered="#{chamadoBean.patrimonioAndamento != null}"/>
+        <h:panelGroup rendered="#{chamadoBean.patrimonioAndamento != null}">
+            <h:outputText id="patrimonio" value="#{chamadoBean.patrimonioAndamento.descricao} --" title="#{chamadoBean.patrimonioAndamento.localizacaoDTO.campusDTO.descricao}"/> 
+            <h:outputText value="#{chamadoBean.patrimonioAndamento.localizacaoDTO.descricao}" style="font-weight: bold" title="#{chamadoBean.patrimonioAndamento.localizacaoDTO.campusDTO.descricao}"/>
+        </h:panelGroup>
+
+        <h:outputText value="#{labels.campoSetor}" style="font-weight: bold"/>
+        <h:outputText value="#{chamadoBean.setorAndamento.descricao}"/>
+        
+        <h:outputText value="#{labels.campoDataHoraAbertura}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoBean.chamadoDTO.dataHoraAbertura}" >
+            <f:convertDateTime pattern='dd/MM/yyyy'/>
+        </h:outputText>  
+
+        <h:outputText value="#{labels.campoDataPrevista}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoBean.chamadoDTO.dataPrevista}" >
+            <f:convertDateTime pattern='dd/MM/yyyy'/>
+        </h:outputText>  
+
+        <h:outputText value="#{labels.campoServico}" style="font-weight: bold" rendered="#{chamadoBean.servicoAndamento != null}"/>
+        <h:panelGroup rendered="#{chamadoBean.servicoAndamento != null}">
+            <h:outputText id="servico" value="#{chamadoBean.servicoAndamento.descricaoCurta}" />  
+        </h:panelGroup>
+        
+        <h:outputText value="#{labels.campoDataHoraFechamento}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoBean.chamadoDTO.dataHoraFechamento}" >
+            <f:convertDateTime pattern='dd/MM/yyyy'/>
+        </h:outputText>    
+        
+        <h:outputText value="#{labels.campoPrioridade}" style="font-weight: bold"/>  
+        <h:outputText value="#{andamentoBean.chamadoDTO.prioridadeDTO.descricao}"/>  
+        
+         <h:outputText value="#{labels.campoTipoServico}" style="font-weight: bold" rendered="#{chamadoBean.servicoAndamento != null}"/>
+        <h:panelGroup rendered="#{chamadoBean.servicoAndamento != null}">
+            <h:outputText id="tipoServico" value="#{chamadoBean.servicoAndamento.tipoServicoDTO.descricao}"/>
+            <p:graphicImage id="imagemTooltip" value="/images/tooltip-icon.gif" width="10px"/> 
+            <p:tooltip for="imagemTooltip" value="#{chamadoBean.servicoAndamento.descricaoCompleta}" showEffect="fade" hideEffect="fade" /> 
+        </h:panelGroup>
+
+        <h:outputText value="#{labels.campoTempoGasto}" style="font-weight: bold"/>
+
+        <h:commandLink action="#{andamentoBean.redirecionarHora}" value="#{andamentoBean.tempoGasto} hora(s)" style="color: #327e04"/>
+                                    
+        <h:outputText value="#{labels.campoStatus}" style="font-weight: bold"/>
+        <h:outputText value="#{andamentoBean.chamadoDTO.statusDTO.descricao}"/>
+        
+        <h:panelGroup>
+            <h:outputText value="#{labels.campoProgresso}" style="font-weight: bold"/>  
+        </h:panelGroup>
+        <p:progressBar widgetVar="pb" labelTemplate="#{andamentoBean.chamadoDTO.progresso}%"  styleClass='#{andamentoBean.chamadoDTO.progresso == 0 ? "animated2" : "animated"}' style="width:170px" />
+        <script type="text/javascript">
+            $(document).ready(function() {
+                PF('pb').setValue(#{andamentoBean.chamadoDTO.progresso});
+                var x = #{andamentoBean.chamadoDTO.progresso};
+                if (x == 0){
+                    pb.setValue(0.00001);
+                }
+            });
+        </script>
+    </h:panelGrid>
+
+    <p:panel header="#{labels.campoDescricao}" id="dscd2" widgetVar="dsc" styleClass="painel" collapsed="false" style="background: none; border: none">
+        <h:outputText styleClass="area"  value="#{andamentoBean.chamadoDTO.descricao}" style="width: 100%" escape="false" />				
+    </p:panel>
+
+    <p:commandButton action="#{andamentoBean.mostrarPanelAtualizar}" value="#{labels.botaoAtualizar}" ajax="false" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoBean.chamadoDTO.codigo}'" />
+
+    <p:commandButton action="#{andamentoBean.novo}" value="#{labels.botaoVoltar}" ajax="false" style="margin-top: 12px" oncomplete="window.location='andamentoChamado.jsf?codigo=#{andamentoBean.chamadoDTO.codigo}'" />                                
+</html>

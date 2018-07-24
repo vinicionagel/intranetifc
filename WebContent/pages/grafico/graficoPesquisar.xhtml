@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk"
+    xmlns:c="http://java.sun.com/jsp/jstl/core">   
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{chartBean}" />
+        <ui:define name="CONTEUDO">
+            <h:panelGrid columns="1" cellpadding="10">                      
+                <h:form id="formGrafico">
+                    <p:messages/>
+                    <p:panel header="Informe os dados para gerar o gráfico:" id="painelGraficos" style="min-width: 50ex">
+                        <h:panelGrid columns="2" cellpadding="1" id="painelGrid">
+                            <h:outputText value="Gráficos: " />
+                            <p:selectOneMenu id="graficos" value="#{bean.graficos}"> 
+                                <f:selectItem itemLabel="Selecione um Gráfico"  /> 
+                                <f:selectItem itemLabel="Status Chamados por Setor" itemValue="PorSetor" />
+                                <f:selectItem itemLabel="Setor Chamados por Status" itemValue="PorStatus" />                        
+                                <f:ajax render="formGrafico"                   
+                                        event="change" />
+                            </p:selectOneMenu>                             
+                        </h:panelGrid>
+                        <p:panel id="graficoSetor" rendered="#{bean.graficos eq bean.POR_SETOR}">
+                            <h:panelGrid columns="2" cellpadding="1">
+                                <h:outputText value="#{labels.campoSetor} :" />
+                                <p:selectOneMenu value="#{bean.setorSelectItem}" id="setores" style="width: 250px"  panelStyle="width: 250px">
+                                    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                    <c:forEach items="#{bean.setorSelectItens}" var="item">
+                                        <f:selectItem itemLabel="#{item.label}" itemValue="#{item.value}" itemDisabled="#{item.disabled}" />
+                                    </c:forEach>                                    
+                                </p:selectOneMenu>          
+                            </h:panelGrid>                            
+                            <h:selectOneRadio id="opDatas" value="#{chartBean.opcao}" >
+                                <f:selectItem itemLabel="Por mês" itemValue="1" />                                  
+                                <f:selectItem itemLabel="Por período" itemValue="2" />                                      
+                                <p:ajax update="graficoRenderizar" />
+                            </h:selectOneRadio>    
+                            <p:outputPanel id="graficoRenderizar">
+                                <p:panel style="border: none; background: none" id="dataInicialFinal" rendered="#{chartBean.opcao == 2}">
+                                    <h:panelGrid columns="2" cellpadding="1">
+                                        <h:outputText value="Inicial: " />
+                                        <p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{chartBean.dataInicial}" pattern="dd/MM/yyyy"/>
+                                        <h:outputText value="Final: " />
+                                        <p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{chartBean.dataFinal}" pattern="dd/MM/yyyy"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                                <p:panel style="border: none; background: none" id="dataPorMes" rendered="#{chartBean.opcao == 1}">
+                                    <p:selectOneMenu value="#{chartBean.mes}" >
+                                        <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                        <f:selectItems value="#{chartBean.listaMeses}" />  
+                                    </p:selectOneMenu>
+                                </p:panel>
+                            </p:outputPanel>
+                            <p:commandLink actionListener="#{chartBean.gerarGraficosPorSetor}" value="Gerar Gráfico" update="graficoSetor" />
+
+                            <p:chart type="pie" model="#{chartBean.todosChamados}" id="graficoGeral" style="width:700px; height:500px; cursor: pointer;">
+                                <p:ajax event="itemSelect" listener="#{chartBean.itemSelectPorSetor}" />                                
+                            </p:chart>                           
+
+                            <p:chart type="pie" model="#{bean.chamadosInfra}"  id="graficoInfra" style="width:700px; height:500px" />
+
+                            <p:chart type="pie" model="#{bean.chamadosServico}" 
+                                         id="graficoServico" style="width:700px; height:500px" />
+
+                        </p:panel>                
+
+                        <p:panel rendered="#{bean.graficos eq bean.POR_STATUS}" id="graficoStatus">                                                       
+                            <h:panelGrid columns="2" cellpadding="1">
+                                <h:outputText value="#{labels.campoStatus} :" /> 
+                                <p:selectOneMenu value="#{bean.statusDTO}" converter="SimpleIndexConverter" id="status" style="width: 250px">
+                                    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                    <t:selectItems value="#{bean.listaTodosStatus}" var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                                
+                                </p:selectOneMenu>   
+                            </h:panelGrid>
+                            <h:selectOneRadio id="opDatasStatus" value="#{chartBean.opcao}" >
+                                <f:selectItem itemLabel="Por mês" itemValue="1" />                                  
+                                <f:selectItem itemLabel="Por período" itemValue="2" />                                      
+                                <p:ajax update="graficoStatus" />
+                            </h:selectOneRadio>    
+
+                            <p:panel style="border: none; background: none" id="dataInicialFinalStatus" rendered="#{chartBean.opcao == 2}">
+                                <h:panelGrid columns="2" cellpadding="1">
+                                    <h:outputText value="Inicial: " />
+                                    <p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{chartBean.dataInicial}" pattern="dd/MM/yyyy"/>
+                                    <h:outputText value="Final: " />
+                                    <p:calendar  maxlength="10" onkeypress="mascara(this,data)" onkeyup="mascara(this,data)" locale="pt" showButtonPanel="true" navigator="true" value="#{chartBean.dataFinal}" pattern="dd/MM/yyyy"/>
+                                </h:panelGrid>
+                            </p:panel>
+                            <p:panel style="border: none; background: none" id="dataPorMesStatus" rendered="#{chartBean.opcao == 1}">
+                                <p:selectOneMenu value="#{chartBean.mes}" >
+                                    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                                    <f:selectItems value="#{chartBean.listaMeses}" />  
+                                </p:selectOneMenu>
+                            </p:panel>
+                            <p:commandLink actionListener="#{chartBean.gerarGraficosPorStatus}" value="Gerar Gráfico" update="graficoStatus" ajax="true"/>
+
+
+                            <p:chart type="pie" model="#{bean.todosStatus}"  id="graficoStatusGeral" style="width:700px; height:500px; cursor: pointer;">
+                                <p:ajax event="itemSelect" listener="#{chartBean.itemSelectPorStatus}"/>  
+                            </p:chart>
+
+                            <p:chart type="pie" model="#{bean.statusInfra}" id="graficoStatusInfra" style="width:700px; height:500px"/>
+
+                            <p:chart type="pie" model="#{bean.statusServico}" 
+                                        id="graficoStatusServico" style="width:700px; height:500px"/>
+                        </p:panel> 
+
+                    </p:panel>
+                </h:form>                
+            </h:panelGrid>
+            <script type="text/javascript">
+
+                window.onload = function() {
+                    spans = document.getElementById('layoutCenter').getElementsByTagName('span');
+                    span = spans[0];
+                    span.innerHTML = "#{chartBean.tituloLayoutUnit}";
+                }
+            </script>
+        </ui:define>
+    </ui:composition>
+</html>

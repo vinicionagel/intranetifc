@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"            
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">              
+
+    <ui:composition template="../generic/genericIncluirAlterar.xhtml">
+        <ui:param name="bean" value="#{tipoServicoBean}" />
+        <ui:define name="CAMPOS">
+            <t:div><h:outputText value="#{labels.campoDescricao}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:inputText value="#{bean.objeto.descricao}" required="false" label="Descricao" size="50" />
+            <t:div><h:outputText value="#{labels.campoSetor}" /><h:outputText value="*" style="color: red"/></t:div> 
+            <p:selectOneMenu value="#{bean.objeto.setorDTO}" id="setores" style="width: 250px"  panelStyle="width: 250px" converter="SimpleIndexConverter">
+                <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+                <t:selectItems value="#{bean.setoresUsuario}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />                                   
+            </p:selectOneMenu>     
+        </ui:define>
+    </ui:composition>                  
+</html>

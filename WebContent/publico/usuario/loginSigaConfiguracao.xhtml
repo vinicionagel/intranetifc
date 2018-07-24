@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:t="http://myfaces.apache.org/tomahawk">
+    <f:view locale="#{localeController.currentLocale}">
+        <h:head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <title>Intranet - IFC Rio do Sul</title>
+            <link rel="stylesheet" type="text/css" href="../../css/IFC.css" />
+            <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico"/>
+            <script type="text/javascript" src="../../js/locale-primefaces.js"/>
+            <script type="text/javascript" src="../../js/mascaras.js"/>
+        </h:head>
+        <h:body>
+            <p:layout fullPage="true">
+                <p:layoutUnit position="center" id="layoutCenter" header="#{labels.tituloCadastro} #{label.tituloLoginSiga}" >
+		    <h:panelGrid columns="1" cellpadding="10">
+			<h:form>
+                            <p:messages escape="false"/>  
+			    <ol>
+				<li>Preencha o cadastro e clique em salvar</li>
+				<li>O administrador da sua unidade irá avaliar seus dados</li>
+				<li>Quando seu usuário for aprovado você será notificado por e-mail e poderá acessar o sistema</li>
+			    </ol>
+			    
+			    <h:outputText value="#{labels.itensObrigatorios}" style="color: red; font-size: 15px"/>                
+			    <h:panelGrid columns="2" cellpadding="3">
+				<t:div><h:outputText value="#{labels.campoNome}" /><h:outputText value="*" style="color: red"/></t:div> 
+                                <p:inputText value="#{usuarioBean.objeto.nome}" disabled="true" label="Nome" size="50" required="true" requiredMessage="Campo NOME deve ser informado"/>
+
+				<t:div><h:outputText value="#{labels.campoEmail}" /><h:outputText value="*" style="color: red"/></t:div>                                             
+				<p:inputText value="#{usuarioBean.objeto.email}" label="Email" size="50" required="true" requiredMessage="Campo EMAIL deve ser informado"/>
+
+				<t:div><h:outputText value="#{labels.campoLogin}" /><h:outputText value="*" style="color: red"/></t:div> 
+                                <p:inputText value="#{usuarioBean.objeto.login}" disabled="true" label="Login" size="50" required="true" requiredMessage="Campo LOGIN deve ser informado"/>
+
+				<t:div rendered="#{!usuarioBean.alterandoUsuarioAdmin}"><h:outputText  value="#{labels.campoSenha}" /><h:outputText value="*" style="color: red"/></t:div> 
+				<p:password rendered="#{!usuarioBean.alterandoUsuarioAdmin}" feedback="true" maxlength="20" value="#{usuarioBean.objeto.senha}"
+					    promptLabel="Digite Sua Senha" weakLabel="Senha Fraca"   
+					    goodLabel="Senha Segura" strongLabel="Senha Super Segura" required="true" requiredMessage="Campo SENHA deve ser informado" />
+				<t:div rendered="#{!usuarioBean.alterandoUsuarioAdmin}" ><h:outputText  value="#{labels.campoConfirmarSenha}" rendered="#{!usuarioBean.alterandoUsuarioAdmin}" /><h:outputText value="*" style="color: red"/></t:div> 
+				<p:password rendered="#{!usuarioBean.alterandoUsuarioAdmin}" id="confirmaSenha" feedback="false"  maxlength="20" value="#{usuarioBean.confirmaSenha}"
+					    promptLabel="Confirme Sua Senha" required="true" requiredMessage="Campo CONFIRMAR SENHA deve ser informado"/>
+				<h:outputText value="#{labels.campoTelefone}" />
+				<p:inputMask value="#{usuarioBean.objeto.telefone}" mask="(99) 9999-9999"/>  
+				<h:outputText value="#{labels.campoDataNascimento}" />
+                                <p:inputMask value="#{usuarioBean.objeto.dataNascimento}" disabled="true" maxlength="10" mask="99/99/9999">
+				    <f:convertDateTime pattern='dd/MM/yyyy'  locale="pt_BR" timeZone="America/Sao_Paulo"/>
+				</p:inputMask>
+				
+				<t:div><h:outputText value="#{labels.campoCampus}" /><h:outputText value="*" style="color: red"/></t:div> 
+				<p:selectOneMenu value="#{usuarioBean.campusUsuario}"  converter="SimpleIndexConverter">
+				    <f:selectItem itemLabel="Selecione um Item" itemValue="" />
+				    <t:selectItems value="#{usuarioBean.listaCampus}"  var="item" itemLabel="#{item.descricao}" itemValue="#{item}" />
+	    			</p:selectOneMenu>
+				
+			    </h:panelGrid>
+			    <h:panelGrid columns="2" cellpadding="3">
+				<p:commandButton action="#{usuarioBean.saveUsuarioSiga}" value="#{labels.botaoSalvar}" ajax="false"/>
+				<p:commandButton action="loginPage" value="#{labels.botaoCancelar}" ajax="false" immediate="true"/>
+			    </h:panelGrid>
+			</h:form>
+		    </h:panelGrid>
+                </p:layoutUnit>  
+            </p:layout>
+        </h:body>
+    </f:view>
+</html>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <ui:param name="bean" value="#{publicidadeBean}" />
+        <ui:composition template="../publicidade/publicidadeIncluirAlterar.xhtml">  
+            <ui:define name="ADICIONAIS">
+                <h:outputLabel for="radio" value="Pode ser removida"/>
+                <h:selectBooleanCheckbox id="radio" value="#{publicidadeBean.objeto.podeSerRemovida}" />
+            </ui:define>
+        </ui:composition>                    
+</html>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:t="http://myfaces.apache.org/tomahawk">   
+    <ui:composition template="../generic/genericPage.xhtml">
+        <ui:param name="bean" value="#{publicidadeBean}" />
+        <ui:define name="CONTEUDO">
+            <h:form id="form" >   
+                    <p:messages/>
+                    <t:div style="float: left; margin-top: 15px">
+                    <p:panel header="Publicidade" widgetVar="documentDialog">
+                        <h:panelGrid  columns="1" cellpadding="5">
+                            <h:panelGroup>
+                                <p:commandButton value="Adicionar imagem ao Login" ajax="false" action="imagemLoginIncluir" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton value="Adicionar imagem ao Banner em construção" disabled="true"  ajax="false"></p:commandButton>
+                            </h:panelGroup>
+                            <p:treeTable value="#{bean.root}" var="document" selection="#{bean.selectedNode}" selectionMode="single" >  
+                                <f:facet name="header">  
+                                    Documentos  
+                                </f:facet>  
+
+                                <p:column style="width:150px">  
+                                    <f:facet name="header">  
+                                        Nome  
+                                    </f:facet>  
+                                    <h:outputText value="#{document.name}" />  
+                                </p:column>  
+
+                                <p:column style="width:100px">  
+                                    <f:facet name="header">  
+                                        Tamanho  
+                                    </f:facet>  
+                                    <h:outputText value="#{document.size} KB" />  
+                                </p:column>  
+
+                                <p:column style="width:100px">  
+                                    <f:facet name="header">  
+                                        Tipo  
+                                    </f:facet>  
+                                    <h:outputText value="#{document.type}" />  
+                                </p:column>  
+                                <f:facet name="footer">  
+                                    <p:commandButton value="Detalhes" icon="ui-icon-search"  
+                                                     update="@form"/> 
+                                    <p:commandButton value="Deletar" icon="ui-icon ui-icon-closethick"  
+                                                     ajax="false" actionListener="#{bean.excluirArquivo}"/>  
+                                     
+                                </f:facet>   
+                            </p:treeTable>
+                        </h:panelGrid>  
+                    </p:panel>
+                  </t:div>
+                    <t:div style="float: left; margin-left: 15px; margin-top: 15px" id="divMostroar">
+                        <p:panel header="Detalhes:" widgetVar="documentDialog" id="panelMostrar" rendered="#{bean.selectedNode != null}">  
+                        <t:panelGrid  columns="2" cellpadding="5"  columnClasses="col1, col2">  
+                            <h:outputLabel for="name" value="Nome " />  
+                            <h:outputText id="name" value="#{bean.selectedNode.data.name}" style="font-weight:bold" />  
+
+                            <h:outputLabel for="size" value="Tamanho: " />  
+                            <h:outputText id="size" value="#{bean.selectedNode.data.size} KB" style="font-weight:bold" />  
+
+                            <h:outputLabel for="type" value="Tipo " />  
+                            <h:outputText id="type" value="#{bean.selectedNode.data.type}" style="font-weight:bold" />  
+                            <t:panelGroup colspan="2" style="overflow: visible; width: 600px">
+                                <p:graphicImage value="/.imagesTempfotosLogin/#{bean.selectedNode.data.name}" style=" width: 600px; height: 400px"  />  
+                            </t:panelGroup>
+                            <style type="text/css">
+                                .col1{ width: 10px }
+                            </style>
+                        </t:panelGrid>
+                    </p:panel>
+                 </t:div>
+            </h:form>  
+        </ui:define>
+        
+    </ui:composition>
+
+</html>
