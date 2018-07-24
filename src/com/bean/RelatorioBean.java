@@ -23,6 +23,7 @@ import com.util.FacesUtil;
 import com.util.ReportUtils;
 import com.util.SelectBoxUtil;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -34,15 +35,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 
-@ManagedBean(name = "relatorioBean")
+@Named(value = "relatorioBean")
 @ViewScoped
-public class RelatorioBean {
+public class RelatorioBean implements Serializable{
+    
     private UsuarioDTO usuarioDTOPesquisa = new UsuarioDTO();   
     private CampusDTO campusDTOPesquisa = new CampusDTO();
     private PatrimonioDTO patrimonioDTOPesquisa = new PatrimonioDTO();
@@ -128,7 +131,6 @@ public class RelatorioBean {
         String[] mesAno = this.mes.split(" / ");        
         int mesInt = 0;
         DateFormatSymbols dfs = new DateFormatSymbols(new Locale("pt", "BR"));
-        
         for(int i = 0; i < dfs.getMonths().length; i++){
             if(dfs.getMonths()[i].equals(mesAno[0])){
                 mesInt = i;
@@ -183,34 +185,33 @@ public class RelatorioBean {
     private String relatorioChamadoServico() throws Throwable{
         String dir = "";
         //Por Usuário
-        if (getOpcao() == 1){
-            if(!((chamadoServicoBO.pesquisarChamadosServicoPorUsuarioEntreDatas(usuarioDTOPesquisa, getDataInicial(), getDataAux())).isEmpty())) {
-                dir = "/com/relatorios/RelatorioChamadoServPorUsuario.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Usuário não apresenta Chamados de Serviço nesse período", "erro"));
-                verifica = false;
-            }
-        }
-        //Por Setor
-        else if (getOpcao() == 2){
-           if(!((chamadoServicoBO.pesquisarChamadosServicoPorSetorEntreDatas(getSetorDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty())) {
-                dir = "/com/relatorios/RelatorioChamadoServPorSetor.jasper" ;
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Setor não apresenta Chamados de Serviço nesse período", "erro"));
-                verifica = false;
-            }
-        }
-        //Por Campus
-        else if (getOpcao() == 3){
-            if(!((chamadoServicoBO.pesquisarChamadosServicoPorCampusEntreDatas(campusDTOPesquisa, getDataInicial(), getDataAux())).isEmpty())) {  
-                dir = "/com/relatorios/RelatorioChamadoServPorCampus.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Campus não apresenta Chamados de Serviço nesse período", "erro"));
-                verifica = false;
-            }
+        switch (getOpcao()) {
+            case 1:
+                if(!((chamadoServicoBO.pesquisarChamadosServicoPorUsuarioEntreDatas(usuarioDTOPesquisa, getDataInicial(), getDataAux())).isEmpty())) {
+                    dir = "/com/relatorios/RelatorioChamadoServPorUsuario.jasper";
+                }
+                else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Usuário não apresenta Chamados de Serviço nesse período", "erro"));
+                    verifica = false;
+                }   break;
+            case 2:
+                if(!((chamadoServicoBO.pesquisarChamadosServicoPorSetorEntreDatas(getSetorDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty())) {
+                    dir = "/com/relatorios/RelatorioChamadoServPorSetor.jasper" ;
+                }
+                else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Setor não apresenta Chamados de Serviço nesse período", "erro"));
+                    verifica = false;
+                }   break;
+            case 3:
+                if(!((chamadoServicoBO.pesquisarChamadosServicoPorCampusEntreDatas(campusDTOPesquisa, getDataInicial(), getDataAux())).isEmpty())) {
+                    dir = "/com/relatorios/RelatorioChamadoServPorCampus.jasper";
+                }
+                else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Campus não apresenta Chamados de Serviço nesse período", "erro"));
+                    verifica = false;
+                }   break;
+            default:
+                break;
         }
         return dir;
     }
@@ -222,54 +223,57 @@ public class RelatorioBean {
     /**Diretório dos Relatórios dos Chamados de Infraestrutura */
     private String relatorioChamadoInfra() throws Throwable{
         String dir = "";
-        if (getOpcao() == 1){
-            if(!(chamadoInfraBO.pesquisarChamadosInfraPorUsuarioEntreDatas(usuarioDTOPesquisa, getDataInicial(), getDataAux())).isEmpty()) {
-                dir = "/com/relatorios/RelatorioChamadoInfraPorUsuario.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Usuário não apresenta chamados nesse período", "erro"));
-                verifica = false;
-            }
-        }else if (getOpcao() == 2){
-            if(!(chamadoInfraBO.pesquisarChamadosInfraPorSetorEntreDatas(getSetorDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
-                dir = "/com/relatorios/RelatorioChamadoInfraPorSetor.jasper" ;
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Setor não apresenta chamados nesse período", "erro"));
-                verifica = false;
-            }
-        }else if (getOpcao() == 3){
-            if(!(chamadoInfraBO.pesquisarChamadosInfraPorCampusEntreDatas(campusDTOPesquisa, getDataInicial(), getDataAux())).isEmpty()) {
-                dir = "/com/relatorios/RelatorioChamadoInfraPorCampus.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Campus não apresenta chamados nesse período", "erro"));
-                verifica = false;
-            }
-        }else if (getOpcao() == 4){
-            if(!(chamadoInfraBO.pesquisarChamadosInfraPorPatrimonioEntreDatas(getPatrimonioDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
-                dir = "/com/relatorios/RelatorioChamadoInfraPorPatrimonio.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Patrimônio não apresenta chamados nesse período", "erro"));
-                verifica = false;
-            }
-        }else if (getOpcao() == 5){
-            if(!(chamadoInfraBO.pesquisarChamadosInfraPorTipoPatrimonioEntreDatas(getTipoPatrimonioDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
-                dir = "/com/relatorios/RelatorioChamadoInfraPorTipoPatrimonio.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Esse Tipo de Patrimônio não apresenta chamados nesse período", "erro"));
-                verifica = false;
-            }
-        }else if (getOpcao() == 6){
-            if(!(chamadoInfraBO.pesquisarChamadosInfraPorLocalizacaoEntreDatas(getLocalizacaoDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
-                dir = "/com/relatorios/RelatorioChamadoInfraPorLocalizacao.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Essa Localização apresenta chamados nesse período", "erro"));
-                verifica = false;
-            }
+        switch (getOpcao()) {
+            case 1:
+                if(!(chamadoInfraBO.pesquisarChamadosInfraPorUsuarioEntreDatas(usuarioDTOPesquisa, getDataInicial(), getDataAux())).isEmpty()) {
+                    dir = "/com/relatorios/RelatorioChamadoInfraPorUsuario.jasper";
+                }
+                else{
+                    FacesUtil.adicionarMensagemErro("Esse Usuário não apresenta chamados nesse período");
+                    verifica = false;
+                }   break;
+            case 2:
+                if(!(chamadoInfraBO.pesquisarChamadosInfraPorSetorEntreDatas(getSetorDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
+                    dir = "/com/relatorios/RelatorioChamadoInfraPorSetor.jasper" ;
+                }
+                else{
+                    FacesUtil.adicionarMensagemErro("Esse Setor não apresenta chamados nesse período");
+                    verifica = false;
+                }   break;
+            case 3:
+                if(!(chamadoInfraBO.pesquisarChamadosInfraPorCampusEntreDatas(campusDTOPesquisa, getDataInicial(), getDataAux())).isEmpty()) {
+                    dir = "/com/relatorios/RelatorioChamadoInfraPorCampus.jasper";
+                }
+                else{
+                    FacesUtil.adicionarMensagemErro("Esse Campus não apresenta chamados nesse período");
+                    verifica = false;
+                }   break;
+            case 4:
+                if(!(chamadoInfraBO.pesquisarChamadosInfraPorPatrimonioEntreDatas(getPatrimonioDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
+                    dir = "/com/relatorios/RelatorioChamadoInfraPorPatrimonio.jasper";
+                }
+                else{
+                    FacesUtil.adicionarMensagemErro("Esse Patrimônio não apresenta chamados nesse período");
+                    verifica = false;
+                }   break;
+            case 5:
+                if(!(chamadoInfraBO.pesquisarChamadosInfraPorTipoPatrimonioEntreDatas(getTipoPatrimonioDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
+                    dir = "/com/relatorios/RelatorioChamadoInfraPorTipoPatrimonio.jasper";
+                }
+                else{
+                    FacesUtil.adicionarMensagemErro("Esse Tipo de Patrimônio não apresenta chamados nesse período");
+                    verifica = false;
+                }   break;
+            case 6:
+                if(!(chamadoInfraBO.pesquisarChamadosInfraPorLocalizacaoEntreDatas(getLocalizacaoDTOPesquisa(), getDataInicial(), getDataAux())).isEmpty()) {
+                    dir = "/com/relatorios/RelatorioChamadoInfraPorLocalizacao.jasper";
+                }
+                else{
+                    FacesUtil.adicionarMensagemErro("Essa Localização apresenta chamados nesse período");
+                    verifica = false;
+                }   break;
+            default:
+                break;
         }
       
         return dir;
@@ -277,20 +281,26 @@ public class RelatorioBean {
     
     public void abrirRelatorio(String parametro) throws SQLException, Exception, Throwable {
         //Diretório
-        if (tipoRelatorio == 1){
-            diretorio = relatorioChamadoInfra();
-        }else if(tipoRelatorio == 2){
-            diretorio = relatorioChamadoServico();
-        }else if(tipoRelatorio == 3){
-            diretorio = relatorioHorasTrabalhadas();
-        }else if(tipoRelatorio == 4){
-            if(!(chamadoInfraBO.pesquisarEquipamentosEmManutencaoEntreDatasContexto(getDataInicial(), getDataAux(),gerarListaIN(getSetoresUsuario()))).isEmpty()) {
-                diretorio = "/com/relatorios/RelatorioEquipamentoManutencao.jasper";
-            }
-            else{
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Essa Data não apresenta equipamentos em manutenção", "erro"));
-                verifica = false;
-            } 
+        switch (tipoRelatorio) {
+            case 1:
+                diretorio = relatorioChamadoInfra();
+                break;
+            case 2:
+                diretorio = relatorioChamadoServico();
+                break;
+            case 3:
+                diretorio = relatorioHorasTrabalhadas();
+                break;
+            case 4:
+                if(!(chamadoInfraBO.pesquisarEquipamentosEmManutencaoEntreDatasContexto(getDataInicial(), getDataAux(),gerarListaIN(getSetoresUsuario()))).isEmpty()) {
+                    diretorio = "/com/relatorios/RelatorioEquipamentoManutencao.jasper";
+                } 
+                else{
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Essa Data não apresenta equipamentos em manutenção", "erro"));
+                    verifica = false;
+                }   break;
+            default:
+                break;
         }
         
         //Geração do Relatório
@@ -310,12 +320,16 @@ public class RelatorioBean {
             parametros.put("dataFinal", getDataFinal());
             try {
                 String nomePDF;
-                if(tipoRelatorio == 3){
-                    nomePDF = "Relatório_Horas_Trabalhadas_"+ DataUtil.dataForStringPadrao(dataInicial)+"_"+DataUtil.dataForStringPadrao(dataAux);
-                }else if(tipoRelatorio == 4){
-                    nomePDF = "Relatório_Equip_Manutencao_"+ DataUtil.dataForStringPadrao(dataInicial)+"_"+DataUtil.dataForStringPadrao(dataAux);
-                }else{
-                    nomePDF = "Relatório_"+ parametro.replace(" ", "_") +"_"+ DataUtil.dataForStringPadrao(dataInicial)+"_"+DataUtil.dataForStringPadrao(dataAux);
+                switch (tipoRelatorio) {
+                    case 3:
+                        nomePDF = "Relatório_Horas_Trabalhadas_"+ DataUtil.dataForStringPadrao(dataInicial)+"_"+DataUtil.dataForStringPadrao(dataAux);
+                        break;
+                    case 4:
+                        nomePDF = "Relatório_Equip_Manutencao_"+ DataUtil.dataForStringPadrao(dataInicial)+"_"+DataUtil.dataForStringPadrao(dataAux);
+                        break;
+                    default:
+                        nomePDF = "Relatório_"+ parametro.replace(" ", "_") +"_"+ DataUtil.dataForStringPadrao(dataInicial)+"_"+DataUtil.dataForStringPadrao(dataAux);
+                        break;
                 }
                 // abre o relatório
                ReportUtils.openReportPDF( nomePDF, inputStream, parametros,ConnectionFactory.getPostgresConnection() );
@@ -487,12 +501,8 @@ public class RelatorioBean {
     }
     
     public List<SetorDTO> getSetoresUsuario() throws Throwable {
-        List<SetorDTO> setoresPermissao = new ArrayList();
-        for(UsuarioPermissaoSetorDTO usuarioPermissaoSetorDTO : getListaUsuarioPermissaoSetor()){
-            System.out.println("Setor: " + usuarioPermissaoSetorDTO.getSetorDTO().getDescricao()+" campus " + usuarioPermissaoSetorDTO.getSetorDTO().getCampusDTO());
-            setoresPermissao.add(usuarioPermissaoSetorDTO.getSetorDTO());
-        }
-        return setoresPermissao;
+        return getListaUsuarioPermissaoSetor().stream().map(usuarioSetorPermissao -> 
+                (SetorDTO) usuarioSetorPermissao.getSetorDTO()).collect(Collectors.toList());
     }
     
     public List<PatrimonioDTO> getListaPatrimonios() throws Throwable {

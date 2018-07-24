@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
@@ -157,7 +156,7 @@ public class PatrimonioBean extends GenericBean<PatrimonioDTO> implements Serial
         }
         getPatrimoniosInclusao().add(new PatrimonioDTO());                     
     }
-
+    //FIX
     private HashSet<String> gerarListaCamposSelecionados(){        
         HashSet<String> campos = new HashSet<>();
         for(int i = 0; i < mapCamposDinamicos.entrySet().toArray().length; i++){

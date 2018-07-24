@@ -18,11 +18,11 @@ import javax.faces.context.FacesContext;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 
 @SessionScoped
-@ManagedBean(name = "contextoBean")
+@Named(value = "contextoBean")
 public class ContextoBean implements Serializable{
 
     private static final long serialVersionUID = 100012L;

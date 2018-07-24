@@ -16,21 +16,20 @@ import javax.enterprise.context.RequestScoped;
 @Named("imageSwitchBean")
 public class ImageSwitchBean {
 
-    private final static String contexto2 = "/.imagesTempfotosLogin";
+    private final static String CONTEXTO2 = "/.imagesTempfotosLogin";
 
     private void criarFotos() {
         StringBuilder builderCaminho = new StringBuilder();
         builderCaminho.append("/opt/intranet");
-        builderCaminho.append(contexto2);
+        builderCaminho.append(CONTEXTO2);
         String caminho = builderCaminho.toString();
         File folder = new File(caminho);
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        if (getImages() != null)
-        for (ImagemLoginDTO imagem : getImages()) {
-            StringBuilder builder = new StringBuilder(caminho).append(File.separator).append(imagem.getNomeFormato());
-            criaArquivo(imagem.getArquivo(), builder.toString());
+        if (getImages() != null){
+            getImages().forEach(ima -> criaArquivo(ima.getArquivo(), caminho + 
+                    File.separator + ima.getNomeFormato()));
         }
     }
 

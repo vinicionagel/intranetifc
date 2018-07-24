@@ -1,6 +1,5 @@
 package com.bean;
 
-import com.util.FacesUtil;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
