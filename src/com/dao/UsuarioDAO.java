@@ -67,7 +67,7 @@ public class UsuarioDAO extends GenericDAO<UsuarioDTO> {
     
     public List<UsuarioDTO> pesquisarPorNomeUsuariosPeloCampus(UsuarioDTO usuarioDTO, CampusDTO campus) {
         EntityManager em = emf.createEntityManager();
-        try {                                  
+        try {                                   
             StringBuilder sql = new StringBuilder();
             sql.append("FROM UsuarioDTO user WHERE LOWER (user.nome) LIKE '%");
             sql.append(usuarioDTO.getNome().toLowerCase(new Locale("pt", "BR")));
@@ -76,7 +76,8 @@ public class UsuarioDAO extends GenericDAO<UsuarioDTO> {
             return em.createQuery(sql.toString())
                     .setParameter("campus", campus.getCodigo())
                     .getResultList();                                    
-        } catch (Exception e) {       
+        } catch (Exception e) {  
+            logger.log(Level.SEVERE, e.getMessage(), e);
             return null;
         } finally {
             em.close();
