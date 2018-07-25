@@ -339,7 +339,7 @@ public class UsuarioBean extends GenericBean<UsuarioDTO> implements Serializable
     public List<UsuarioDTO> dadosPesquisa() {
         setCampoPesquisar(campoPesquisar == null ? campoPesquisar = "" : getCampoPesquisar());
         usuarioDTOPesquisa.setNome(campoPesquisar);
-        return lista = getBO().pesquisarPorNomeUsuariosPeloCampus(usuarioDTOPesquisa, ContextoBean.getContexto().getCampusAtual());
+        return lista = getBO().pesquisarUsuariosPorNomeECampus(usuarioDTOPesquisa, ContextoBean.getContexto().getCampusAtual());
     }
 
     public boolean getPermissaoAtivarUsuario(UsuarioDTO usuario) {

@@ -127,7 +127,7 @@ public class PermissaoBean implements Serializable {
     public List<UsuarioDTO> getDadosPesquisa() {
         UsuarioDTO usuarioParaPesquisa = new UsuarioDTO();
         usuarioParaPesquisa.setNome(campoPesquisar);
-        return UsuarioBO.getInstance().pesquisarPorNomeUsuariosPeloCampus(usuarioParaPesquisa, ContextoBean.getContexto().getCampusAtual());
+        return UsuarioBO.getInstance().pesquisarUsuariosPorNomeECampus(usuarioParaPesquisa, ContextoBean.getContexto().getCampusAtual());
     }
 
     public String getCampoPesquisar() {

@@ -65,7 +65,7 @@ public class UsuarioDAO extends GenericDAO<UsuarioDTO> {
         }
     }
     
-    public List<UsuarioDTO> pesquisarPorNomeUsuariosPeloCampus(UsuarioDTO usuarioDTO, CampusDTO campus) {
+    public List<UsuarioDTO> pesquisarUsuariosPorNomeECampus(UsuarioDTO usuarioDTO, CampusDTO campus) {
         EntityManager em = emf.createEntityManager();
         try {                                   
             StringBuilder sql = new StringBuilder();
