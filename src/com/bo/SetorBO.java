@@ -66,7 +66,7 @@ public class SetorBO extends GenericBO<SetorDTO>{
     
     public List<SetorDTO> consultarSetoresDoUsuario(UsuarioDTO usuario)  {
         try {
-            return dao.consultarSetoresDoUsuario(usuario);
+            return dao.consultaTodosSetoresMenosUsuarioSemSetorDoUsuario(usuario);
         } catch (Exception e) {
             return null;
         }
@@ -98,7 +98,7 @@ public class SetorBO extends GenericBO<SetorDTO>{
     
     public List<SetorDTO> pesquisarPorCampus(List<CampusDTO> campusDTOsUsuario) {
         try {
-            return dao.pesquisarPorCampus(campusDTOsUsuario);
+            return dao.pesquisarSetoresPorCampus(campusDTOsUsuario);
         } catch (Exception e) {
             return null;
         }
@@ -172,7 +172,7 @@ public class SetorBO extends GenericBO<SetorDTO>{
         return dao.pesquisarPorCampusOcorrencia(campusDTO);
     }
     
-    public List<SetorDTO> consultarSetoresDoUsuarioSemUsuarioSemSetorPorCampus(UsuarioDTO user, CampusDTO campusDTO) {
+    public List<SetorDTO> consultarSetoresDoUsuarioPorCampusUsuarioSemSetor(UsuarioDTO user, CampusDTO campusDTO) {
         return dao.consultarSetoresDoUsuarioPorCampusUsuarioSemSetor(user,campusDTO);
     }
     

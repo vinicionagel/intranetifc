@@ -47,9 +47,9 @@ public class UsuarioBO extends GenericBO<UsuarioDTO>{
         }
     }
     
-    public List<UsuarioDTO> pesquisarNomeECampus(UsuarioDTO usuarioDTO, CampusDTO campusDTO) {
+    public List<UsuarioDTO> pesquisarPorNomeUsuariosPeloCampus(UsuarioDTO usuarioDTO, CampusDTO campusDTO) {
         try {
-            return dao.pesquisarNomeECampus(usuarioDTO, campusDTO);
+            return dao.pesquisarPorNomeUsuariosPeloCampus(usuarioDTO, campusDTO);
         } catch (Exception e) {
             return null;
         }
@@ -57,7 +57,7 @@ public class UsuarioBO extends GenericBO<UsuarioDTO>{
     
     public UsuarioDTO pesquisarEmail(UsuarioDTO usuarioDTO) {
         try {
-            return dao.pesquisarEmail(usuarioDTO);
+            return dao.pesquisarEmailUsuario(usuarioDTO);
         } catch (Exception e) {
             return null;
         }

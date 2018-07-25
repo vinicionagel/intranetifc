@@ -199,7 +199,7 @@ public class VincularUsuarioSetorBean extends GenericBean<UsuarioSetorDTO> imple
         if(usuarioDTO != null && campusDTO != null){
             List<SetorDTO> listaAuxiliar;
             if(isIncluindo()){
-                listaAuxiliar = setoresDisponiveisUsuario(setorBO.consultarSetoresDoUsuarioSemUsuarioSemSetorPorCampus(usuarioDTO,campusDTO));
+                listaAuxiliar = setoresDisponiveisUsuario(setorBO.consultarSetoresDoUsuarioPorCampusUsuarioSemSetor(usuarioDTO,campusDTO));
             } else {
                 listaAuxiliar = setorBO.consultarSetoresDoUsuario(usuarioDTO,campusDTO);
             }

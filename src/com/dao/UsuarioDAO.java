@@ -65,7 +65,7 @@ public class UsuarioDAO extends GenericDAO<UsuarioDTO> {
         }
     }
     
-    public List<UsuarioDTO> pesquisarNomeECampus(UsuarioDTO usuarioDTO, CampusDTO campus) {
+    public List<UsuarioDTO> pesquisarPorNomeUsuariosPeloCampus(UsuarioDTO usuarioDTO, CampusDTO campus) {
         EntityManager em = emf.createEntityManager();
         try {                                  
             StringBuilder sql = new StringBuilder();
@@ -73,7 +73,6 @@ public class UsuarioDAO extends GenericDAO<UsuarioDTO> {
             sql.append(usuarioDTO.getNome().toLowerCase(new Locale("pt", "BR")));
             sql.append("%' AND user.codigo in (SELECT us.usuarioDTO.codigo FROM UsuarioSetorDTO us WHERE us.setorDTO.campusDTO.codigo = :campus)");
             sql.append(" ORDER BY user.nome ");
-            
             return em.createQuery(sql.toString())
                     .setParameter("campus", campus.getCodigo())
                     .getResultList();                                    
@@ -84,7 +83,7 @@ public class UsuarioDAO extends GenericDAO<UsuarioDTO> {
         }
     }
     
-     public UsuarioDTO pesquisarEmail(UsuarioDTO usuarioDTO) {
+     public UsuarioDTO pesquisarEmailUsuario(UsuarioDTO usuarioDTO) {
          EntityManager em = emf.createEntityManager();
          try {
              StringBuilder sql = new StringBuilder();
@@ -96,7 +95,9 @@ public class UsuarioDAO extends GenericDAO<UsuarioDTO> {
          } catch (Exception e) {
              logger.log(Level.SEVERE, e.getMessage(), e);
              return null;
-         }
+         } finally {
+            em.close();
+        }
     }
      
     public UsuarioDTO pesquisarPorLoginESenha(UsuarioDTO usuarioDTO) {

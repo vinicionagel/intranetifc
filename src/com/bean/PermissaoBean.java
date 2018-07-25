@@ -48,12 +48,12 @@ public class PermissaoBean implements Serializable {
 
     public void save() throws Throwable {
         if (usuarioDTO != null) {
-            if (pegarSelecionadoPermissao() != usuarioDTO.getPermissoes()) {
+            if (pegarPermissaoSelecionada() != usuarioDTO.getPermissoes()) {
                 if (!validaPermissaoRelatorio()) {
                     setoresUsuario.forEach((SetorDTO t) -> usuarioPermissaoSetorBO.remove(criaObjetoPermissaoSetorDTO(t)));
                 }
                 if (usuarioPermissaoSetorBO.pesquisarPorUsuario(usuarioDTO) != null) {
-                    usuarioDTO.setPermissoes(pegarSelecionadoPermissao());
+                    usuarioDTO.setPermissoes(pegarPermissaoSelecionada());
                 }
                 UsuarioBO.getInstance().update(usuarioDTO);
             }
@@ -75,7 +75,7 @@ public class PermissaoBean implements Serializable {
         return "";
     }
 
-    private List<PermissaoDTO> pegarSelecionadoPermissao() {
+    private List<PermissaoDTO> pegarPermissaoSelecionada() {
         return getCheckMapPermissao().entrySet().
                 stream().filter(entry -> entry.getValue()).
                 map(e -> e.getKey()).
@@ -104,7 +104,7 @@ public class PermissaoBean implements Serializable {
 
     public void incluirAlterar() {
         permissaoBO.permissoesUsuario(usuarioDTO).
-                forEach(p -> checkMapPermissao.put(p, Boolean.TRUE));
+                forEach(permissao -> checkMapPermissao.put(permissao, Boolean.TRUE));
 
     }
 
@@ -125,9 +125,9 @@ public class PermissaoBean implements Serializable {
     }
 
     public List<UsuarioDTO> getDadosPesquisa() {
-        UsuarioDTO userPesquisa = new UsuarioDTO();
-        userPesquisa.setNome(campoPesquisar);
-        return UsuarioBO.getInstance().pesquisarNomeECampus(userPesquisa, ContextoBean.getContexto().getCampusAtual());
+        UsuarioDTO usuarioParaPesquisa = new UsuarioDTO();
+        usuarioParaPesquisa.setNome(campoPesquisar);
+        return UsuarioBO.getInstance().pesquisarPorNomeUsuariosPeloCampus(usuarioParaPesquisa, ContextoBean.getContexto().getCampusAtual());
     }
 
     public String getCampoPesquisar() {

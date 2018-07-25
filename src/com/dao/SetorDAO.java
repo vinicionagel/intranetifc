@@ -137,15 +137,15 @@ public class SetorDAO extends GenericDAO<SetorDTO> {
         }
     }
 
-    public List<SetorDTO> pesquisarPorCampus(List<CampusDTO> campus){
+    public List<SetorDTO> pesquisarSetoresPorCampus(List<CampusDTO> campusBusca){
         EntityManager em = emf.createEntityManager();
         try {
             List<SetorDTO> setores = new ArrayList<>();
-            for (CampusDTO campusDTO : campus) {
+            campusBusca.forEach((campusDTO) -> {
                 setores.addAll(em.createQuery("FROM SetorDTO setor WHERE setor.campusDTO.codigo = :campus AND LOWER(setor.descricao) NOT IN ('administrador', 'usuário sem setor') ORDER BY setor.descricao")
                         .setParameter("campus", campusDTO.getCodigo())
                         .getResultList());
-            }
+            });
             return setores;
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
@@ -155,8 +155,8 @@ public class SetorDAO extends GenericDAO<SetorDTO> {
         }
     }
 
-    /** Não pega o setor "sem setor" caso o usuário esteja nele*/
-    public List<SetorDTO> consultarSetoresDoUsuario(UsuarioDTO usuario) {
+    
+    public List<SetorDTO> consultaTodosSetoresMenosUsuarioSemSetorDoUsuario(UsuarioDTO usuario) {
         EntityManager em = emf.createEntityManager();
         try {
             StringBuilder sql = new StringBuilder();
@@ -166,7 +166,6 @@ public class SetorDAO extends GenericDAO<SetorDTO> {
             sql.append("AND us.setorDTO.codigo = s.codigo ");
             sql.append("AND LOWER (us.setorDTO.descricao) != 'usuário sem setor' ");
             sql.append("ORDER BY s.campusDTO.descricao, s.descricao");
-
             return em.createQuery(sql.toString())
                     .setParameter("usuario", usuario.getCodigo())
                     .getResultList();
