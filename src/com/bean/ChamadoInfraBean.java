@@ -1,5 +1,11 @@
 package com.bean;
 
+import com.bean.filter.chamadoInfra.ChamadoAtribuido;
+import com.bean.filter.chamadoInfra.ChamadoInfraPorSetor;
+import com.bean.filter.chamadoInfra.ChamadoPorTitutlo;
+import com.bean.filter.chamadoInfra.Filtrando;
+import com.bean.filter.chamadoInfra.MeusChamados;
+import com.bean.filter.chamadoInfra.StatusGrafico;
 import com.bo.ChamadoInfraBO;
 import com.bo.PatrimonioBO;
 import com.bo.PrioridadeBO;
@@ -7,22 +13,21 @@ import com.dto.ChamadoInfraDTO;
 import com.dto.ChamadoInfraModel;
 import com.dto.LocalizacaoDTO;
 import com.dto.PatrimonioDTO;
-import com.dto.SetorDTO;
 import com.dto.StatusDTO;
 import static com.util.FacesUtil.*;
 import com.util.SelectBoxUtil;
-import com.util.StringUtils;
 import com.util.ValidadorCampo;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import org.primefaces.extensions.util.RequestParameterBuilder;
 
-@ManagedBean(name = "chamadoInfraBean")
+@Named(value = "chamadoInfraBean")
 @ViewScoped
 public class ChamadoInfraBean extends ChamadoBean<ChamadoInfraDTO> {
     
@@ -38,7 +43,7 @@ public class ChamadoInfraBean extends ChamadoBean<ChamadoInfraDTO> {
     private String opBusca = "";
     private Long codigoPatrimonio = 0l;    
     private List<ChamadoInfraDTO> ChamadosInfraSelecionados= new ArrayList<>();
-    private Collection<Integer> list = new ArrayList<Integer>(); 
+    private Collection<Integer> list = new ArrayList<>(); 
 
     RequestParameterBuilder rpBuilder = new RequestParameterBuilder(getContextPath()+"/pages/chamado/andamentoMultiplosChamados.jsf");  
     
@@ -133,20 +138,18 @@ public class ChamadoInfraBean extends ChamadoBean<ChamadoInfraDTO> {
     public void editarSelecionados(){
         Collection<Integer> list = new ArrayList<>(); 
         try{
-            for(ChamadoInfraDTO dTO : getChamadosInfraSelecionados()){
-                list.add(dTO.getCodigo().intValue()); 
-            }
+            getChamadosInfraSelecionados().forEach((dTO) -> {
+                list.add(dTO.getCodigo().intValue());
+            });
             rpBuilder.paramJson("list", list, getTypeGenericList());  
-            //System.out.println("hauahuhua" + rpBuilder.build());
-        }catch(Exception e){
+        }catch(UnsupportedEncodingException e){
             e.printStackTrace();
         }
     }
     
     public String getTypeGenericList() {  
         return "java.util.Collection<java.lang.Integer>";  
-    }  
-    
+    }
 
     @Override
     public String save() throws Throwable {
@@ -209,40 +212,26 @@ public class ChamadoInfraBean extends ChamadoBean<ChamadoInfraDTO> {
     public ChamadoInfraBO getBO() {
         return ChamadoInfraBO.getInstance();
     }
-
+    
     public ChamadoInfraModel getChamadosInfra(){
-        ChamadoInfraModel retorno = new ChamadoInfraModel();
-
-        if (getOpBusca().equals("filtrando")) {
-            chamadoInfraFiltro.setPatrimonioDTO(patrimonioBO.findById(codigoPatrimonio));
-            retorno.setWrappedData(chamadoInfraBO.pesquisarChamadosInfraPeloFiltro(chamadoInfraFiltro, setorBO.findById(getCodigoSetor()), ContextoBean.getContexto(), null, null));
-        } else if (getOpBusca().equals("meusChamados")) {
-            retorno.setWrappedData(chamadoInfraBO.pesquisarMeusChamadosInfra(ContextoBean.getContexto()));
-        } else if (getOpBusca().equals("chamadosAtribuidos")) {
-            retorno.setWrappedData(chamadoInfraBO.pesquisarChamadosInfraAtribuidos(ContextoBean.getContexto()));
-        } else if (getOpBusca().equals("chamadosObservados")) {
-            retorno.setWrappedData(chamadoInfraBO.pesquisarChamadosInfraObservados(ContextoBean.getContexto()));
-        } else if (getOpBusca().equals("porTitulo") && !StringUtils.isEmpty(getCampoPesquisar())) {
-            retorno.setWrappedData(chamadoInfraBO.pesquisarChamadosInfraPorTitulo(getCampoPesquisar(), ContextoBean.getContexto()));
-        } else if (getSessionAttribute("statusGrafico") != null) {
-            ChamadoInfraDTO chamadoInfra = new ChamadoInfraDTO();
-            chamadoInfra.setStatusDTO((StatusDTO) getSessionAttribute("statusGrafico"));
-            retorno.setWrappedData(chamadoInfraBO.pesquisarChamadosInfraPeloFiltro(chamadoInfra, (SetorDTO) getSessionAttribute("setorGrafico"), ContextoBean.getContexto(), (Date) getSessionAttribute("dataInicial"), (Date) getSessionAttribute("dataFinal")));
-        } else {
-            retorno.setWrappedData(chamadoInfraBO.pesquisarChamadosInfraPorSetorUsuario(ContextoBean.getContexto()));
-        }
-        
+        ChamadoInfraModel retorno;
+        Filtrando filtrando = new Filtrando(
+                new MeusChamados(
+                new ChamadoAtribuido(
+                new ChamadoPorTitutlo(
+                new StatusGrafico(
+                new ChamadoInfraPorSetor(null)), getCampoPesquisar()))));
+        retorno = filtrando.filtrando(getOpBusca());
         removerAtributosSessao();
-        
-        return (ChamadoInfraModel) retorno;
+        return retorno;
     }
     
     public List<PatrimonioDTO> getListaPatrimonio() {
-        return localizacaoDTO != null ? patrimonioBO.pesquisarSemBaixaPorLocalizacao(localizacaoDTO) : new ArrayList<PatrimonioDTO>();
+        return localizacaoDTO != null ? patrimonioBO.pesquisarSemBaixaPorLocalizacao(localizacaoDTO) : new ArrayList<>();
     }
 
     public List<SelectItem> getPatrimoniosFiltro() throws Throwable {
-        return getBuscaAvancada() == true ? new SelectBoxUtil().retornaListaPatrimonioSelectItem(patrimonioBO.pesquisarPatrimonioSemBaixaPorSetoresDoUsuarioOrdenadoPorCampusELocalizacao(ContextoBean.getContexto())) : new ArrayList<SelectItem>();
+        return getBuscaAvancada() == true ? new SelectBoxUtil().retornaListaPatrimonioSelectItem(patrimonioBO.pesquisarPatrimonioSemBaixaPorSetoresDoUsuarioOrdenadoPorCampusELocalizacao(ContextoBean.getContexto())) : new ArrayList<>();
     }
     
     public String getOpBusca() {

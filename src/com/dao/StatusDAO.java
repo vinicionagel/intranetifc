@@ -34,7 +34,7 @@ public class StatusDAO extends GenericDAO<StatusDTO> {
         EntityManager em = emf.createEntityManager();
         try {            
             StringBuilder sql = new StringBuilder();
-            sql.append("FROM StatusDTO WHERE descricao = '");
+            sql.append("SELECT status FROM StatusDTO status WHERE status.descricao = '");
             sql.append(statusDTO);
             sql.append("'");
             
